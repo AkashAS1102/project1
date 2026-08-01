@@ -3,106 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nitec - Sequoia Inspiring Musico.</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="description" content="Nitec — Premium audio gear. Discover headphones, earbuds, and immersive sound experiences curated for audiophiles.">
+    <title>Nitec — Premium Audio Gear</title>
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Favicon (inline data-uri for simplicity) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
 </head>
 <body>
-    <div class="page-background"></div>
+
+    <!-- Ambient background blobs -->
+    <div class="page-background" aria-hidden="true"></div>
+
     <div class="app-container">
-        <!-- Navigation -->
-        <nav class="navbar">
-            <div class="logo">
-                <i class="fa-solid fa-square-n" style="font-size: 1.5rem; margin-right: 8px;"></i> nitec.
+
+        <!-- ======== NAVIGATION ======== -->
+        <nav class="navbar" aria-label="Primary navigation">
+            <a href="#" class="logo" aria-label="Nitec home">
+                <!-- SVG Logo Mark -->
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect width="28" height="28" rx="7" fill="#1a1a1c"/>
+                    <text x="6" y="20" fill="white" font-family="Inter, sans-serif" font-size="16" font-weight="700">N</text>
+                </svg>
+                nitec.
+            </a>
+
+            <div class="search-bar" role="search">
+                <input type="text" id="search-input" placeholder="Search products..." aria-label="Search products">
+                <button class="search-btn" aria-label="Search">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                </button>
             </div>
-            <div class="search-bar">
-                <input type="text" placeholder="Search products...">
-                <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </div>
+
             <div class="nav-right">
-                <div class="icon-btn"><i class="fa-solid fa-lock"></i></div>
-                <div class="icon-btn heart-btn"><i class="fa-solid fa-heart"></i></div>
-                <div class="user-profile">
+                <button class="icon-btn" aria-label="Shopping cart" id="cart-btn">
+                    <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
+                </button>
+                <button class="icon-btn heart-btn" aria-label="Wishlist" id="wishlist-btn">
+                    <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                </button>
+                <div class="user-profile" tabindex="0" role="button" aria-label="User profile menu">
                     <span class="user-name">Ryman Alex</span>
-                    <img src="https://i.pravatar.cc/150?img=11" alt="User" class="avatar">
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Ryman Alex's avatar" class="avatar" loading="lazy">
                 </div>
             </div>
         </nav>
 
-        <!-- Main Content Grid -->
+        <!-- ======== MAIN CONTENT GRID ======== -->
         <main class="main-grid">
-            
-            <!-- Hero Section -->
-            <section class="hero-section card">
+
+            <!-- ——— Hero Section ——— -->
+            <section class="hero-section card" aria-label="Featured product">
                 <div class="hero-content">
-                    <span class="badge"><i class="fa-solid fa-music"></i> Music is Classic</span>
+                    <span class="badge">
+                        <i class="fa-solid fa-music" aria-hidden="true"></i> Music is Classic
+                    </span>
+
                     <h1 class="hero-title">Sequoia Inspiring<br>Musico.</h1>
-                    
+
                     <div class="hero-subtitle-container">
-                        <div class="number">01</div>
-                        <div class="line"></div>
+                        <span class="number" aria-hidden="true">01</span>
+                        <span class="line" aria-hidden="true"></span>
                         <div class="hero-text">
-                            <h3>Clear Sounds</h3>
-                            <p>Making your dream music come true stay with Sequios Sounds!</p>
+                            <h2>Clear Sounds</h2>
+                            <p>Making your dream music come true — stay with Sequoia Sounds!</p>
                         </div>
                     </div>
 
-                    <button class="cta-btn">
-                        View All Products 
-                        <span class="arrow-circle"><i class="fa-solid fa-arrow-up-right"></i></span>
+                    <button class="cta-btn" id="view-products-btn">
+                        View All Products
+                        <span class="arrow-circle" aria-hidden="true">
+                            <i class="fa-solid fa-arrow-up-right"></i>
+                        </span>
                     </button>
 
-                    <div class="social-links">
+                    <div class="social-links" aria-label="Social media links">
                         <span>Follow us on:</span>
                         <div class="social-icons">
-                            <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                            <a href="#"><i class="fa-brands fa-tiktok"></i></a>
-                            <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                            <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+                            <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
+                            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="hero-image-container">
-                    <img src="https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=800" alt="Blue Headphones" class="hero-headphones">
-                    <div class="carousel-controls">
-                        <button class="arrow-btn left"><i class="fa-solid fa-chevron-left"></i></button>
-                        <button class="arrow-btn right"><i class="fa-solid fa-chevron-right"></i></button>
+                    <img
+                        src="https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=800"
+                        alt="Sequoia premium blue over-ear headphones"
+                        class="hero-headphones"
+                        loading="eager"
+                    >
+                    <div class="carousel-controls" aria-label="Product image navigation">
+                        <button class="arrow-btn left" aria-label="Previous image">
+                            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+                        </button>
+                        <button class="arrow-btn right" aria-label="Next image">
+                            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                        </button>
                     </div>
                 </div>
             </section>
 
-            <!-- Popular Colors -->
-            <section class="popular-colors card">
+            <!-- ——— Popular Colors ——— -->
+            <section class="popular-colors card" aria-label="Available color options">
                 <h3>Popular Colors</h3>
-                <div class="colors">
-                    <div class="color-dot" style="background: #4A90E2; box-shadow: 0 4px 10px rgba(74, 144, 226, 0.4)"></div>
-                    <div class="color-dot" style="background: #F5A623; box-shadow: 0 4px 10px rgba(245, 166, 35, 0.4)"></div>
-                    <div class="color-dot" style="background: #7ED321; box-shadow: 0 4px 10px rgba(126, 211, 33, 0.4)"></div>
-                    <div class="color-dot" style="background: #D0021B; box-shadow: 0 4px 10px rgba(208, 2, 27, 0.4)"></div>
-                    <div class="color-dot" style="background: #50E3C2; box-shadow: 0 4px 10px rgba(80, 227, 194, 0.4)"></div>
+                <div class="colors" role="radiogroup" aria-label="Select a color">
+                    <button class="color-dot active" style="background:#4A90E2; box-shadow:0 4px 12px rgba(74,144,226,0.4)" aria-label="Ocean Blue" role="radio" aria-checked="true"></button>
+                    <button class="color-dot" style="background:#F5A623; box-shadow:0 4px 12px rgba(245,166,35,0.4)" aria-label="Sunset Orange" role="radio" aria-checked="false"></button>
+                    <button class="color-dot" style="background:#7ED321; box-shadow:0 4px 12px rgba(126,211,33,0.4)" aria-label="Lime Green" role="radio" aria-checked="false"></button>
+                    <button class="color-dot" style="background:#D0021B; box-shadow:0 4px 12px rgba(208,2,27,0.4)" aria-label="Cherry Red" role="radio" aria-checked="false"></button>
+                    <button class="color-dot" style="background:#50E3C2; box-shadow:0 4px 12px rgba(80,227,194,0.4)" aria-label="Mint Teal" role="radio" aria-checked="false"></button>
                 </div>
             </section>
 
-            <!-- New Gen X-Bud -->
-            <section class="new-gen card">
+            <!-- ——— New Gen X-Bud ——— -->
+            <section class="new-gen card" aria-label="New Gen X-Bud earbuds">
                 <div class="card-header">
                     <h3>New Gen<br>X-Bud</h3>
-                    <a href="#" class="link-arrow"><i class="fa-solid fa-arrow-up-right"></i></a>
+                    <a href="#" class="link-arrow" aria-label="Explore X-Bud earbuds">
+                        <i class="fa-solid fa-arrow-up-right" aria-hidden="true"></i>
+                    </a>
                 </div>
                 <div class="img-wrapper">
-                    <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=400" alt="Earbuds" class="card-img">
+                    <img
+                        src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=400"
+                        alt="New Gen X-Bud wireless earbuds in charging case"
+                        class="card-img"
+                        loading="lazy"
+                    >
                 </div>
             </section>
 
-            <!-- Light Grey Surface Headphone -->
-            <section class="light-grey-headphone card">
-                <a href="#" class="link-arrow top-right"><i class="fa-solid fa-arrow-up-right"></i></a>
+            <!-- ——— Light Grey Surface Headphone ——— -->
+            <section class="light-grey-headphone card" aria-label="Light Grey Surface Headphone">
+                <a href="#" class="link-arrow top-right" aria-label="Explore Light Grey Surface Headphone">
+                    <i class="fa-solid fa-arrow-up-right" aria-hidden="true"></i>
+                </a>
                 <div class="img-wrapper-full">
-                    <img src="https://images.unsplash.com/photo-1628102491629-778571d893a3?auto=format&fit=crop&q=80&w=500" alt="VR Headset / Headphones" class="card-img-full">
+                    <img
+                        src="https://images.unsplash.com/photo-1628102491629-778571d893a3?auto=format&fit=crop&q=80&w=600"
+                        alt="Person wearing a VR headset and premium headphones"
+                        class="card-img-full"
+                        loading="lazy"
+                    >
                 </div>
                 <div class="card-content-bottom">
                     <h3>Light Grey Surface<br>Headphone</h3>
@@ -110,60 +165,221 @@
                 </div>
             </section>
 
-            <!-- Bottom Left: More Products -->
-            <section class="more-products card">
+            <!-- ——— More Products ——— -->
+            <section class="more-products card" aria-label="Browse more products">
                 <div class="header-row">
                     <div>
                         <h3>More Products</h3>
                         <p>460 plus items.</p>
                     </div>
-                    <div class="icon-btn heart-btn small"><i class="fa-solid fa-heart"></i></div>
+                    <button class="icon-btn heart-btn small" aria-label="Save all products">
+                        <i class="fa-solid fa-heart" aria-hidden="true"></i>
+                    </button>
                 </div>
                 <div class="product-thumbs">
-                    <div class="thumb-wrap"><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=200" alt="Product 1"></div>
-                    <div class="thumb-wrap"><img src="https://images.unsplash.com/photo-1572569433602-66b40264440b?auto=format&fit=crop&q=80&w=200" alt="Product 2"></div>
-                    <div class="thumb-wrap"><img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&q=80&w=200" alt="Product 3"></div>
+                    <div class="thumb-wrap">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=200" alt="Headphones on yellow background" loading="lazy">
+                    </div>
+                    <div class="thumb-wrap">
+                        <img src="https://images.unsplash.com/photo-1572569433602-66b40264440b?auto=format&fit=crop&q=80&w=200" alt="White wireless earbuds" loading="lazy">
+                    </div>
+                    <div class="thumb-wrap">
+                        <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&q=80&w=200" alt="Over-ear studio headphones" loading="lazy">
+                    </div>
                 </div>
             </section>
 
-            <!-- 5m+ Downloads -->
-            <section class="downloads-stats card">
+            <!-- ——— 5m+ Downloads / Stats ——— -->
+            <section class="downloads-stats card" aria-label="Download statistics">
                 <div class="avatars-group">
-                    <img src="https://i.pravatar.cc/150?img=33" alt="Avatar">
-                    <img src="https://i.pravatar.cc/150?img=47" alt="Avatar">
-                    <img src="https://i.pravatar.cc/150?img=12" alt="Avatar">
+                    <img src="https://i.pravatar.cc/150?img=33" alt="User review" loading="lazy">
+                    <img src="https://i.pravatar.cc/150?img=47" alt="User review" loading="lazy">
+                    <img src="https://i.pravatar.cc/150?img=12" alt="User review" loading="lazy">
                 </div>
                 <div class="stats-circle">
                     <h2>5m+</h2>
                     <p>Downloads</p>
                 </div>
                 <div class="rating">
-                    <i class="fa-solid fa-star"></i> 4.6 reviews
+                    <i class="fa-solid fa-star" aria-hidden="true"></i> 4.6 reviews
                 </div>
             </section>
 
-            <!-- Listening Has Been Released -->
-            <section class="listening-released card">
+            <!-- ——— Listening Has Been Released ——— -->
+            <section class="listening-released card" aria-label="New product announcement">
                 <div class="header-row">
-                    <span class="badge red-dot"><i class="fa-solid fa-heart" style="color: #ff4757; font-size: 10px;"></i> Popular</span>
-                    <a href="#" class="link-arrow"><i class="fa-solid fa-arrow-up-right"></i></a>
+                    <span class="badge">
+                        <i class="fa-solid fa-heart" style="color:#ff4757; font-size:10px;" aria-hidden="true"></i>
+                        Popular
+                    </span>
+                    <a href="#" class="link-arrow" aria-label="Explore popular products">
+                        <i class="fa-solid fa-arrow-up-right" aria-hidden="true"></i>
+                    </a>
                 </div>
                 <div class="content-split">
                     <div class="text-side">
                         <h3>Listening Has<br>Been Released</h3>
                         <div class="mini-thumbs">
-                            <div class="mini-thumb-wrap"><img src="https://images.unsplash.com/photo-1511300636408-a63a89df3482?auto=format&fit=crop&q=80&w=100" alt="Thumb"></div>
-                            <div class="mini-thumb-wrap"><img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&q=80&w=100" alt="Thumb"></div>
+                            <div class="mini-thumb-wrap">
+                                <img src="https://images.unsplash.com/photo-1511300636408-a63a89df3482?auto=format&fit=crop&q=80&w=100" alt="Product preview" loading="lazy">
+                            </div>
+                            <div class="mini-thumb-wrap">
+                                <img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&q=80&w=100" alt="Product preview" loading="lazy">
+                            </div>
+                            <div class="mini-thumb-wrap">
+                                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=100" alt="Product preview" loading="lazy">
+                            </div>
                         </div>
                     </div>
                     <div class="img-side">
-                        <img src="https://images.unsplash.com/photo-1520170350707-b2da59970118?auto=format&fit=crop&q=80&w=300" alt="Hand holding lens" class="side-img">
-                        <div class="rating-badge"><i class="fa-solid fa-star"></i> 4.7</div>
+                        <img
+                            src="https://images.unsplash.com/photo-1520170350707-b2da59970118?auto=format&fit=crop&q=80&w=300"
+                            alt="Featured listening device"
+                            class="side-img"
+                            loading="lazy"
+                        >
+                        <div class="rating-badge">
+                            <i class="fa-solid fa-star" aria-hidden="true"></i> 4.7
+                        </div>
                     </div>
                 </div>
             </section>
 
         </main>
     </div>
+
+    <!-- ======== JAVASCRIPT ======== -->
+    <script>
+    (function() {
+        'use strict';
+
+        // --- Color Picker Interaction ---
+        const colorDots = document.querySelectorAll('.color-dot');
+        colorDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                colorDots.forEach(d => {
+                    d.classList.remove('active');
+                    d.setAttribute('aria-checked', 'false');
+                });
+                dot.classList.add('active');
+                dot.setAttribute('aria-checked', 'true');
+            });
+        });
+
+        // --- Search Bar Enhancement ---
+        const searchInput = document.getElementById('search-input');
+        const searchBar = searchInput?.closest('.search-bar');
+        if (searchInput && searchBar) {
+            searchInput.addEventListener('focus', () => searchBar.classList.add('focused'));
+            searchInput.addEventListener('blur', () => searchBar.classList.remove('focused'));
+        }
+
+        // --- Wishlist / Cart Button Toggle ---
+        document.querySelectorAll('.icon-btn.heart-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.toggle('liked');
+                const icon = this.querySelector('i');
+                if (this.classList.contains('liked')) {
+                    icon.classList.replace('fa-solid', 'fa-regular');
+                    // Tiny bounce
+                    this.style.transform = 'scale(1.3)';
+                    setTimeout(() => this.style.transform = '', 200);
+                } else {
+                    icon.classList.replace('fa-regular', 'fa-solid');
+                }
+            });
+        });
+
+        // --- Scroll-Reveal for Cards ---
+        const observerOptions = {
+            threshold: 0.12,
+            rootMargin: '0px 0px -40px 0px'
+        };
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0) scale(1)';
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Only apply scroll-reveal on pages tall enough to scroll
+        if (document.body.scrollHeight > window.innerHeight * 1.2) {
+            document.querySelectorAll('.main-grid > .card').forEach((card, i) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(24px) scale(0.96)';
+                card.style.transition = `opacity 0.5s ${i * 0.08}s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.5s ${i * 0.08}s cubic-bezier(0.25,0.46,0.45,0.94)`;
+                revealObserver.observe(card);
+            });
+        }
+
+        // --- Navbar Scroll Shadow ---
+        const navbar = document.querySelector('.navbar');
+        const container = document.querySelector('.app-container');
+        if (navbar && container) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 30) {
+                    navbar.style.borderBottom = '1px solid rgba(0,0,0,0.05)';
+                    navbar.style.paddingBottom = '12px';
+                } else {
+                    navbar.style.borderBottom = 'none';
+                    navbar.style.paddingBottom = '';
+                }
+            }, { passive: true });
+        }
+
+        // --- Keyboard shortcut: "/" to focus search ---
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+                e.preventDefault();
+                searchInput?.focus();
+            }
+        });
+
+        // --- Ripple effect for CTA button ---
+        const ctaBtn = document.getElementById('view-products-btn');
+        if (ctaBtn) {
+            ctaBtn.addEventListener('click', function(e) {
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+                ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255,255,255,0.4)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple-anim 0.6s ease-out';
+                ripple.style.pointerEvents = 'none';
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        }
+
+        // --- Tooltip on product thumbnails ---
+        document.querySelectorAll('.thumb-wrap').forEach(thumb => {
+            thumb.setAttribute('tabindex', '0');
+            thumb.setAttribute('role', 'button');
+        });
+
+    })();
+    </script>
+
+    <!-- Ripple keyframe (inline, since it's JS-triggered) -->
+    <style>
+    @keyframes ripple-anim {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+    </style>
+
 </body>
 </html>
