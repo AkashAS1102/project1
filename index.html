@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Nitec — Premium audio gear. Discover headphones, earbuds, and immersive sound experiences curated for audiophiles.">
-    <title>Nitec — Premium Audio Gear</title>
+    <meta name="description" content="Spidy — Premium audio gear crafted for audiophiles. Shop headphones, earbuds, and speakers with immersive sound quality.">
+    <title>Spidy — Premium Audio Gear</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -17,369 +17,768 @@
     <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
 
-    <!-- Favicon (inline data-uri for simplicity) -->
+    <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎧</text></svg>">
 </head>
 <body>
 
-    <!-- Ambient background blobs -->
-    <div class="page-background" aria-hidden="true"></div>
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scroll-progress"></div>
 
-    <div class="app-container">
+    <!-- Ambient Orbs -->
+    <div class="bg-orbs" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
 
-        <!-- ======== NAVIGATION ======== -->
-        <nav class="navbar" aria-label="Primary navigation">
-            <a href="#" class="logo" aria-label="Nitec home">
-                <!-- SVG Logo Mark -->
-                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <rect width="28" height="28" rx="7" fill="#1a1a1c"/>
-                    <text x="6" y="20" fill="white" font-family="Inter, sans-serif" font-size="16" font-weight="700">N</text>
-                </svg>
-                nitec.
-            </a>
+    <!-- ======== NAVIGATION ======== -->
+    <nav class="nav" id="main-nav" aria-label="Primary navigation">
+        <a href="#" class="nav-logo" aria-label="Spidy home">
+            <span class="nav-logo-icon">S</span>
+            spidy.
+        </a>
 
-            <div class="search-bar" role="search">
-                <input type="text" id="search-input" placeholder="Search products..." aria-label="Search products">
-                <button class="search-btn" aria-label="Search">
-                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-                </button>
-            </div>
+        <ul class="nav-links">
+            <li><a href="#products">Products</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#testimonials">Reviews</a></li>
+            <li><a href="#newsletter">Contact</a></li>
+        </ul>
 
-            <div class="nav-right">
-                <button class="icon-btn" aria-label="Shopping cart" id="cart-btn">
-                    <i class="fa-solid fa-bag-shopping" aria-hidden="true"></i>
-                </button>
-                <button class="icon-btn heart-btn" aria-label="Wishlist" id="wishlist-btn">
-                    <i class="fa-solid fa-heart" aria-hidden="true"></i>
-                </button>
-                <div class="user-profile" tabindex="0" role="button" aria-label="User profile menu">
-                    <span class="user-name">Ryman Alex</span>
-                    <img src="https://i.pravatar.cc/150?img=11" alt="Ryman Alex's avatar" class="avatar" loading="lazy">
+        <div class="nav-actions">
+            <!-- Theme Toggle -->
+            <button class="nav-btn" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+                <i class="fa-solid fa-sun"></i>
+            </button>
+
+            <!-- Search -->
+            <button class="nav-btn" id="search-toggle" aria-label="Search" title="Search (/)">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+
+            <!-- Cart -->
+            <button class="nav-btn" id="cart-btn" aria-label="Cart">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span class="badge" id="cart-badge">0</span>
+            </button>
+
+            <!-- User -->
+            <div class="nav-user" id="user-trigger" tabindex="0" role="button" aria-label="User menu">
+                <span class="nav-user-name">Ryman</span>
+                <img src="https://i.pravatar.cc/150?img=11" alt="User avatar" class="nav-user-avatar" loading="lazy">
+
+                <div class="user-dropdown" id="user-dropdown" role="menu">
+                    <a href="#" role="menuitem"><i class="fa-solid fa-user"></i> Profile</a>
+                    <a href="#" role="menuitem"><i class="fa-solid fa-box"></i> Orders</a>
+                    <a href="#" role="menuitem"><i class="fa-solid fa-gear"></i> Settings</a>
+                    <div class="sep"></div>
+                    <a href="#" role="menuitem" class="danger"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
                 </div>
             </div>
-        </nav>
 
-        <!-- ======== MAIN CONTENT GRID ======== -->
-        <main class="main-grid">
+            <!-- Hamburger -->
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
 
-            <!-- ——— Hero Section ——— -->
-            <section class="hero-section card" aria-label="Featured product">
-                <div class="hero-content">
-                    <span class="badge">
-                        <i class="fa-solid fa-music" aria-hidden="true"></i> Music is Classic
-                    </span>
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer-overlay" id="drawer-overlay"></div>
+    <div class="mobile-drawer" id="mobile-drawer">
+        <a href="#products"><i class="fa-solid fa-headphones"></i> Products</a>
+        <a href="#features"><i class="fa-solid fa-bolt"></i> Features</a>
+        <a href="#testimonials"><i class="fa-solid fa-star"></i> Reviews</a>
+        <a href="#newsletter"><i class="fa-solid fa-envelope"></i> Contact</a>
+        <a href="#"><i class="fa-solid fa-heart"></i> Wishlist</a>
+        <a href="#"><i class="fa-solid fa-bag-shopping"></i> Cart</a>
+        <a href="#"><i class="fa-solid fa-user"></i> Profile</a>
+    </div>
 
-                    <h1 class="hero-title">Sequoia Inspiring<br>Musico.</h1>
-
-                    <div class="hero-subtitle-container">
-                        <span class="number" aria-hidden="true">01</span>
-                        <span class="line" aria-hidden="true"></span>
-                        <div class="hero-text">
-                            <h2>Clear Sounds</h2>
-                            <p>Making your dream music come true — stay with Sequoia Sounds!</p>
-                        </div>
-                    </div>
-
-                    <button class="cta-btn" id="view-products-btn">
-                        View All Products
-                        <span class="arrow-circle" aria-hidden="true">
-                            <i class="fa-solid fa-arrow-up-right"></i>
-                        </span>
+    <!-- ======== HERO ======== -->
+    <section class="hero section" id="hero">
+        <div class="hero-inner">
+            <div class="hero-text">
+                <div class="hero-badge">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> New Collection 2026
+                </div>
+                <h1 class="hero-title">
+                    Sound That<br>Moves <span class="gradient">You.</span>
+                </h1>
+                <p class="hero-desc">
+                    Experience uncompromising audio clarity with Spidy's precision-engineered headphones. Crafted for those who hear every detail.
+                </p>
+                <div class="hero-actions">
+                    <button class="btn-primary" id="shop-now-btn">
+                        <i class="fa-solid fa-bag-shopping"></i> Shop Now
                     </button>
-
-                    <div class="social-links" aria-label="Social media links">
-                        <span>Follow us on:</span>
-                        <div class="social-icons">
-                            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-                            <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok" aria-hidden="true"></i></a>
-                            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram" aria-hidden="true"></i></a>
-                            <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
-                        </div>
+                    <button class="btn-secondary" id="explore-btn">
+                        <i class="fa-solid fa-play"></i> Watch Film
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="hero-stat-value" id="stat-downloads">0</span>
+                        <span class="hero-stat-label">Downloads</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-value" id="stat-rating">0</span>
+                        <span class="hero-stat-label">Avg. Rating</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-value" id="stat-products">0</span>
+                        <span class="hero-stat-label">Products</span>
                     </div>
                 </div>
+            </div>
 
-                <div class="hero-image-container">
+            <div class="hero-visual" id="hero-visual">
+                <!-- Floating review badge -->
+                <div class="hero-review-float">
+                    <div class="hero-review-stars">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <span class="hero-review-text"><strong>4.8</strong> from 2.4k reviews</span>
+                </div>
+
+                <div class="hero-product-ring" id="product-ring">
                     <img
                         src="https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=800"
-                        alt="Sequoia premium blue over-ear headphones"
-                        class="hero-headphones"
-                        loading="eager"
-                    >
-                    <div class="carousel-controls" aria-label="Product image navigation">
-                        <button class="arrow-btn left" aria-label="Previous image">
-                            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
-                        </button>
-                        <button class="arrow-btn right" aria-label="Next image">
-                            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ——— Popular Colors ——— -->
-            <section class="popular-colors card" aria-label="Available color options">
-                <h3>Popular Colors</h3>
-                <div class="colors" role="radiogroup" aria-label="Select a color">
-                    <button class="color-dot active" style="background:#4A90E2; box-shadow:0 4px 12px rgba(74,144,226,0.4)" aria-label="Ocean Blue" role="radio" aria-checked="true"></button>
-                    <button class="color-dot" style="background:#F5A623; box-shadow:0 4px 12px rgba(245,166,35,0.4)" aria-label="Sunset Orange" role="radio" aria-checked="false"></button>
-                    <button class="color-dot" style="background:#7ED321; box-shadow:0 4px 12px rgba(126,211,33,0.4)" aria-label="Lime Green" role="radio" aria-checked="false"></button>
-                    <button class="color-dot" style="background:#D0021B; box-shadow:0 4px 12px rgba(208,2,27,0.4)" aria-label="Cherry Red" role="radio" aria-checked="false"></button>
-                    <button class="color-dot" style="background:#50E3C2; box-shadow:0 4px 12px rgba(80,227,194,0.4)" aria-label="Mint Teal" role="radio" aria-checked="false"></button>
-                </div>
-            </section>
-
-            <!-- ——— New Gen X-Bud ——— -->
-            <section class="new-gen card" aria-label="New Gen X-Bud earbuds">
-                <div class="card-header">
-                    <h3>New Gen<br>X-Bud</h3>
-                    <a href="#" class="link-arrow" aria-label="Explore X-Bud earbuds">
-                        <i class="fa-solid fa-arrow-up-right" aria-hidden="true"></i>
-                    </a>
-                </div>
-                <div class="img-wrapper">
-                    <img
-                        src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=400"
-                        alt="New Gen X-Bud wireless earbuds in charging case"
-                        class="card-img"
-                        loading="lazy"
+                        alt="Spidy Sequoia premium headphones"
+                        class="hero-product-img"
+                        id="hero-product-img"
                     >
                 </div>
-            </section>
 
-            <!-- ——— Light Grey Surface Headphone ——— -->
-            <section class="light-grey-headphone card" aria-label="Light Grey Surface Headphone">
-                <a href="#" class="link-arrow top-right" aria-label="Explore Light Grey Surface Headphone">
-                    <i class="fa-solid fa-arrow-up-right" aria-hidden="true"></i>
-                </a>
-                <div class="img-wrapper-full">
-                    <img
-                        src="https://images.unsplash.com/photo-1628102491629-778571d893a3?auto=format&fit=crop&q=80&w=600"
-                        alt="Person wearing a VR headset and premium headphones"
-                        class="card-img-full"
-                        loading="lazy"
-                    >
-                </div>
-                <div class="card-content-bottom">
-                    <h3>Light Grey Surface<br>Headphone</h3>
-                    <p>Boosted with bass</p>
-                </div>
-            </section>
-
-            <!-- ——— More Products ——— -->
-            <section class="more-products card" aria-label="Browse more products">
-                <div class="header-row">
+                <!-- Floating price tag -->
+                <div class="hero-price-tag">
                     <div>
-                        <h3>More Products</h3>
-                        <p>460 plus items.</p>
+                        <span class="price-now">$299</span>
+                        <span class="price-was">$399</span>
                     </div>
-                    <button class="icon-btn heart-btn small" aria-label="Save all products">
-                        <i class="fa-solid fa-heart" aria-hidden="true"></i>
-                    </button>
+                    <span class="price-save">Save 25%</span>
                 </div>
-                <div class="product-thumbs">
-                    <div class="thumb-wrap">
-                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=200" alt="Headphones on yellow background" loading="lazy">
-                    </div>
-                    <div class="thumb-wrap">
-                        <img src="https://images.unsplash.com/photo-1572569433602-66b40264440b?auto=format&fit=crop&q=80&w=200" alt="White wireless earbuds" loading="lazy">
-                    </div>
-                    <div class="thumb-wrap">
-                        <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&q=80&w=200" alt="Over-ear studio headphones" loading="lazy">
-                    </div>
-                </div>
-            </section>
+            </div>
+        </div>
+    </section>
 
-            <!-- ——— 5m+ Downloads / Stats ——— -->
-            <section class="downloads-stats card" aria-label="Download statistics">
-                <div class="avatars-group">
-                    <img src="https://i.pravatar.cc/150?img=33" alt="User review" loading="lazy">
-                    <img src="https://i.pravatar.cc/150?img=47" alt="User review" loading="lazy">
-                    <img src="https://i.pravatar.cc/150?img=12" alt="User review" loading="lazy">
-                </div>
-                <div class="stats-circle">
-                    <h2>5m+</h2>
-                    <p>Downloads</p>
-                </div>
-                <div class="rating">
-                    <i class="fa-solid fa-star" aria-hidden="true"></i> 4.6 reviews
-                </div>
-            </section>
+    <!-- ======== PRODUCTS ======== -->
+    <section class="products-section section" id="products">
+        <div class="products-header reveal">
+            <div>
+                <span class="section-label"><span class="dot"></span> Our Collection</span>
+                <h2 class="section-heading">Explore Products</h2>
+                <p class="section-sub">Handcrafted audio gear designed for every moment — studio sessions, commutes, or quiet evenings.</p>
+            </div>
+            <div class="products-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="headphones">Headphones</button>
+                <button class="filter-btn" data-filter="earbuds">Earbuds</button>
+                <button class="filter-btn" data-filter="speakers">Speakers</button>
+            </div>
+        </div>
 
-            <!-- ——— Listening Has Been Released ——— -->
-            <section class="listening-released card" aria-label="New product announcement">
-                <div class="header-row">
-                    <span class="badge">
-                        <i class="fa-solid fa-heart" style="color:#ff4757; font-size:10px;" aria-hidden="true"></i>
-                        Popular
-                    </span>
-                    <a href="#" class="link-arrow" aria-label="Explore popular products">
-                        <i class="fa-solid fa-arrow-up-right" aria-hidden="true"></i>
-                    </a>
-                </div>
-                <div class="content-split">
-                    <div class="text-side">
-                        <h3>Listening Has<br>Been Released</h3>
-                        <div class="mini-thumbs">
-                            <div class="mini-thumb-wrap">
-                                <img src="https://images.unsplash.com/photo-1511300636408-a63a89df3482?auto=format&fit=crop&q=80&w=100" alt="Product preview" loading="lazy">
-                            </div>
-                            <div class="mini-thumb-wrap">
-                                <img src="https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&q=80&w=100" alt="Product preview" loading="lazy">
-                            </div>
-                            <div class="mini-thumb-wrap">
-                                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=100" alt="Product preview" loading="lazy">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="img-side">
-                        <img
-                            src="https://images.unsplash.com/photo-1520170350707-b2da59970118?auto=format&fit=crop&q=80&w=300"
-                            alt="Featured listening device"
-                            class="side-img"
-                            loading="lazy"
-                        >
-                        <div class="rating-badge">
-                            <i class="fa-solid fa-star" aria-hidden="true"></i> 4.7
+        <div class="products-grid reveal-stagger" id="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card" data-category="headphones">
+                <div class="product-img-wrap">
+                    <span class="product-tag new">New</span>
+                    <img src="https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=500" alt="Sequoia Pro headphones" loading="lazy">
+                    <div class="product-actions-overlay">
+                        <div class="action-btns">
+                            <button class="add-cart-btn" data-name="Sequoia Pro" data-price="299"><i class="fa-solid fa-bag-shopping"></i> Add to Cart</button>
+                            <button class="wish-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
                         </div>
                     </div>
                 </div>
-            </section>
+                <div class="product-info">
+                    <h3 class="product-name">Sequoia Pro</h3>
+                    <p class="product-category">Over-Ear Headphones</p>
+                    <div class="product-bottom">
+                        <span class="product-price">$299 <span class="old">$399</span></span>
+                        <span class="product-rating"><i class="fa-solid fa-star"></i> 4.8</span>
+                    </div>
+                    <div class="product-colors">
+                        <span class="product-color active" style="background:#4A90E2" title="Ocean Blue"></span>
+                        <span class="product-color" style="background:#1a1a1c" title="Matte Black"></span>
+                        <span class="product-color" style="background:#f5f5f0" title="Ivory White"></span>
+                    </div>
+                </div>
+            </div>
 
-        </main>
-    </div>
+            <!-- Product 2 -->
+            <div class="product-card" data-category="earbuds">
+                <div class="product-img-wrap">
+                    <span class="product-tag sale">-30%</span>
+                    <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=500" alt="X-Bud wireless earbuds" loading="lazy">
+                    <div class="product-actions-overlay">
+                        <div class="action-btns">
+                            <button class="add-cart-btn" data-name="X-Bud Pro" data-price="179"><i class="fa-solid fa-bag-shopping"></i> Add to Cart</button>
+                            <button class="wish-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">X-Bud Pro</h3>
+                    <p class="product-category">Wireless Earbuds</p>
+                    <div class="product-bottom">
+                        <span class="product-price">$179 <span class="old">$249</span></span>
+                        <span class="product-rating"><i class="fa-solid fa-star"></i> 4.6</span>
+                    </div>
+                    <div class="product-colors">
+                        <span class="product-color active" style="background:#1a1a1c" title="Charcoal"></span>
+                        <span class="product-color" style="background:#f5f5f0" title="Pearl White"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card" data-category="headphones">
+                <div class="product-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=500" alt="Studio Max headphones" loading="lazy">
+                    <div class="product-actions-overlay">
+                        <div class="action-btns">
+                            <button class="add-cart-btn" data-name="Studio Max" data-price="349"><i class="fa-solid fa-bag-shopping"></i> Add to Cart</button>
+                            <button class="wish-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">Studio Max</h3>
+                    <p class="product-category">Studio Headphones</p>
+                    <div class="product-bottom">
+                        <span class="product-price">$349</span>
+                        <span class="product-rating"><i class="fa-solid fa-star"></i> 4.9</span>
+                    </div>
+                    <div class="product-colors">
+                        <span class="product-color active" style="background:#F5A623" title="Gold"></span>
+                        <span class="product-color" style="background:#1a1a1c" title="Midnight"></span>
+                        <span class="product-color" style="background:#D0021B" title="Racing Red"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card" data-category="speakers">
+                <div class="product-img-wrap">
+                    <span class="product-tag">Hot</span>
+                    <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=500" alt="Pulse portable speaker" loading="lazy">
+                    <div class="product-actions-overlay">
+                        <div class="action-btns">
+                            <button class="add-cart-btn" data-name="Pulse Speaker" data-price="199"><i class="fa-solid fa-bag-shopping"></i> Add to Cart</button>
+                            <button class="wish-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">Pulse Speaker</h3>
+                    <p class="product-category">Portable Speaker</p>
+                    <div class="product-bottom">
+                        <span class="product-price">$199</span>
+                        <span class="product-rating"><i class="fa-solid fa-star"></i> 4.7</span>
+                    </div>
+                    <div class="product-colors">
+                        <span class="product-color active" style="background:#50E3C2" title="Teal"></span>
+                        <span class="product-color" style="background:#8b5cf6" title="Violet"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== FEATURES ======== -->
+    <section class="features-section section" id="features">
+        <div class="reveal">
+            <span class="section-label"><span class="dot"></span> Why Spidy</span>
+            <h2 class="section-heading">Built Different</h2>
+            <p class="section-sub">Every detail is engineered for the ultimate listening experience.</p>
+        </div>
+
+        <div class="features-grid reveal-stagger">
+            <div class="feature-card">
+                <div class="feature-icon cyan">
+                    <i class="fa-solid fa-truck-fast"></i>
+                </div>
+                <h3>Free Shipping</h3>
+                <p>Complimentary worldwide delivery on every order over $50. Fast and fully tracked.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon violet">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3>2-Year Warranty</h3>
+                <p>Full coverage on all products. We stand behind every headphone we make.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon green">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </div>
+                <h3>30-Day Returns</h3>
+                <p>Not in love? Send it back within 30 days, no questions asked. Full refund.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon amber">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <h3>24/7 Support</h3>
+                <p>Our audio experts are always available via chat, email, or phone — anytime.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== TESTIMONIALS ======== -->
+    <section class="testimonials-section section" id="testimonials">
+        <div class="reveal">
+            <span class="section-label" style="justify-content:center"><span class="dot"></span> Testimonials</span>
+            <h2 class="section-heading">Loved by Thousands</h2>
+            <p class="section-sub" style="text-align:center;margin-left:auto;margin-right:auto;">Hear what real customers have to say about their Spidy experience.</p>
+        </div>
+
+        <div class="testimonials-grid reveal-stagger">
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="testimonial-text">"The <em>noise cancellation is unreal</em>. I use the Sequoia Pro in the studio daily — crystal clear mids and the bass never muddies the mix. Best investment I've made."</p>
+                <div class="testimonial-author">
+                    <img src="https://i.pravatar.cc/150?img=32" alt="Sarah Chen" class="testimonial-avatar" loading="lazy">
+                    <div>
+                        <div class="testimonial-author-name">Sarah Chen</div>
+                        <div class="testimonial-author-role">Music Producer, LA</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <p class="testimonial-text">"Wore these for a <em>12-hour mixing session</em> and forgot they were on. The comfort is insane and they look absolutely stunning. Worth every single penny."</p>
+                <div class="testimonial-author">
+                    <img src="https://i.pravatar.cc/150?img=68" alt="Marcus Johnson" class="testimonial-avatar" loading="lazy">
+                    <div>
+                        <div class="testimonial-author-name">Marcus Johnson</div>
+                        <div class="testimonial-author-role">Audio Engineer</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                </div>
+                <p class="testimonial-text">"The X-Bud Pro earbuds are my daily driver. <em>Battery lasts forever</em>, bass hits perfectly, and pairing is instant. Finally ditched my old ones for good."</p>
+                <div class="testimonial-author">
+                    <img src="https://i.pravatar.cc/150?img=25" alt="Emily Park" class="testimonial-avatar" loading="lazy">
+                    <div>
+                        <div class="testimonial-author-name">Emily Park</div>
+                        <div class="testimonial-author-role">Podcast Host</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== NEWSLETTER CTA ======== -->
+    <section class="cta-section section" id="newsletter">
+        <div class="cta-box reveal">
+            <span class="section-label" style="justify-content:center"><span class="dot"></span> Stay Updated</span>
+            <h2 class="section-heading">Get Exclusive Drops</h2>
+            <p class="section-sub">Be the first to know about new releases, limited editions, and members-only offers.</p>
+            <form class="newsletter-form" id="newsletter-form" aria-label="Newsletter signup">
+                <input type="email" placeholder="Enter your email" aria-label="Email address" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- ======== FOOTER ======== -->
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="#" class="nav-logo">
+                    <span class="nav-logo-icon">S</span>
+                    spidy.
+                </a>
+                <p>Premium audio gear crafted for those who demand the best listening experience.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Products</h4>
+                <a href="#">Headphones</a>
+                <a href="#">Earbuds</a>
+                <a href="#">Speakers</a>
+                <a href="#">Accessories</a>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <a href="#">About Us</a>
+                <a href="#">Careers</a>
+                <a href="#">Press Kit</a>
+                <a href="#">Blog</a>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <a href="#">Help Center</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Returns</a>
+                <a href="#">Warranty</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Spidy Audio. All rights reserved.</p>
+            <div class="footer-bottom-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Cookies</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div class="toast-wrap" id="toast-wrap" aria-live="polite"></div>
 
     <!-- ======== JAVASCRIPT ======== -->
     <script>
     (function() {
         'use strict';
 
-        // --- Color Picker Interaction ---
-        const colorDots = document.querySelectorAll('.color-dot');
-        colorDots.forEach(dot => {
-            dot.addEventListener('click', () => {
-                colorDots.forEach(d => {
-                    d.classList.remove('active');
-                    d.setAttribute('aria-checked', 'false');
-                });
-                dot.classList.add('active');
-                dot.setAttribute('aria-checked', 'true');
-            });
+        /* ========================================
+           TOAST SYSTEM
+           ======================================== */
+        function toast(msg, type = 'success', ms = 3000) {
+            const wrap = document.getElementById('toast-wrap');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            const icons = { success: 'fa-circle-check', error: 'fa-circle-xmark', info: 'fa-circle-info' };
+            el.innerHTML = `<i class="fa-solid ${icons[type] || icons.info}"></i> ${msg}`;
+            wrap.appendChild(el);
+            setTimeout(() => {
+                el.classList.add('out');
+                setTimeout(() => el.remove(), 300);
+            }, ms);
+        }
+
+        /* ========================================
+           THEME TOGGLE (dark/light)
+           ======================================== */
+        const themeBtn = document.getElementById('theme-toggle');
+        const themeIcon = themeBtn?.querySelector('i');
+
+        function applyTheme(light) {
+            document.body.classList.toggle('light-mode', light);
+            if (themeIcon) {
+                themeIcon.className = light ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+            }
+        }
+
+        // Init from localStorage
+        const savedLight = localStorage.getItem('spidy-light') === 'true';
+        applyTheme(savedLight);
+
+        themeBtn?.addEventListener('click', () => {
+            const goLight = !document.body.classList.contains('light-mode');
+            localStorage.setItem('spidy-light', goLight);
+            applyTheme(goLight);
+            toast(goLight ? 'Light mode enabled' : 'Dark mode enabled', 'info', 2000);
         });
 
-        // --- Search Bar Enhancement ---
-        const searchInput = document.getElementById('search-input');
-        const searchBar = searchInput?.closest('.search-bar');
-        if (searchInput && searchBar) {
-            searchInput.addEventListener('focus', () => searchBar.classList.add('focused'));
-            searchInput.addEventListener('blur', () => searchBar.classList.remove('focused'));
-        }
+        /* ========================================
+           SCROLL PROGRESS BAR
+           ======================================== */
+        const progressBar = document.getElementById('scroll-progress');
+        window.addEventListener('scroll', () => {
+            const h = document.documentElement.scrollHeight - window.innerHeight;
+            if (progressBar && h > 0) {
+                progressBar.style.width = ((window.scrollY / h) * 100) + '%';
+            }
+        }, { passive: true });
 
-        // --- Wishlist / Cart Button Toggle ---
-        document.querySelectorAll('.icon-btn.heart-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                this.classList.toggle('liked');
-                const icon = this.querySelector('i');
-                if (this.classList.contains('liked')) {
-                    icon.classList.replace('fa-solid', 'fa-regular');
-                    // Tiny bounce
-                    this.style.transform = 'scale(1.3)';
-                    setTimeout(() => this.style.transform = '', 200);
-                } else {
-                    icon.classList.replace('fa-regular', 'fa-solid');
-                }
-            });
+        /* ========================================
+           STICKY NAV GLASS
+           ======================================== */
+        const nav = document.getElementById('main-nav');
+        window.addEventListener('scroll', () => {
+            if (nav) nav.classList.toggle('scrolled', window.scrollY > 50);
+        }, { passive: true });
+
+        /* ========================================
+           USER DROPDOWN
+           ======================================== */
+        const userTrigger = document.getElementById('user-trigger');
+        const userDrop = document.getElementById('user-dropdown');
+
+        userTrigger?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDrop?.classList.toggle('open');
         });
 
-        // --- Scroll-Reveal for Cards ---
-        const observerOptions = {
-            threshold: 0.12,
-            rootMargin: '0px 0px -40px 0px'
-        };
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#user-trigger')) userDrop?.classList.remove('open');
+        });
 
-        const revealObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0) scale(1)';
-                    revealObserver.unobserve(entry.target);
-                }
-            });
-        }, observerOptions);
+        /* ========================================
+           MOBILE DRAWER
+           ======================================== */
+        const hamburger = document.getElementById('hamburger');
+        const drawer = document.getElementById('mobile-drawer');
+        const overlay = document.getElementById('drawer-overlay');
 
-        // Only apply scroll-reveal on pages tall enough to scroll
-        if (document.body.scrollHeight > window.innerHeight * 1.2) {
-            document.querySelectorAll('.main-grid > .card').forEach((card, i) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(24px) scale(0.96)';
-                card.style.transition = `opacity 0.5s ${i * 0.08}s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.5s ${i * 0.08}s cubic-bezier(0.25,0.46,0.45,0.94)`;
-                revealObserver.observe(card);
-            });
+        function openDrawer() {
+            drawer?.classList.add('open');
+            overlay?.classList.add('open');
+            hamburger?.classList.add('open');
+            document.body.style.overflow = 'hidden';
         }
 
-        // --- Navbar Scroll Shadow ---
-        const navbar = document.querySelector('.navbar');
-        const container = document.querySelector('.app-container');
-        if (navbar && container) {
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 30) {
-                    navbar.style.borderBottom = '1px solid rgba(0,0,0,0.05)';
-                    navbar.style.paddingBottom = '12px';
-                } else {
-                    navbar.style.borderBottom = 'none';
-                    navbar.style.paddingBottom = '';
-                }
-            }, { passive: true });
+        function closeDrawer() {
+            drawer?.classList.remove('open');
+            overlay?.classList.remove('open');
+            hamburger?.classList.remove('open');
+            document.body.style.overflow = '';
         }
 
-        // --- Keyboard shortcut: "/" to focus search ---
+        hamburger?.addEventListener('click', () => {
+            drawer?.classList.contains('open') ? closeDrawer() : openDrawer();
+        });
+
+        overlay?.addEventListener('click', closeDrawer);
+
+        // Close drawer when clicking a link
+        drawer?.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', closeDrawer);
+        });
+
+        /* ========================================
+           KEYBOARD SHORTCUTS
+           ======================================== */
         document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeDrawer();
+                userDrop?.classList.remove('open');
+            }
             if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
                 e.preventDefault();
-                searchInput?.focus();
+                toast('Search coming soon!', 'info', 2000);
             }
         });
 
-        // --- Ripple effect for CTA button ---
-        const ctaBtn = document.getElementById('view-products-btn');
-        if (ctaBtn) {
-            ctaBtn.addEventListener('click', function(e) {
-                const ripple = document.createElement('span');
-                const rect = this.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                ripple.style.width = ripple.style.height = size + 'px';
-                ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
-                ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
-                ripple.style.position = 'absolute';
-                ripple.style.borderRadius = '50%';
-                ripple.style.background = 'rgba(255,255,255,0.4)';
-                ripple.style.transform = 'scale(0)';
-                ripple.style.animation = 'ripple-anim 0.6s ease-out';
-                ripple.style.pointerEvents = 'none';
-                this.style.position = 'relative';
-                this.style.overflow = 'hidden';
-                this.appendChild(ripple);
-                setTimeout(() => ripple.remove(), 600);
-            });
+        /* ========================================
+           HERO PARALLAX
+           ======================================== */
+        const heroVisual = document.getElementById('hero-visual');
+        const heroImg = document.getElementById('hero-product-img');
+
+        heroVisual?.addEventListener('mousemove', (e) => {
+            const rect = heroVisual.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            if (heroImg) {
+                heroImg.style.transform = `translateY(${y * -20}px) translateX(${x * 15}px) rotateY(${x * 8}deg) rotateX(${-y * 5}deg)`;
+            }
+        });
+
+        heroVisual?.addEventListener('mouseleave', () => {
+            if (heroImg) heroImg.style.transform = '';
+        });
+
+        /* ========================================
+           COUNTER ANIMATION
+           ======================================== */
+        function animateValue(el, end, suffix = '', duration = 2000) {
+            const start = performance.now();
+            function tick(now) {
+                const p = Math.min((now - start) / duration, 1);
+                const eased = 1 - Math.pow(1 - p, 3);
+                const isFloat = String(end).includes('.');
+                const val = isFloat
+                    ? (eased * end).toFixed(1)
+                    : Math.round(eased * end);
+                el.textContent = val + suffix;
+                if (p < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
         }
 
-        // --- Tooltip on product thumbnails ---
-        document.querySelectorAll('.thumb-wrap').forEach(thumb => {
-            thumb.setAttribute('tabindex', '0');
-            thumb.setAttribute('role', 'button');
+        let statsAnimated = false;
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !statsAnimated) {
+                    statsAnimated = true;
+                    const dl = document.getElementById('stat-downloads');
+                    const rt = document.getElementById('stat-rating');
+                    const pr = document.getElementById('stat-products');
+                    if (dl) animateValue(dl, 5, 'M+', 2000);
+                    if (rt) animateValue(rt, 4.8, '', 1800);
+                    if (pr) animateValue(pr, 460, '+', 2200);
+                    statsObserver.disconnect();
+                }
+            });
+        }, { threshold: 0.3 });
+
+        const heroStats = document.querySelector('.hero-stats');
+        if (heroStats) statsObserver.observe(heroStats);
+
+        /* ========================================
+           PRODUCT FILTERS
+           ======================================== */
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const productCards = document.querySelectorAll('.product-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+
+                productCards.forEach(card => {
+                    const cat = card.dataset.category;
+                    const show = filter === 'all' || cat === filter;
+                    card.style.display = show ? '' : 'none';
+                    if (show) {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(12px)';
+                        requestAnimationFrame(() => {
+                            card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        });
+                    }
+                });
+
+                toast(`Showing: ${btn.textContent}`, 'info', 1500);
+            });
+        });
+
+        /* ========================================
+           CART SYSTEM
+           ======================================== */
+        let cartCount = 0;
+        const cartBadge = document.getElementById('cart-badge');
+
+        function updateBadge() {
+            if (!cartBadge) return;
+            cartBadge.textContent = cartCount;
+            cartBadge.classList.toggle('visible', cartCount > 0);
+            cartBadge.classList.remove('pop');
+            void cartBadge.offsetWidth;
+            cartBadge.classList.add('pop');
+        }
+
+        document.querySelectorAll('.add-cart-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const name = this.dataset.name;
+                cartCount++;
+                updateBadge();
+
+                // Button feedback
+                const orig = this.innerHTML;
+                this.classList.add('added');
+                this.innerHTML = '<i class="fa-solid fa-check"></i> Added!';
+
+                setTimeout(() => {
+                    this.classList.remove('added');
+                    this.innerHTML = orig;
+                }, 1400);
+
+                toast(`${name} added to cart`, 'success');
+            });
+        });
+
+        document.getElementById('cart-btn')?.addEventListener('click', () => {
+            toast(`${cartCount} item${cartCount !== 1 ? 's' : ''} in your cart`, 'info');
+        });
+
+        /* ========================================
+           WISHLIST TOGGLES
+           ======================================== */
+        document.querySelectorAll('.wish-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.classList.toggle('liked');
+                const icon = this.querySelector('i');
+                const isLiked = this.classList.contains('liked');
+                icon.className = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+                this.style.transform = 'scale(1.3)';
+                setTimeout(() => this.style.transform = '', 250);
+                toast(isLiked ? 'Added to wishlist ❤️' : 'Removed from wishlist', isLiked ? 'success' : 'info', 2000);
+            });
+        });
+
+        /* ========================================
+           PRODUCT COLOR PICKER
+           ======================================== */
+        document.querySelectorAll('.product-colors').forEach(container => {
+            container.querySelectorAll('.product-color').forEach(dot => {
+                dot.addEventListener('click', () => {
+                    container.querySelectorAll('.product-color').forEach(d => d.classList.remove('active'));
+                    dot.classList.add('active');
+                });
+            });
+        });
+
+        /* ========================================
+           NEWSLETTER
+           ======================================== */
+        document.getElementById('newsletter-form')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = e.target.querySelector('input');
+            if (input?.value) {
+                toast('Subscribed! Welcome aboard 🎉', 'success');
+                input.value = '';
+            }
+        });
+
+        /* ========================================
+           CTA BUTTONS
+           ======================================== */
+        document.getElementById('shop-now-btn')?.addEventListener('click', () => {
+            document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        document.getElementById('explore-btn')?.addEventListener('click', () => {
+            toast('Film coming soon — stay tuned!', 'info', 2500);
+        });
+
+        document.getElementById('search-toggle')?.addEventListener('click', () => {
+            toast('Search coming soon!', 'info', 2000);
+        });
+
+        /* ========================================
+           SCROLL REVEAL (IntersectionObserver)
+           ======================================== */
+        const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
+        const revealObs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    revealObs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        revealEls.forEach(el => revealObs.observe(el));
+
+        /* ========================================
+           LAZY IMAGE FADE-IN
+           ======================================== */
+        document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+            if (!img.complete) {
+                img.style.opacity = '0';
+                img.style.transition = 'opacity 0.5s ease';
+                img.addEventListener('load', () => { img.style.opacity = '1'; });
+            }
         });
 
     })();
     </script>
-
-    <!-- Ripple keyframe (inline, since it's JS-triggered) -->
-    <style>
-    @keyframes ripple-anim {
-        to {
-            transform: scale(4);
-            opacity: 0;
-        }
-    }
-    </style>
 
 </body>
 </html>
