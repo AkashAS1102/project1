@@ -32,6 +32,9 @@
         <div class="orb orb-3"></div>
     </div>
 
+    <!-- Glass Noise Texture -->
+    <div class="glass-noise" aria-hidden="true"></div>
+
     <!-- ======== NAVIGATION ======== -->
     <nav class="nav" id="main-nav" aria-label="Primary navigation">
         <a href="#" class="nav-logo" aria-label="Spidy home">
@@ -166,6 +169,29 @@
             </div>
         </div>
     </section>
+
+    <!-- ======== TRUST MARQUEE ======== -->
+    <div class="trust-marquee" aria-hidden="true">
+        <div class="trust-marquee-track">
+            <span class="trust-marquee-item"><i class="fa-solid fa-award"></i> Grammy Award Winner</span>
+            <span class="trust-marquee-item"><i class="fa-solid fa-headphones"></i> 5M+ Happy Listeners</span>
+            <span class="trust-marquee-item"><i class="fa-solid fa-star"></i> #1 Audio Brand 2026</span>
+            <span class="trust-marquee-item"><i class="fa-solid fa-certificate"></i> Hi-Res Audio Certified</span>
+            <span class="trust-marquee-item"><i class="fa-solid fa-trophy"></i> Red Dot Design Award</span>
+            <span class="trust-marquee-item"><i class="fa-solid fa-globe"></i> Available in 50+ Countries</span>
+            <span class="trust-marquee-item"><i class="fa-solid fa-leaf"></i> Carbon Neutral</span>
+            <span class="trust-marquee-item"><i class="fa-solid fa-shield-halved"></i> 2-Year Global Warranty</span>
+            <!-- Duplicate for seamless loop -->
+            <span class="trust-marquee-item"><i class="fa-solid fa-award"></i> Grammy Award Winner</span>
+            <span class="trust-marquee-item"><i class="fa-solid fa-headphones"></i> 5M+ Happy Listeners</span>
+            <span class="trust-marquee-item"><i class="fa-solid fa-star"></i> #1 Audio Brand 2026</span>
+            <span class="trust-marquee-item"><i class="fa-solid fa-certificate"></i> Hi-Res Audio Certified</span>
+            <span class="trust-marquee-item"><i class="fa-solid fa-trophy"></i> Red Dot Design Award</span>
+            <span class="trust-marquee-item"><i class="fa-solid fa-globe"></i> Available in 50+ Countries</span>
+            <span class="trust-marquee-item"><i class="fa-solid fa-leaf"></i> Carbon Neutral</span>
+            <span class="trust-marquee-item"><i class="fa-solid fa-shield-halved"></i> 2-Year Global Warranty</span>
+        </div>
+    </div>
 
     <!-- ======== PRODUCTS ======== -->
     <section class="products-section section" id="products">
@@ -442,6 +468,11 @@
             </div>
         </div>
     </footer>
+
+    <!-- Back to Top -->
+    <button class="back-to-top" id="back-to-top" aria-label="Back to top" title="Back to top">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
 
     <!-- Toast Container -->
     <div class="toast-wrap" id="toast-wrap" aria-live="polite"></div>
@@ -775,6 +806,18 @@
                 img.style.transition = 'opacity 0.5s ease';
                 img.addEventListener('load', () => { img.style.opacity = '1'; });
             }
+        });
+
+        /* ========================================
+           BACK TO TOP
+           ======================================== */
+        const backToTop = document.getElementById('back-to-top');
+        window.addEventListener('scroll', () => {
+            if (backToTop) backToTop.classList.toggle('visible', window.scrollY > 600);
+        }, { passive: true });
+
+        backToTop?.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
 
     })();
