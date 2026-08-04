@@ -1622,34 +1622,35 @@ img { max-width: 100%; display: block; }
 .light-mode ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
 
 /* ============================================
-   SCROLL REVEAL
+   SCROLL REVEAL (UPGRADED)
    ============================================ */
 .reveal {
     opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+    transform: translateY(40px) scale(0.98);
+    clip-path: inset(10% 0 0 0);
+    transition: opacity 0.8s var(--spring), transform 0.8s var(--spring), clip-path 0.8s var(--spring);
 }
 
 .reveal.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+    clip-path: inset(0 0 0 0);
 }
 
-/* stagger children */
 .reveal-stagger > * {
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+    transform: translateY(40px) perspective(1000px) rotateX(-10deg);
+    transition: opacity 0.8s var(--spring), transform 0.8s var(--spring);
 }
 
-.reveal-stagger.visible > *:nth-child(1) { transition-delay: 0s; }
-.reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.08s; }
-.reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.16s; }
-.reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.24s; }
+.reveal-stagger.visible > *:nth-child(1) { transition-delay: 0.0s; }
+.reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.1s; }
+.reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.2s; }
+.reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.3s; }
 
 .reveal-stagger.visible > * {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) perspective(1000px) rotateX(0);
 }
 
 /* ============================================
@@ -1752,4 +1753,105 @@ img { max-width: 100%; display: block; }
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+}
+
+/* ============================================
+   PRELOADER
+   ============================================ */
+.preloader {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-primary);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.8s cubic-bezier(0.8, 0, 0.2, 1), visibility 0.8s;
+}
+
+.preloader.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-logo {
+    width: 64px;
+    height: 64px;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+    box-shadow: var(--glass-shadow), var(--glass-glow-accent);
+    animation: loader-pulse 2s infinite var(--spring);
+}
+
+@keyframes loader-pulse {
+    0%, 100% { transform: scale(1); box-shadow: var(--glass-shadow), 0 0 20px rgba(0,212,255,0.1); }
+    50% { transform: scale(1.1); box-shadow: var(--glass-shadow), 0 0 50px rgba(0,212,255,0.4); }
+}
+
+/* ============================================
+   CUSTOM CURSOR
+   ============================================ */
+body.has-custom-cursor {
+    cursor: none;
+}
+
+body.has-custom-cursor a,
+body.has-custom-cursor button,
+body.has-custom-cursor input {
+    cursor: none;
+}
+
+.custom-cursor {
+    position: fixed;
+    top: 0; left: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.8);
+    mix-blend-mode: difference;
+    pointer-events: none;
+    z-index: 100000;
+    transform: translate3d(0, 0, 0);
+    margin: -10px 0 0 -10px; /* Center */
+    transition: width 0.3s var(--spring), height 0.3s var(--spring), background 0.3s var(--ease), margin 0.3s var(--spring);
+    will-change: transform;
+}
+
+.custom-cursor.hover {
+    width: 60px;
+    height: 60px;
+    margin: -30px 0 0 -30px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.3);
+    mix-blend-mode: normal;
+}
+
+/* ============================================
+   CART PARTICLE
+   ============================================ */
+.cart-particle {
+    position: fixed;
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    font-size: 0.8rem;
+    z-index: 9999;
+    pointer-events: none;
+    box-shadow: 0 0 20px var(--accent);
+    transition: transform 0.8s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.8s ease-in;
+    margin: -16px 0 0 -16px;
 }

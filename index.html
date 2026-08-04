@@ -22,6 +22,14 @@
 </head>
 <body>
 
+    <!-- Preloader -->
+    <div id="preloader" class="preloader">
+        <div class="loader-logo">S</div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div id="custom-cursor" class="custom-cursor"></div>
+
     <!-- Scroll Progress -->
     <div class="scroll-progress" id="scroll-progress"></div>
 
@@ -818,6 +826,116 @@
 
         backToTop?.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        /* ========================================
+           PRELOADER
+           ======================================== */
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                setTimeout(() => {
+                    preloader.classList.add('fade-out');
+                    setTimeout(() => preloader.remove(), 800);
+                }, 500); // minimum artificial delay for premium feel
+            }
+        });
+
+        /* ========================================
+           CUSTOM MAGNETIC CURSOR
+           ======================================== */
+        const cursor = document.getElementById('custom-cursor');
+        let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
+        let isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+        if (!isTouchDevice && cursor) {
+            document.body.classList.add('has-custom-cursor');
+            
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            // Smooth spring animation for cursor
+            function animateCursor() {
+                const dx = mouseX - cursorX;
+                const dy = mouseY - cursorY;
+                cursorX += dx * 0.2;
+                cursorY += dy * 0.2;
+                
+                cursor.style.transform = `translate3d(${cursorX}px, ${cursorY}px, 0)`;
+                requestAnimationFrame(animateCursor);
+            }
+            requestAnimationFrame(animateCursor);
+
+            // Magnetic hover states
+            const interactables = document.querySelectorAll('a, button, .nav-logo, .product-color, .nav-user');
+            interactables.forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+            });
+            
+            // Hide on leaving window
+            document.addEventListener('mouseleave', () => cursor.style.opacity = '0');
+            document.addEventListener('mouseenter', () => cursor.style.opacity = '1');
+        } else if (cursor) {
+            cursor.style.display = 'none';
+        }
+
+        /* ========================================
+           BACKGROUND PARALLAX
+           ======================================== */
+        const orbs = document.querySelectorAll('.orb');
+        window.addEventListener('scroll', () => {
+            if (!isTouchDevice) {
+                const scrolled = window.scrollY;
+                orbs.forEach((orb, index) => {
+                    const speed = (index + 1) * 0.15;
+                    orb.style.transform = `translateY(${scrolled * speed}px)`;
+                });
+            }
+        }, { passive: true });
+
+        /* ========================================
+           CART PARTICLE EFFECT (Overriding previous logic)
+           ======================================== */
+        document.querySelectorAll('.add-cart-btn').forEach(btn => {
+            // Remove previous click listeners if possible, but since they are anonymous, 
+            // we will just add the particle effect on top.
+            btn.addEventListener('click', function(e) {
+                if (isTouchDevice) return; // Skip complex animation on mobile
+                
+                const cartIcon = document.getElementById('cart-btn');
+                if (!cartIcon) return;
+
+                const rect = this.getBoundingClientRect();
+                const cartRect = cartIcon.getBoundingClientRect();
+                
+                const particle = document.createElement('div');
+                particle.className = 'cart-particle';
+                particle.innerHTML = '<i class="fa-solid fa-headphones"></i>';
+                
+                // Start position (center of button)
+                const startX = rect.left + rect.width / 2;
+                const startY = rect.top + rect.height / 2;
+                
+                // End position (center of cart icon)
+                const endX = cartRect.left + cartRect.width / 2;
+                const endY = cartRect.top + cartRect.height / 2;
+
+                particle.style.left = `${startX}px`;
+                particle.style.top = `${startY}px`;
+                
+                document.body.appendChild(particle);
+
+                // Animate
+                requestAnimationFrame(() => {
+                    particle.style.transform = `translate(${endX - startX}px, ${endY - startY}px) scale(0.2)`;
+                    particle.style.opacity = '0';
+                });
+
+                setTimeout(() => particle.remove(), 800);
+            });
         });
 
     })();
