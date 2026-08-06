@@ -9,7 +9,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -871,8 +871,26 @@
             // Magnetic hover states
             const interactables = document.querySelectorAll('a, button, .nav-logo, .product-color, .nav-user');
             interactables.forEach(el => {
-                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+                el.addEventListener('mouseenter', () => {
+                    cursor.classList.add('hover');
+                    el.style.transition = 'none';
+                });
+                
+                // Magnetic effect for prominent buttons
+                if (el.classList.contains('btn-primary') || el.classList.contains('nav-btn')) {
+                    el.addEventListener('mousemove', (e) => {
+                        const rect = el.getBoundingClientRect();
+                        const x = e.clientX - rect.left - rect.width / 2;
+                        const y = e.clientY - rect.top - rect.height / 2;
+                        el.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px) scale(1.05)`;
+                    });
+                }
+                
+                el.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('hover');
+                    el.style.transition = 'all 0.4s var(--spring)';
+                    el.style.transform = '';
+                });
             });
             
             // Hide on leaving window
@@ -935,6 +953,31 @@
                 });
 
                 setTimeout(() => particle.remove(), 800);
+            });
+        });
+
+        /* ========================================
+           3D TILT EFFECT
+           ======================================== */
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                if (isTouchDevice) return;
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -8; // max 8deg
+                const rotateY = ((x - centerX) / centerX) * 8;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+                card.style.transition = 'none';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                if (isTouchDevice) return;
+                card.style.transform = '';
+                card.style.transition = 'transform 0.5s var(--ease)';
             });
         });
 
