@@ -617,10 +617,18 @@ img { max-width: 100%; display: block; }
 }
 
 .hero-title .gradient {
-    background: linear-gradient(135deg, var(--accent), var(--accent-warm));
+    background: linear-gradient(135deg, var(--accent), var(--accent-warm), var(--accent), var(--accent-warm));
+    background-size: 200% 100%;
+    animation: gradientShift 4s ease infinite;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .hero-desc {
@@ -1434,7 +1442,10 @@ img { max-width: 100%; display: block; }
     transition: border-color 0.3s;
 }
 
-.newsletter-form:focus-within { border-color: rgba(212,175,55,0.3); }
+.newsletter-form:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(212,175,55,0.2), inset 0 0 10px rgba(212,175,55,0.05);
+}
 
 .newsletter-form input {
     flex: 1;
@@ -1869,6 +1880,19 @@ body.has-custom-cursor input {
     will-change: transform;
 }
 
+.custom-cursor::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4px;
+    height: 4px;
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+
 .custom-cursor.hover {
     width: 60px;
     height: 60px;
@@ -1877,6 +1901,11 @@ body.has-custom-cursor input {
     backdrop-filter: blur(4px);
     border: 1px solid rgba(255,255,255,0.3);
     mix-blend-mode: normal;
+}
+
+.custom-cursor.hover::after {
+    opacity: 1;
+    box-shadow: 0 0 10px var(--accent);
 }
 
 /* ============================================
