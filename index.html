@@ -174,6 +174,12 @@
                     </div>
                     <span class="price-save">Save 25%</span>
                 </div>
+
+                <!-- Audio Wave Visualizer -->
+                <div class="audio-visualizer" id="audio-visualizer">
+                    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -429,6 +435,28 @@
         </div>
     </section>
 
+    <!-- ======== FAQ SECTION ======== -->
+    <section class="faq-section section" id="faq">
+        <div class="reveal">
+            <span class="section-label" style="justify-content:center"><span class="dot"></span> Support</span>
+            <h2 class="section-heading" style="text-align:center;">Frequently Asked Questions</h2>
+        </div>
+        <div class="faq-grid reveal-stagger">
+            <div class="faq-item">
+                <button class="faq-question">How does the 30-day return policy work? <i class="fa-solid fa-chevron-down"></i></button>
+                <div class="faq-answer"><p>We offer a hassle-free 30-day return policy. If you aren't completely satisfied with your Spidy gear, simply contact our support team and we'll provide a prepaid return label. Once received, you get a full refund.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">Are the headphones compatible with all devices? <i class="fa-solid fa-chevron-down"></i></button>
+                <div class="faq-answer"><p>Yes, all our wireless audio products feature Bluetooth 5.3 for universal compatibility across iOS, Android, macOS, and Windows. They also include a high-fidelity 3.5mm cable for wired listening.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">How long does the battery last on a single charge? <i class="fa-solid fa-chevron-down"></i></button>
+                <div class="faq-answer"><p>The Sequoia Pro headphones offer up to 40 hours of playback with ANC enabled (50 hours with ANC off). The X-Bud Pro earbuds provide 8 hours of continuous listening, with an additional 24 hours from the charging case.</p></div>
+            </div>
+        </div>
+    </section>
+
     <!-- ======== FOOTER ======== -->
     <footer class="site-footer">
         <div class="footer-grid">
@@ -481,6 +509,40 @@
     <button class="back-to-top" id="back-to-top" aria-label="Back to top" title="Back to top">
         <i class="fa-solid fa-arrow-up"></i>
     </button>
+
+    <!-- Mini-Cart Sidebar -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="close-cart" id="close-cart"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <!-- Empty state by default -->
+            <div class="cart-empty">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <p>Your cart is empty.</p>
+                <button class="btn-primary" id="cart-shop-now">Shop Now</button>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cart-total-price">$0.00</span>
+            </div>
+            <button class="btn-primary checkout-btn">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div class="video-modal-overlay" id="video-modal-overlay"></div>
+    <div class="video-modal" id="video-modal">
+        <button class="close-modal" id="close-video-modal"><i class="fa-solid fa-xmark"></i></button>
+        <div class="video-container">
+            <img src="https://images.unsplash.com/photo-1593696954577-1643c1a351ef?auto=format&fit=crop&q=80&w=1200" alt="Video placeholder" class="video-placeholder">
+            <button class="play-btn-large"><i class="fa-solid fa-play"></i></button>
+        </div>
+    </div>
 
     <!-- Toast Container -->
     <div class="toast-wrap" id="toast-wrap" aria-live="polite"></div>
@@ -732,8 +794,28 @@
             });
         });
 
-        document.getElementById('cart-btn')?.addEventListener('click', () => {
-            toast(`${cartCount} item${cartCount !== 1 ? 's' : ''} in your cart`, 'info');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        const cartOverlay = document.getElementById('cart-overlay');
+        const closeCartBtn = document.getElementById('close-cart');
+        const cartShopNowBtn = document.getElementById('cart-shop-now');
+        
+        function openCart() {
+            cartSidebar?.classList.add('open');
+            cartOverlay?.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeCart() {
+            cartSidebar?.classList.remove('open');
+            cartOverlay?.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        
+        document.getElementById('cart-btn')?.addEventListener('click', openCart);
+        closeCartBtn?.addEventListener('click', closeCart);
+        cartOverlay?.addEventListener('click', closeCart);
+        cartShopNowBtn?.addEventListener('click', () => {
+            closeCart();
+            document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
         });
 
         /* ========================================
@@ -782,8 +864,44 @@
             document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
         });
 
+        const videoModal = document.getElementById('video-modal');
+        const videoOverlay = document.getElementById('video-modal-overlay');
+        const closeVideoBtn = document.getElementById('close-video-modal');
+
         document.getElementById('explore-btn')?.addEventListener('click', () => {
-            toast('Film coming soon — stay tuned!', 'info', 2500);
+            videoModal?.classList.add('open');
+            videoOverlay?.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        });
+
+        function closeVideoModal() {
+            videoModal?.classList.remove('open');
+            videoOverlay?.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        closeVideoBtn?.addEventListener('click', closeVideoModal);
+        videoOverlay?.addEventListener('click', closeVideoModal);
+
+        /* ========================================
+           FAQ ACCORDION
+           ======================================== */
+        document.querySelectorAll('.faq-question').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const item = btn.parentElement;
+                const isActive = item.classList.contains('active');
+                
+                // Close all others
+                document.querySelectorAll('.faq-item').forEach(i => {
+                    i.classList.remove('active');
+                    i.querySelector('.faq-answer').style.maxHeight = null;
+                });
+
+                if (!isActive) {
+                    item.classList.add('active');
+                    const answer = item.querySelector('.faq-answer');
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                }
+            });
         });
 
         document.getElementById('search-toggle')?.addEventListener('click', () => {
