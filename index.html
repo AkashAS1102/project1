@@ -115,7 +115,7 @@
                     <i class="fa-solid fa-wand-magic-sparkles"></i> New Collection 2026
                 </div>
                 <h1 class="hero-title">
-                    Sound That<br>Moves <span class="gradient">You.</span>
+                    <span class="word">Sound</span> <span class="word">That</span><br><span class="word">Moves</span> <span class="word gradient">You.</span>
                 </h1>
                 <p class="hero-desc">
                     Experience uncompromising audio clarity with Spidy's precision-engineered headphones. Crafted for those who hear every detail.
@@ -673,6 +673,20 @@
         });
 
         /* ========================================
+           DYNAMIC AUDIO VISUALIZER
+           ======================================== */
+        const visualizerBars = document.querySelectorAll('.audio-visualizer .bar');
+        if (visualizerBars.length > 0) {
+            setInterval(() => {
+                visualizerBars.forEach(bar => {
+                    const height = Math.random() * 80 + 20; // 20% to 100%
+                    bar.style.height = `${height}%`;
+                    bar.style.transition = 'height 0.15s ease-in-out';
+                });
+            }, 150);
+        }
+
+        /* ========================================
            HERO PARALLAX
            ======================================== */
         const heroVisual = document.getElementById('hero-visual');
@@ -762,25 +776,78 @@
         /* ========================================
            CART SYSTEM
            ======================================== */
-        let cartCount = 0;
+        let cart = [];
         const cartBadge = document.getElementById('cart-badge');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotalPrice = document.getElementById('cart-total-price');
 
-        function updateBadge() {
-            if (!cartBadge) return;
-            cartBadge.textContent = cartCount;
-            cartBadge.classList.toggle('visible', cartCount > 0);
-            cartBadge.classList.remove('pop');
-            void cartBadge.offsetWidth;
-            cartBadge.classList.add('pop');
+        function updateCartUI() {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if (cartBadge) {
+                cartBadge.textContent = totalItems;
+                cartBadge.classList.toggle('visible', totalItems > 0);
+                cartBadge.classList.remove('pop');
+                void cartBadge.offsetWidth;
+                cartBadge.classList.add('pop');
+            }
+
+            if (!cartItemsContainer) return;
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="cart-empty">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <p>Your cart is empty.</p>
+                        <button class="btn-primary" id="cart-shop-now">Shop Now</button>
+                    </div>
+                `;
+                document.getElementById('cart-shop-now')?.addEventListener('click', () => {
+                    closeCart();
+                    document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+                });
+            } else {
+                cartItemsContainer.innerHTML = cart.map((item, index) => `
+                    <div class="cart-item" style="display:flex; justify-content:space-between; align-items:center; padding: 15px 0; border-bottom: 1px solid var(--border);">
+                        <div>
+                            <h4 style="margin-bottom:5px; font-weight:600">${item.name}</h4>
+                            <span style="color:var(--text-secondary)">$${item.price} x ${item.quantity}</span>
+                        </div>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <span style="font-weight:600; color:var(--accent)">$${item.price * item.quantity}</span>
+                            <button class="remove-item-btn" data-index="${index}" style="background:none; border:none; color:var(--accent-rose); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+
+                cartItemsContainer.querySelectorAll('.remove-item-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const idx = this.dataset.index;
+                        const removed = cart.splice(idx, 1)[0];
+                        toast(`${removed.name} removed from cart`, 'info');
+                        updateCartUI();
+                    });
+                });
+            }
+
+            if (cartTotalPrice) {
+                const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                cartTotalPrice.textContent = `$${total.toFixed(2)}`;
+            }
         }
 
         document.querySelectorAll('.add-cart-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const name = this.dataset.name;
-                cartCount++;
-                updateBadge();
+                const price = parseFloat(this.dataset.price || 0);
+                
+                const existing = cart.find(item => item.name === name);
+                if (existing) {
+                    existing.quantity++;
+                } else {
+                    cart.push({ name, price, quantity: 1 });
+                }
+                
+                updateCartUI();
 
-                // Button feedback
                 const orig = this.innerHTML;
                 this.classList.add('added');
                 this.innerHTML = '<i class="fa-solid fa-check"></i> Added!';
@@ -797,7 +864,6 @@
         const cartSidebar = document.getElementById('cart-sidebar');
         const cartOverlay = document.getElementById('cart-overlay');
         const closeCartBtn = document.getElementById('close-cart');
-        const cartShopNowBtn = document.getElementById('cart-shop-now');
         
         function openCart() {
             cartSidebar?.classList.add('open');
@@ -813,10 +879,6 @@
         document.getElementById('cart-btn')?.addEventListener('click', openCart);
         closeCartBtn?.addEventListener('click', closeCart);
         cartOverlay?.addEventListener('click', closeCart);
-        cartShopNowBtn?.addEventListener('click', () => {
-            closeCart();
-            document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
-        });
 
         /* ========================================
            WISHLIST TOGGLES
