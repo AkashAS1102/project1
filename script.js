@@ -41,23 +41,25 @@
             toast(goLight ? 'Light mode enabled' : 'Dark mode enabled', 'info', 2000);
         });
 
-        /* ========================================
-           SCROLL PROGRESS BAR
-           ======================================== */
+                let isScrolling = false;
         const progressBar = document.getElementById('scroll-progress');
-        window.addEventListener('scroll', () => {
-            const h = document.documentElement.scrollHeight - window.innerHeight;
-            if (progressBar && h > 0) {
-                progressBar.style.width = ((window.scrollY / h) * 100) + '%';
-            }
-        }, { passive: true });
-
-        /* ========================================
-           STICKY NAV GLASS
-           ======================================== */
         const nav = document.getElementById('main-nav');
+        const backToTop = document.getElementById('back-to-top');
+
         window.addEventListener('scroll', () => {
-            if (nav) nav.classList.toggle('scrolled', window.scrollY > 50);
+            if (!isScrolling) {
+                window.requestAnimationFrame(() => {
+                    const scrolled = window.scrollY;
+                    const h = document.documentElement.scrollHeight - window.innerHeight;
+                    
+                    if (progressBar && h > 0) progressBar.style.width = ((scrolled / h) * 100) + '%';
+                    if (nav) nav.classList.toggle('scrolled', scrolled > 50);
+                    if (backToTop) backToTop.classList.toggle('visible', scrolled > 600);
+                    
+                    isScrolling = false;
+                });
+                isScrolling = true;
+            }
         }, { passive: true });
 
         /* ========================================
@@ -120,20 +122,6 @@
                 openSearchModal();
             }
         });
-
-        /* ========================================
-           DYNAMIC AUDIO VISUALIZER
-           ======================================== */
-        const visualizerBars = document.querySelectorAll('.audio-visualizer .bar');
-        if (visualizerBars.length > 0) {
-            setInterval(() => {
-                visualizerBars.forEach(bar => {
-                    const height = Math.random() * 80 + 20; // 20% to 100%
-                    bar.style.height = `${height}%`;
-                    bar.style.transition = 'height 0.15s ease-in-out';
-                });
-            }, 150);
-        }
 
         /* ========================================
            HERO PARALLAX
@@ -580,17 +568,10 @@
             }
         });
 
-        /* ========================================
-           BACK TO TOP
-           ======================================== */
-        const backToTop = document.getElementById('back-to-top');
-        window.addEventListener('scroll', () => {
-            if (backToTop) backToTop.classList.toggle('visible', window.scrollY > 600);
-        }, { passive: true });
+        /* Back To Top combined in unified scroll handler */
 
-        backToTop?.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        const backToTopBtn = document.getElementById('back-to-top');
+        backToTopBtn?.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
         /* ========================================
            PRELOADER
@@ -664,19 +645,7 @@
             cursor.style.display = 'none';
         }
 
-        /* ========================================
-           BACKGROUND PARALLAX
-           ======================================== */
-        const orbs = document.querySelectorAll('.orb');
-        window.addEventListener('scroll', () => {
-            if (!isTouchDevice) {
-                const scrolled = window.scrollY;
-                orbs.forEach((orb, index) => {
-                    const speed = (index + 1) * 0.15;
-                    orb.style.transform = `translateY(${scrolled * speed}px)`;
-                });
-            }
-        }, { passive: true });
+        /* Background Parallax removed for performance optimization */
 
         /* ========================================
            CART PARTICLE EFFECT (Overriding previous logic)
@@ -746,3 +715,4 @@
         });
 
     })();
+
