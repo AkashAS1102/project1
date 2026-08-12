@@ -714,5 +714,183 @@
             });
         });
 
+        /* ========================================
+           QUICK VIEW MODAL LOGIC
+           ======================================== */
+        const productData = {
+            'p1': { name: 'Sequoia Pro', price: '$299', img: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=500', desc: 'Over-Ear Headphones with industry-leading Active Noise Cancellation and lossless audio support.', freq: '10Hz - 40kHz', battery: '40 Hours', driver: '45mm Neodymium', anc: 'Yes', weight: '280g' },
+            'p2': { name: 'X-Bud Pro', price: '$179', img: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=500', desc: 'True wireless earbuds with adaptive EQ and sweat resistance for an active lifestyle.', freq: '20Hz - 20kHz', battery: '24 Hours (with case)', driver: '11mm Custom', anc: 'Yes', weight: '5.4g (per earbud)' },
+            'p3': { name: 'Studio Max', price: '$349', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=500', desc: 'Reference-grade studio headphones designed for audio engineers and producers.', freq: '5Hz - 50kHz', battery: 'N/A (Wired)', driver: '50mm Planar Magnetic', anc: 'No', weight: '340g' },
+            'p4': { name: 'Pulse Speaker', price: '$199', img: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=500', desc: 'Portable bluetooth speaker with 360-degree spatial sound and waterproof design.', freq: '40Hz - 20kHz', battery: '18 Hours', driver: 'Dual Passive Radiators', anc: 'No', weight: '850g' }
+        };
+
+        const qvBtns = document.querySelectorAll('.quick-view-btn');
+        const qvModal = document.getElementById('quick-view-modal');
+        const qvOverlay = document.getElementById('quick-view-overlay');
+        const qvContent = document.getElementById('quick-view-content');
+        const closeQv = document.getElementById('close-quick-view');
+
+        function openQuickView(id) {
+            const data = productData[id];
+            if (!data) return;
+
+            qvContent.innerHTML = `
+                <div style="display:flex; gap: 30px;">
+                    <div style="flex:1; border-radius: var(--radius-md); overflow:hidden; background: #fff;">
+                        <img src="${data.img}" style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+                    <div style="flex:1;" class="quick-view-details">
+                        <h2>${data.name}</h2>
+                        <div class="price">${data.price}</div>
+                        <p>${data.desc}</p>
+                        <ul style="list-style:none; padding:0; margin-bottom:20px; color:var(--text-secondary);">
+                            <li style="margin-bottom:10px;"><strong>Frequency:</strong> ${data.freq}</li>
+                            <li style="margin-bottom:10px;"><strong>Battery:</strong> ${data.battery}</li>
+                            <li style="margin-bottom:10px;"><strong>Weight:</strong> ${data.weight}</li>
+                        </ul>
+                        <button class="btn-primary add-cart-btn" data-name="${data.name}" data-price="${data.price.replace('$','')}"><i class="fa-solid fa-bag-shopping"></i> Add to Cart</button>
+                    </div>
+                </div>
+            `;
+            
+            qvModal.classList.add('open');
+            qvOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            
+            // Re-bind add to cart inside modal
+            qvContent.querySelector('.add-cart-btn').addEventListener('click', function() {
+                toast(`${data.name} added to cart`);
+                let count = parseInt(document.getElementById('cart-badge').textContent) || 0;
+                document.getElementById('cart-badge').textContent = count + 1;
+                closeQuickViewModal();
+            });
+        }
+
+        function closeQuickViewModal() {
+            qvModal.classList.remove('open');
+            qvOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        qvBtns.forEach(btn => btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openQuickView(btn.dataset.id);
+        }));
+        closeQv?.addEventListener('click', closeQuickViewModal);
+        qvOverlay?.addEventListener('click', closeQuickViewModal);
+
+        /* ========================================
+           PRODUCT COMPARISON TOOL
+           ======================================== */
+        const compare1 = document.getElementById('compare-1');
+        const compare2 = document.getElementById('compare-2');
+        const compareTable = document.getElementById('comparison-table');
+
+        function renderComparison() {
+            if (!compare1 || !compare2 || !compareTable) return;
+            const p1 = productData[compare1.value];
+            const p2 = productData[compare2.value];
+
+            const specs = [
+                { label: 'Frequency Response', key: 'freq' },
+                { label: 'Battery Life', key: 'battery' },
+                { label: 'Driver', key: 'driver' },
+                { label: 'Active Noise Cancellation', key: 'anc' },
+                { label: 'Weight', key: 'weight' }
+            ];
+
+            let html = `
+                <tr>
+                    <th>Specification</th>
+                    <th>${p1.name}</th>
+                    <th>${p2.name}</th>
+                </tr>
+            `;
+
+            specs.forEach(spec => {
+                html += `
+                    <tr>
+                        <td>${spec.label}</td>
+                        <td>${p1[spec.key]}</td>
+                        <td>${p2[spec.key]}</td>
+                    </tr>
+                `;
+            });
+
+            compareTable.innerHTML = html;
+        }
+
+        compare1?.addEventListener('change', renderComparison);
+        compare2?.addEventListener('change', renderComparison);
+        renderComparison(); // Init
+
+        /* ========================================
+           IMMERSIVE AUDIO DEMO
+           ======================================== */
+        const spatialToggle = document.getElementById('spatial-toggle');
+        const demoPlayBtn = document.getElementById('demo-play-btn');
+        const demoEq = document.getElementById('demo-eq');
+        const soundWaves = document.getElementById('sound-waves');
+        const toggleRow = document.querySelector('.audio-toggle-row');
+
+        spatialToggle?.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                toggleRow?.classList.add('spatial-active');
+                if(demoPlayBtn?.classList.contains('playing')) {
+                    soundWaves?.classList.add('active');
+                }
+            } else {
+                toggleRow?.classList.remove('spatial-active');
+                soundWaves?.classList.remove('active');
+            }
+        });
+
+        demoPlayBtn?.addEventListener('click', () => {
+            const isPlaying = demoPlayBtn.classList.toggle('playing');
+            demoEq?.classList.toggle('playing', isPlaying);
+            
+            if (isPlaying && spatialToggle?.checked) {
+                soundWaves?.classList.add('active');
+            } else {
+                soundWaves?.classList.remove('active');
+            }
+        });
+
+        /* ========================================
+           FLY TO CART IMAGE ANIMATION
+           ======================================== */
+        document.querySelectorAll('.add-cart-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (window.innerWidth < 768) return; // Skip on mobile
+                
+                const card = this.closest('.product-card');
+                if(!card) return;
+                
+                const img = card.querySelector('img');
+                const cartIcon = document.getElementById('cart-btn');
+                if (!img || !cartIcon) return;
+
+                const imgRect = img.getBoundingClientRect();
+                const cartRect = cartIcon.getBoundingClientRect();
+                
+                const flyImg = img.cloneNode();
+                flyImg.className = 'fly-to-cart-img';
+                flyImg.style.left = `${imgRect.left}px`;
+                flyImg.style.top = `${imgRect.top}px`;
+                flyImg.style.width = `${imgRect.width}px`;
+                flyImg.style.height = `${imgRect.height}px`;
+                
+                document.body.appendChild(flyImg);
+
+                // Animate
+                requestAnimationFrame(() => {
+                    flyImg.style.transform = `translate(${cartRect.left - imgRect.left}px, ${cartRect.top - imgRect.top}px) scale(0.1)`;
+                    flyImg.style.opacity = '0.5';
+                });
+
+                setTimeout(() => flyImg.remove(), 800);
+            });
+        });
+
     })();
 
