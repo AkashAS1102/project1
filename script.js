@@ -892,5 +892,199 @@
             });
         });
 
-    })();
+        /* ========================================
+           CART DRAWER & LOCALSTORAGE
+           ======================================== */
+        const cartOverlay = document.getElementById('cart-overlay');
+        const cartDrawer = document.getElementById('cart-drawer');
+        const cartClose = document.getElementById('cart-close');
+        const cartItemsContainer = document.getElementById('cart-items');
+        const cartTotalPrice = document.getElementById('cart-total-price');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        let cart = JSON.parse(localStorage.getItem('spidy-cart')) || [];
 
+        function saveCart() {
+            localStorage.setItem('spidy-cart', JSON.stringify(cart));
+            updateCartBadge();
+            renderCart();
+        }
+
+        function updateCartBadge() {
+            const badge = document.getElementById('cart-badge');
+            if (badge) {
+                const count = cart.reduce((acc, item) => acc + item.qty, 0);
+                badge.textContent = count;
+            }
+        }
+
+        function openCart() {
+            if (cartDrawer) {
+                cartDrawer.classList.add('open');
+                cartOverlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                renderCart();
+            }
+        }
+
+        function closeCart() {
+            if (cartDrawer) {
+                cartDrawer.classList.remove('open');
+                cartOverlay.classList.remove('open');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function renderCart() {
+            if (!cartItemsContainer) return;
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<div class="cart-empty-state">Your cart is empty.</div>';
+                cartTotalPrice.textContent = '$0.00';
+                return;
+            }
+
+            cartItemsContainer.innerHTML = '';
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price * item.qty;
+                const el = document.createElement('div');
+                el.className = 'cart-item';
+                el.innerHTML = `
+                    <img src="${item.img}" alt="${item.title}">
+                    <div class="cart-item-info">
+                        <div class="cart-item-title">${item.title}</div>
+                        <div class="cart-item-price">$${item.price} x ${item.qty}</div>
+                    </div>
+                    <button class="cart-item-remove" data-index="${index}"><i class="fa-solid fa-trash"></i></button>
+                `;
+                cartItemsContainer.appendChild(el);
+            });
+            cartTotalPrice.textContent = '$' + total.toFixed(2);
+
+            document.querySelectorAll('.cart-item-remove').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = e.currentTarget.getAttribute('data-index');
+                    cart.splice(idx, 1);
+                    saveCart();
+                });
+            });
+        }
+
+        document.getElementById('cart-btn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            openCart();
+        });
+        document.getElementById('mobile-cart-btn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeDrawer();
+            openCart();
+        });
+        cartClose?.addEventListener('click', closeCart);
+        cartOverlay?.addEventListener('click', closeCart);
+
+        checkoutBtn?.addEventListener('click', () => {
+            if (cart.length === 0) return toast('Cart is empty', 'error');
+            toast('Processing checkout...', 'info');
+            setTimeout(() => {
+                cart = [];
+                saveCart();
+                closeCart();
+                toast('Order placed successfully!', 'success');
+            }, 1500);
+        });
+
+        // Add to Cart Logic modification
+        document.querySelectorAll('.add-cart-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const card = this.closest('.product-card');
+                if(!card) return;
+                
+                const title = card.querySelector('.product-name')?.textContent || 'Spidy Product';
+                let priceText = card.querySelector('.price')?.textContent || '$0';
+                const price = parseFloat(priceText.replace('$', '').replace(',', ''));
+                const img = card.querySelector('.product-img-wrap img')?.src || '';
+
+                const existing = cart.find(i => i.title === title);
+                if (existing) {
+                    existing.qty++;
+                } else {
+                    cart.push({ title, price, img, qty: 1 });
+                }
+                saveCart();
+                toast('Added to cart!', 'success');
+            });
+        });
+
+        updateCartBadge(); // Init
+
+        /* ========================================
+           PRODUCT FILTERING
+           ======================================== */
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const productCards = document.querySelectorAll('.product-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.getAttribute('data-filter');
+
+                productCards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        /* ========================================
+           3D TILT EFFECT
+           ======================================== */
+        const tiltCards = document.querySelectorAll('.product-card');
+        tiltCards.forEach(card => {
+            card.classList.add('tilt-card');
+            const glare = document.createElement('div');
+            glare.className = 'tilt-glare';
+            card.appendChild(glare);
+
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -10; // Max 10deg
+                const rotateY = ((x - centerX) / centerX) * 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 80%)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+                glare.style.background = `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 80%)`;
+            });
+        });
+
+        /* ========================================
+           FORM SUBMISSION MOCK
+           ======================================== */
+        const newsletterForm = document.querySelector('.cta-form');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                newsletterForm.classList.add('form-loading');
+                setTimeout(() => {
+                    newsletterForm.classList.remove('form-loading');
+                    newsletterForm.reset();
+                    toast('Successfully subscribed to newsletter!', 'success');
+                }, 1500);
+            });
+        }
+
+    })();

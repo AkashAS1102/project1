@@ -103,8 +103,28 @@
         <a href="#testimonials"><i class="fa-solid fa-star"></i> Reviews</a>
         <a href="#newsletter"><i class="fa-solid fa-envelope"></i> Contact</a>
         <a href="#"><i class="fa-solid fa-heart"></i> Wishlist</a>
-        <a href="#"><i class="fa-solid fa-bag-shopping"></i> Cart</a>
+        <a href="#" id="mobile-cart-btn"><i class="fa-solid fa-bag-shopping"></i> Cart</a>
         <a href="#"><i class="fa-solid fa-user"></i> Profile</a>
+    </div>
+
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-header">
+            <h3>Your Cart</h3>
+            <button class="cart-close" id="cart-close" aria-label="Close cart"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <!-- Items injected by JS -->
+            <div class="cart-empty-state">Your cart is empty.</div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total</span>
+                <span id="cart-total-price">$0.00</span>
+            </div>
+            <button class="btn btn-primary" id="checkout-btn">Checkout</button>
+        </div>
     </div>
 
     <!-- ======== HERO ======== -->
