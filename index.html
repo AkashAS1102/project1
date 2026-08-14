@@ -745,6 +745,75 @@
         </div>
     </div>
 
+    <!-- Checkout Modal -->
+    <div class="checkout-overlay" id="checkout-overlay"></div>
+    <div class="checkout-modal" id="checkout-modal">
+        <button class="close-modal" id="close-checkout-modal"><i class="fa-solid fa-xmark"></i></button>
+        <div class="checkout-content">
+            <div class="checkout-header">
+                <h2>Checkout</h2>
+                <div class="checkout-steps">
+                    <span class="step active" id="step-1-dot">1</span>
+                    <div class="step-line"></div>
+                    <span class="step" id="step-2-dot">2</span>
+                    <div class="step-line"></div>
+                    <span class="step" id="step-3-dot">3</span>
+                </div>
+            </div>
+            
+            <form id="checkout-form">
+                <!-- Step 1: Shipping -->
+                <div class="checkout-step-content active" id="checkout-step-1">
+                    <h3>Shipping Details</h3>
+                    <div class="form-group">
+                        <label for="co-name">Full Name</label>
+                        <input type="text" id="co-name" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="co-email">Email Address</label>
+                        <input type="email" id="co-email" required placeholder="john@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="co-address">Address</label>
+                        <input type="text" id="co-address" required placeholder="123 Audio Street">
+                    </div>
+                    <button type="button" class="btn-primary" id="btn-next-1" style="width: 100%; margin-top: 15px;">Continue to Payment</button>
+                </div>
+                
+                <!-- Step 2: Payment -->
+                <div class="checkout-step-content" id="checkout-step-2">
+                    <h3>Payment Information</h3>
+                    <div class="form-group">
+                        <label for="co-card">Card Number</label>
+                        <input type="text" id="co-card" required placeholder="0000 0000 0000 0000">
+                    </div>
+                    <div class="form-row" style="display: flex; gap: 15px;">
+                        <div class="form-group" style="flex: 1;">
+                            <label for="co-exp">Expiry</label>
+                            <input type="text" id="co-exp" required placeholder="MM/YY">
+                        </div>
+                        <div class="form-group" style="flex: 1;">
+                            <label for="co-cvv">CVV</label>
+                            <input type="text" id="co-cvv" required placeholder="123">
+                        </div>
+                    </div>
+                    <div class="checkout-actions" style="display: flex; gap: 15px; margin-top: 15px;">
+                        <button type="button" class="btn-secondary" id="btn-prev-2" style="flex: 1;">Back</button>
+                        <button type="submit" class="btn-primary" id="btn-submit-order" style="flex: 1;">Place Order</button>
+                    </div>
+                </div>
+                
+                <!-- Step 3: Confirmation -->
+                <div class="checkout-step-content" id="checkout-step-3" style="text-align: center;">
+                    <div class="order-success-icon" style="font-size: 4rem; color: var(--success); margin-bottom: 20px;"><i class="fa-solid fa-circle-check"></i></div>
+                    <h3>Order Confirmed!</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 20px;">Thank you for your purchase. Your premium audio gear is being prepared for shipment.</p>
+                    <button type="button" class="btn-primary" id="btn-close-checkout">Continue Shopping</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Toast Container -->
     <div class="toast-wrap" id="toast-wrap" aria-live="polite"></div>
 

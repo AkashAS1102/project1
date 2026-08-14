@@ -437,37 +437,96 @@
         document.getElementById('close-search-modal')?.addEventListener('click', closeSearchModal);
         searchOverlay?.addEventListener('click', closeSearchModal);
 
+        let searchTimeout = null;
+        let selectedSearchIndex = -1;
+        let currentSearchResults = [];
+
         searchInput?.addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            const filtered = products.filter(p => 
-                p.name.toLowerCase().includes(query) || 
-                p.category.toLowerCase().includes(query)
-            );
-            renderSearchResults(filtered);
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim().toLowerCase();
+            
+            searchTimeout = setTimeout(() => {
+                if(!query) {
+                    currentSearchResults = products;
+                } else {
+                    currentSearchResults = products.filter(p => 
+                        p.name.toLowerCase().includes(query) || 
+                        p.category.toLowerCase().includes(query)
+                    );
+                }
+                selectedSearchIndex = -1;
+                renderSearchResults(currentSearchResults, query);
+            }, 250);
         });
 
-        function renderSearchResults(results) {
+        searchInput?.addEventListener('keydown', (e) => {
+            const items = searchResults?.querySelectorAll('.search-result-item');
+            if (!items || items.length === 0) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedSearchIndex = (selectedSearchIndex + 1) % items.length;
+                updateSearchSelection(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedSearchIndex = (selectedSearchIndex - 1 + items.length) % items.length;
+                updateSearchSelection(items);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (selectedSearchIndex >= 0) {
+                    items[selectedSearchIndex].click();
+                } else if (items.length > 0) {
+                    items[0].click();
+                }
+            }
+        });
+
+        function updateSearchSelection(items) {
+            items.forEach((item, index) => {
+                if (index === selectedSearchIndex) {
+                    item.style.background = 'var(--bg-secondary)';
+                    item.scrollIntoView({ block: 'nearest' });
+                } else {
+                    item.style.background = '';
+                }
+            });
+        }
+
+        function highlightText(text, query) {
+            if (!query) return text;
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, '<mark style="background:var(--accent); color:#000; padding:0 2px; border-radius:2px;">$1</mark>');
+        }
+
+        function renderSearchResults(results, query = '') {
             if (!searchResults) return;
             if (results.length === 0) {
                 searchResults.innerHTML = '<p style="text-align:center; color:var(--text-secondary); padding: 20px;">No products found.</p>';
                 return;
             }
-            searchResults.innerHTML = results.map(p => `
-                <div class="search-result-item" data-id="${p.id}">
+            
+            searchResults.innerHTML = results.map((p, index) => {
+                const highlightedName = highlightText(p.name, query);
+                const highlightedCategory = highlightText(p.category, query);
+                return `
+                <div class="search-result-item" data-id="${p.id}" style="cursor:pointer; transition: background 0.2s;">
                     <img src="${p.image}" alt="${p.name}">
                     <div class="search-result-info">
-                        <h4>${p.name}</h4>
-                        <p>${p.category}</p>
+                        <h4>${highlightedName}</h4>
+                        <p>${highlightedCategory}</p>
                     </div>
                     <div style="margin-left:auto; color:var(--accent); font-weight:600;">$${p.price}</div>
                 </div>
-            `).join('');
+            `}).join('');
 
-            // Add click listeners to results to open quick view
-            searchResults.querySelectorAll('.search-result-item').forEach(item => {
+            searchResults.querySelectorAll('.search-result-item').forEach((item, index) => {
+                item.addEventListener('mouseenter', () => {
+                    selectedSearchIndex = index;
+                    updateSearchSelection(searchResults.querySelectorAll('.search-result-item'));
+                });
                 item.addEventListener('click', () => {
                     closeSearchModal();
-                    openQuickView(parseInt(item.dataset.id));
+                    openQuickView('p' + item.dataset.id);
                 });
             });
         }
@@ -718,10 +777,46 @@
            QUICK VIEW MODAL LOGIC
            ======================================== */
         const productData = {
-            'p1': { name: 'Sequoia Pro', price: '$299', img: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=500', desc: 'Over-Ear Headphones with industry-leading Active Noise Cancellation and lossless audio support.', freq: '10Hz - 40kHz', battery: '40 Hours', driver: '45mm Neodymium', anc: 'Yes', weight: '280g' },
-            'p2': { name: 'X-Bud Pro', price: '$179', img: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=500', desc: 'True wireless earbuds with adaptive EQ and sweat resistance for an active lifestyle.', freq: '20Hz - 20kHz', battery: '24 Hours (with case)', driver: '11mm Custom', anc: 'Yes', weight: '5.4g (per earbud)' },
-            'p3': { name: 'Studio Max', price: '$349', img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=500', desc: 'Reference-grade studio headphones designed for audio engineers and producers.', freq: '5Hz - 50kHz', battery: 'N/A (Wired)', driver: '50mm Planar Magnetic', anc: 'No', weight: '340g' },
-            'p4': { name: 'Pulse Speaker', price: '$199', img: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=500', desc: 'Portable bluetooth speaker with 360-degree spatial sound and waterproof design.', freq: '40Hz - 20kHz', battery: '18 Hours', driver: 'Dual Passive Radiators', anc: 'No', weight: '850g' }
+            'p1': { 
+                name: 'Sequoia Pro', price: '$299', 
+                img: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=500', 
+                gallery: [
+                    'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=500',
+                    'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&q=80&w=500',
+                    'https://images.unsplash.com/photo-1593696954577-1643c1a351ef?auto=format&fit=crop&q=80&w=500'
+                ],
+                desc: 'Over-Ear Headphones with industry-leading Active Noise Cancellation and lossless audio support.', freq: '10Hz - 40kHz', battery: '40 Hours', driver: '45mm Neodymium', anc: 'Yes', weight: '280g' 
+            },
+            'p2': { 
+                name: 'X-Bud Pro', price: '$179', 
+                img: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=500', 
+                gallery: [
+                    'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=500',
+                    'https://images.unsplash.com/photo-1572536147168-9b88981604a5?auto=format&fit=crop&q=80&w=500',
+                    'https://images.unsplash.com/photo-1606220838315-056192d5e927?auto=format&fit=crop&q=80&w=500'
+                ],
+                desc: 'True wireless earbuds with adaptive EQ and sweat resistance for an active lifestyle.', freq: '20Hz - 20kHz', battery: '24 Hours (with case)', driver: '11mm Custom', anc: 'Yes', weight: '5.4g (per earbud)' 
+            },
+            'p3': { 
+                name: 'Studio Max', price: '$349', 
+                img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=500', 
+                gallery: [
+                    'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=500',
+                    'https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=500',
+                    'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&q=80&w=500'
+                ],
+                desc: 'Reference-grade studio headphones designed for audio engineers and producers.', freq: '5Hz - 50kHz', battery: 'N/A (Wired)', driver: '50mm Planar Magnetic', anc: 'No', weight: '340g' 
+            },
+            'p4': { 
+                name: 'Pulse Speaker', price: '$199', 
+                img: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=500', 
+                gallery: [
+                    'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=500',
+                    'https://images.unsplash.com/photo-1589003071536-407421160d5b?auto=format&fit=crop&q=80&w=500',
+                    'https://images.unsplash.com/photo-1612198273689-b751996515b1?auto=format&fit=crop&q=80&w=500'
+                ],
+                desc: 'Portable bluetooth speaker with 360-degree spatial sound and waterproof design.', freq: '40Hz - 20kHz', battery: '18 Hours', driver: 'Dual Passive Radiators', anc: 'No', weight: '850g' 
+            }
         };
 
         const qvBtns = document.querySelectorAll('.quick-view-btn');
@@ -734,10 +829,19 @@
             const data = productData[id];
             if (!data) return;
 
+            let thumbnailsHtml = data.gallery ? data.gallery.map((src, index) => 
+                `<img src="${src}" class="qv-thumb ${index === 0 ? 'active' : ''}" data-src="${src}" style="width:60px; height:60px; object-fit:cover; border-radius:8px; cursor:pointer; opacity:${index === 0 ? '1' : '0.6'}; border: 2px solid ${index === 0 ? 'var(--accent)' : 'transparent'}; transition:all 0.3s;">`
+            ).join('') : '';
+
             qvContent.innerHTML = `
-                <div style="display:flex; gap: 30px;">
-                    <div style="flex:1; border-radius: var(--radius-md); overflow:hidden; background: #fff;">
-                        <img src="${data.img}" style="width:100%; height:100%; object-fit:cover;">
+                <div style="display:flex; gap: 30px; align-items: flex-start;">
+                    <div style="flex:1; border-radius: var(--radius-md); overflow:hidden; display:flex; flex-direction:column; gap:10px;">
+                        <div style="background: #fff; width:100%; border-radius: var(--radius-md); overflow:hidden; aspect-ratio: 1/1;">
+                            <img src="${data.img}" id="qv-main-img" style="width:100%; height:100%; object-fit:cover; transition: opacity 0.3s ease;">
+                        </div>
+                        <div style="display:flex; gap:10px; justify-content:center; margin-top:10px;" id="qv-thumbnails">
+                            ${thumbnailsHtml}
+                        </div>
                     </div>
                     <div style="flex:1;" class="quick-view-details">
                         <h2>${data.name}</h2>
@@ -753,6 +857,27 @@
                 </div>
             `;
             
+            // Add event listeners for thumbnails
+            const thumbnails = qvContent.querySelectorAll('.qv-thumb');
+            const mainImg = qvContent.querySelector('#qv-main-img');
+            thumbnails.forEach(thumb => {
+                thumb.addEventListener('click', () => {
+                    mainImg.style.opacity = '0';
+                    setTimeout(() => {
+                        mainImg.src = thumb.dataset.src;
+                        mainImg.style.opacity = '1';
+                    }, 150);
+                    thumbnails.forEach(t => { 
+                        t.classList.remove('active'); 
+                        t.style.opacity = '0.6'; 
+                        t.style.borderColor = 'transparent';
+                    });
+                    thumb.classList.add('active');
+                    thumb.style.opacity = '1';
+                    thumb.style.borderColor = 'var(--accent)';
+                });
+            });
+
             qvModal.classList.add('open');
             qvOverlay.classList.add('open');
             document.body.style.overflow = 'hidden';
@@ -833,25 +958,70 @@
         const soundWaves = document.getElementById('sound-waves');
         const toggleRow = document.querySelector('.audio-toggle-row');
 
+        let audioCtx;
+        let audioElement;
+        let track;
+        let panner;
+
+        function initAudio() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            audioElement = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+            audioElement.crossOrigin = "anonymous";
+            audioElement.loop = true;
+            
+            track = audioCtx.createMediaElementSource(audioElement);
+            panner = audioCtx.createStereoPanner();
+            
+            track.connect(panner).connect(audioCtx.destination);
+            
+            // Simple LFO for spatial effect (panning left/right)
+            let panVal = 0;
+            let panDir = 0.015;
+            setInterval(() => {
+                if (spatialToggle?.checked && !audioElement.paused) {
+                    panVal += panDir;
+                    if (panVal > 1 || panVal < -1) panDir = -panDir;
+                    if(panner.pan) panner.pan.value = panVal;
+                } else {
+                    if(panner.pan) panner.pan.value = 0;
+                    panVal = 0;
+                }
+            }, 50);
+        }
+
         spatialToggle?.addEventListener('change', (e) => {
             if (e.target.checked) {
                 toggleRow?.classList.add('spatial-active');
                 if(demoPlayBtn?.classList.contains('playing')) {
                     soundWaves?.classList.add('active');
                 }
+                toast('Spidy Spatial enabled', 'info', 1500);
             } else {
                 toggleRow?.classList.remove('spatial-active');
                 soundWaves?.classList.remove('active');
+                toast('Standard Audio enabled', 'info', 1500);
             }
         });
 
-        demoPlayBtn?.addEventListener('click', () => {
-            const isPlaying = demoPlayBtn.classList.toggle('playing');
-            demoEq?.classList.toggle('playing', isPlaying);
+        demoPlayBtn?.addEventListener('click', async () => {
+            initAudio();
             
-            if (isPlaying && spatialToggle?.checked) {
-                soundWaves?.classList.add('active');
+            if (audioCtx.state === 'suspended') {
+                await audioCtx.resume();
+            }
+
+            if (audioElement.paused) {
+                audioElement.play();
+                demoPlayBtn.classList.add('playing');
+                demoEq?.classList.add('playing');
+                demoPlayBtn.innerHTML = '<i class="fa-solid fa-pause"></i>';
+                if (spatialToggle?.checked) soundWaves?.classList.add('active');
             } else {
+                audioElement.pause();
+                demoPlayBtn.classList.remove('playing');
+                demoEq?.classList.remove('playing');
+                demoPlayBtn.innerHTML = '<i class="fa-solid fa-play"></i>';
                 soundWaves?.classList.remove('active');
             }
         });
@@ -981,14 +1151,88 @@
         cartClose?.addEventListener('click', closeCart);
         cartOverlay?.addEventListener('click', closeCart);
 
-        checkoutBtn?.addEventListener('click', () => {
+        /* ========================================
+           CHECKOUT MODAL LOGIC
+           ======================================== */
+        const checkoutModal = document.getElementById('checkout-modal');
+        const checkoutOverlay = document.getElementById('checkout-overlay');
+        const closeCheckoutModal = document.getElementById('close-checkout-modal');
+        const checkoutForm = document.getElementById('checkout-form');
+        
+        const step1Dot = document.getElementById('step-1-dot');
+        const step2Dot = document.getElementById('step-2-dot');
+        const step3Dot = document.getElementById('step-3-dot');
+        
+        const step1Content = document.getElementById('checkout-step-1');
+        const step2Content = document.getElementById('checkout-step-2');
+        const step3Content = document.getElementById('checkout-step-3');
+
+        function openCheckout() {
             if (cart.length === 0) return toast('Cart is empty', 'error');
-            toast('Processing checkout...', 'info');
+            closeCart();
+            checkoutModal?.classList.add('open');
+            checkoutOverlay?.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            
+            // Reset to step 1
+            step1Content?.classList.add('active');
+            step2Content?.classList.remove('active');
+            step3Content?.classList.remove('active');
+            step1Dot?.classList.add('active');
+            step2Dot?.classList.remove('active');
+            step3Dot?.classList.remove('active');
+        }
+
+        function closeCheckout() {
+            checkoutModal?.classList.remove('open');
+            checkoutOverlay?.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        checkoutBtn?.addEventListener('click', openCheckout);
+        closeCheckoutModal?.addEventListener('click', closeCheckout);
+        checkoutOverlay?.addEventListener('click', closeCheckout);
+        document.getElementById('btn-close-checkout')?.addEventListener('click', closeCheckout);
+
+        document.getElementById('btn-next-1')?.addEventListener('click', () => {
+            const name = document.getElementById('co-name').value;
+            const email = document.getElementById('co-email').value;
+            const address = document.getElementById('co-address').value;
+            
+            if(!name || !email || !address) return toast('Please fill all fields', 'error');
+            
+            step1Content?.classList.remove('active');
+            step2Content?.classList.add('active');
+            step2Dot?.classList.add('active');
+        });
+
+        document.getElementById('btn-prev-2')?.addEventListener('click', () => {
+            step2Content?.classList.remove('active');
+            step1Content?.classList.add('active');
+            step2Dot?.classList.remove('active');
+        });
+
+        checkoutForm?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Show loading
+            const submitBtn = document.getElementById('btn-submit-order');
+            const origText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+            submitBtn.disabled = true;
+            
             setTimeout(() => {
+                submitBtn.innerHTML = origText;
+                submitBtn.disabled = false;
+                
+                // Go to step 3 (Success)
+                step2Content?.classList.remove('active');
+                step3Content?.classList.add('active');
+                step3Dot?.classList.add('active');
+                
+                // Clear cart
                 cart = [];
                 saveCart();
-                closeCart();
-                toast('Order placed successfully!', 'success');
             }, 1500);
         });
 
@@ -1050,22 +1294,29 @@
             glare.className = 'tilt-glare';
             card.appendChild(glare);
 
+            let rafId = null;
+
             card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
+                if (rafId) cancelAnimationFrame(rafId);
                 
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                const rotateX = ((y - centerY) / centerY) * -10; // Max 10deg
-                const rotateY = ((x - centerX) / centerX) * 10;
-                
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-                glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 80%)`;
+                rafId = requestAnimationFrame(() => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = ((y - centerY) / centerY) * -10; // Max 10deg
+                    const rotateY = ((x - centerX) / centerX) * 10;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                    glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 80%)`;
+                });
             });
 
             card.addEventListener('mouseleave', () => {
+                if (rafId) cancelAnimationFrame(rafId);
                 card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
                 glare.style.background = `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 80%)`;
             });
