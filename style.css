@@ -1917,6 +1917,12 @@ img { max-width: 100%; display: block; }
     .toast-wrap { bottom: 12px; right: 12px; left: 12px; }
     .toast { max-width: 100%; }
     
+    .journal-grid { gap: 16px; }
+    .comparison-container { padding: 15px; }
+    .comparison-table th, .comparison-table td { padding: 10px; font-size: 0.85rem; }
+    .nav-btn { width: 36px; height: 36px; font-size: 0.85rem; }
+    .nav-actions { gap: 4px; }
+    
     /* Reduce glass blur for performance on mobile */
     .nav.scrolled, 
     .hero-stats, 
@@ -1933,10 +1939,13 @@ img { max-width: 100%; display: block; }
     .hero-title { font-size: 1.85rem; }
     .hero-product-ring { width: 250px; height: 250px; }
     .products-grid { grid-template-columns: 1fr; }
+    .journal-grid { grid-template-columns: 1fr; }
+    .audio-demo-inner { padding: 20px; gap: 30px; }
     .products-filters { flex-wrap: wrap; }
     .newsletter-form { flex-direction: column; border-radius: var(--radius-md); }
     .newsletter-form input { text-align: center; }
     .newsletter-form button { border-radius: var(--radius-full); margin: 4px; }
+    .checkout-content { padding: 20px; }
 }
 
 /* Reduced Motion */
