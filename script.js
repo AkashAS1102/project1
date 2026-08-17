@@ -213,19 +213,169 @@
         /* Duplicate CART SYSTEM logic removed in favor of LOCALSTORAGE logic below */
 
         /* ========================================
-           WISHLIST TOGGLES
+           WISHLIST SYSTEM
            ======================================== */
+        let wishlist = JSON.parse(localStorage.getItem('spidy-wishlist') || '[]');
+        const wishlistBadge = document.getElementById('wishlist-badge');
+        const wishlistDrawer = document.getElementById('wishlist-drawer');
+        const wishlistOverlay = document.getElementById('wishlist-overlay');
+        const wishlistItemsContainer = document.getElementById('wishlist-items');
+        
+        function updateWishlistUI() {
+            if (wishlistBadge) {
+                wishlistBadge.textContent = wishlist.length;
+                wishlistBadge.style.display = wishlist.length > 0 ? 'flex' : 'none';
+            }
+            if (!wishlistItemsContainer) return;
+            if (wishlist.length === 0) {
+                wishlistItemsContainer.innerHTML = `<div class="cart-empty-state">Your wishlist is empty.</div>`;
+            } else {
+                wishlistItemsContainer.innerHTML = wishlist.map((item, index) => `
+                    <div class="cart-item" style="display:flex; justify-content:space-between; align-items:center; padding: 15px 0; border-bottom: 1px solid var(--border);">
+                        <div>
+                            <h4 style="margin-bottom:5px; font-weight:600">${item.name}</h4>
+                            <span style="color:var(--text-secondary)">$${item.price}</span>
+                        </div>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <button class="remove-wish-btn" data-index="${index}" style="background:none; border:none; color:var(--accent-rose); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                wishlistItemsContainer.querySelectorAll('.remove-wish-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const idx = this.dataset.index;
+                        const removed = wishlist.splice(idx, 1)[0];
+                        localStorage.setItem('spidy-wishlist', JSON.stringify(wishlist));
+                        toast(`${removed.name} removed from wishlist`, 'info');
+                        updateWishlistUI();
+                        // Also un-toggle the heart icon on the page
+                        document.querySelectorAll('.wish-btn').forEach(wishBtn => {
+                            if (wishBtn.dataset.name === removed.name) {
+                                wishBtn.classList.remove('liked');
+                                wishBtn.querySelector('i').className = 'fa-regular fa-heart';
+                            }
+                        });
+                    });
+                });
+            }
+        }
+        
+        function openWishlist() {
+            wishlistDrawer?.classList.add('open');
+            wishlistOverlay?.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            updateWishlistUI();
+        }
+        function closeWishlist() {
+            wishlistDrawer?.classList.remove('open');
+            wishlistOverlay?.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        
+        document.getElementById('wishlist-btn')?.addEventListener('click', openWishlist);
+        document.getElementById('wishlist-close')?.addEventListener('click', closeWishlist);
+        wishlistOverlay?.addEventListener('click', closeWishlist);
+
         document.querySelectorAll('.wish-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                this.classList.toggle('liked');
-                const icon = this.querySelector('i');
-                const isLiked = this.classList.contains('liked');
-                icon.className = isLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+            const card = btn.closest('.product-card');
+            const cartBtn = card?.querySelector('.add-cart-btn');
+            if (cartBtn) {
+                btn.dataset.name = cartBtn.dataset.name;
+                btn.dataset.price = cartBtn.dataset.price;
+            }
+            
+            if (wishlist.find(i => i.name === btn.dataset.name)) {
+                btn.classList.add('liked');
+                btn.querySelector('i').className = 'fa-solid fa-heart';
+            }
+            
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const name = this.dataset.name || 'Product';
+                const price = parseFloat(this.dataset.price || 0);
+                
+                const existingIndex = wishlist.findIndex(item => item.name === name);
+                const isLiked = existingIndex === -1;
+                
+                if (isLiked) {
+                    wishlist.push({ name, price });
+                    this.classList.add('liked');
+                    this.querySelector('i').className = 'fa-solid fa-heart';
+                    toast(`Added to wishlist ❤️`, 'success');
+                } else {
+                    wishlist.splice(existingIndex, 1);
+                    this.classList.remove('liked');
+                    this.querySelector('i').className = 'fa-regular fa-heart';
+                    toast(`Removed from wishlist`, 'info');
+                }
+                
+                localStorage.setItem('spidy-wishlist', JSON.stringify(wishlist));
+                updateWishlistUI();
+                
                 this.style.transform = 'scale(1.3)';
                 setTimeout(() => this.style.transform = '', 250);
-                toast(isLiked ? 'Added to wishlist ❤️' : 'Removed from wishlist', isLiked ? 'success' : 'info', 2000);
             });
         });
+        
+        updateWishlistUI();
+
+        /* ========================================
+           LOGIN SYSTEM MOCK
+           ======================================== */
+        const loginOverlay = document.getElementById('login-overlay');
+        const loginModal = document.getElementById('login-modal');
+        const closeLoginBtn = document.getElementById('close-login');
+        const userTrigger = document.getElementById('user-trigger');
+        const loginForm = document.getElementById('login-form');
+        const userDisplayName = document.getElementById('user-display-name');
+        const userDisplayIcon = document.getElementById('user-display-icon');
+        const userDisplayAvatar = document.getElementById('user-display-avatar');
+        
+        let isLoggedIn = localStorage.getItem('spidy-logged-in') === 'true';
+        
+        function updateLoginUI() {
+            if (isLoggedIn) {
+                if (userDisplayName) userDisplayName.textContent = 'Ryman';
+                if (userDisplayIcon) userDisplayIcon.style.display = 'none';
+                if (userDisplayAvatar) userDisplayAvatar.style.display = 'block';
+            } else {
+                if (userDisplayName) userDisplayName.textContent = 'Sign In';
+                if (userDisplayIcon) userDisplayIcon.style.display = 'inline-block';
+                if (userDisplayAvatar) userDisplayAvatar.style.display = 'none';
+            }
+        }
+        
+        function openLogin() {
+            if (isLoggedIn) return;
+            loginModal?.classList.add('open');
+            loginOverlay?.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLogin() {
+            loginModal?.classList.remove('open');
+            loginOverlay?.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+        
+        userTrigger?.addEventListener('click', (e) => {
+            if (!isLoggedIn) {
+                openLogin();
+            }
+        });
+        closeLoginBtn?.addEventListener('click', closeLogin);
+        loginOverlay?.addEventListener('click', closeLogin);
+        
+        loginForm?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            isLoggedIn = true;
+            localStorage.setItem('spidy-logged-in', 'true');
+            updateLoginUI();
+            closeLogin();
+            toast('Successfully signed in!', 'success');
+        });
+        
+        updateLoginUI();
 
         /* ========================================
            PRODUCT COLOR PICKER
@@ -1178,6 +1328,32 @@
                 });
             });
         });
+
+        /* ========================================
+           PRODUCT SORTING
+           ======================================== */
+        const sortSelect = document.getElementById('sort-products');
+        const productsGrid = document.getElementById('products-grid');
+        
+        if (sortSelect && productsGrid) {
+            sortSelect.addEventListener('change', (e) => {
+                const sortValue = e.target.value;
+                const cards = Array.from(productsGrid.querySelectorAll('.product-card'));
+                
+                cards.sort((a, b) => {
+                    const priceA = parseFloat(a.querySelector('.add-cart-btn')?.dataset.price || 0);
+                    const priceB = parseFloat(b.querySelector('.add-cart-btn')?.dataset.price || 0);
+                    
+                    if (sortValue === 'price-low') return priceA - priceB;
+                    if (sortValue === 'price-high') return priceB - priceA;
+                    // Mock sorting for rating
+                    if (sortValue === 'rating') return Math.random() - 0.5;
+                    return 0; // featured defaults to original DOM order roughly
+                });
+                
+                cards.forEach(card => productsGrid.appendChild(card));
+            });
+        }
 
         /* ========================================
            3D TILT EFFECT
