@@ -390,6 +390,63 @@
         });
 
         /* ========================================
+           CUSTOM STUDIO LOGIC
+           ======================================== */
+        const customizerSection = document.getElementById('customizer');
+        if (customizerSection) {
+            const headphoneMockup = document.getElementById('headphone-mockup');
+            
+            // Handle color swatch clicks
+            document.querySelectorAll('.control-group').forEach(group => {
+                const optionsContainer = group.querySelector('.color-options');
+                if (!optionsContainer) return;
+                
+                const layerType = optionsContainer.id.replace('color-', '');
+                
+                group.querySelectorAll('.color-swatch').forEach(swatch => {
+                    swatch.addEventListener('click', (e) => {
+                        group.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+                        swatch.classList.add('active');
+                        
+                        const color = swatch.dataset.color;
+                        
+                        if (headphoneMockup) {
+                            headphoneMockup.style.setProperty(`--${layerType}-color`, color);
+                            headphoneMockup.style.transition = 'transform 0.2s var(--spring)';
+                            headphoneMockup.style.transform = 'scale(1.02)';
+                            setTimeout(() => {
+                                headphoneMockup.style.transform = 'scale(1)';
+                            }, 150);
+                        }
+                    });
+                });
+            });
+            
+            // "Add Custom Build to Cart" button animation
+            const buildBtn = customizerSection.querySelector('.btn-primary');
+            if (buildBtn) {
+                buildBtn.addEventListener('click', function() {
+                    const originalText = this.innerHTML;
+                    this.innerHTML = '<i class="fa-solid fa-check"></i> Added to Cart';
+                    toast('Custom Sequoia Pro added to your cart!', 'success');
+                    
+                    // Simple logic to mimic adding to cart for now
+                    const cartBadge = document.getElementById('cart-badge');
+                    if (cartBadge) {
+                        const current = parseInt(cartBadge.textContent) || 0;
+                        cartBadge.textContent = current + 1;
+                        cartBadge.classList.add('pop');
+                        setTimeout(() => cartBadge.classList.remove('pop'), 350);
+                    }
+                    
+                    setTimeout(() => {
+                        this.innerHTML = originalText;
+                    }, 2000);
+                });
+            }
+        }
+
+        /* ========================================
            NEWSLETTER
            ======================================== */
         document.getElementById('newsletter-form')?.addEventListener('submit', (e) => {
