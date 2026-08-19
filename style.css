@@ -1273,6 +1273,122 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .product-color.active { outline-color: var(--accent); outline-width: 2px; }
 
 /* ============================================
+   SHOP BY VIBE
+   ============================================ */
+.vibe-section {
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
+.vibe-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 40px;
+}
+
+.vibe-card {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 3/4;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+}
+
+.vibe-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-md);
+}
+
+.vibe-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--smooth);
+}
+
+.vibe-card:hover .vibe-bg {
+    transform: scale(1.1);
+}
+
+.vibe-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%);
+    opacity: 0.8;
+    transition: opacity 0.4s var(--ease);
+}
+
+.vibe-card:hover .vibe-overlay {
+    opacity: 1;
+}
+
+.vibe-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transform: translateY(45px);
+    transition: transform 0.4s var(--smooth);
+}
+
+.vibe-card:hover .vibe-content {
+    transform: translateY(0);
+}
+
+.vibe-content h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+
+.vibe-content p {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.8);
+    margin: 0;
+}
+
+.vibe-btn {
+    opacity: 0;
+    margin-top: 10px;
+    width: 100%;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+
+.vibe-btn:hover {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+}
+
+.vibe-card:hover .vibe-btn {
+    opacity: 1;
+    transition: opacity 0.4s 0.1s var(--ease), background 0.3s, color 0.3s;
+}
+
+@media (max-width: 1024px) {
+    .vibe-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .vibe-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================
    CUSTOM STUDIO
    ============================================ */
 .customizer-container {
