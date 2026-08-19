@@ -1488,4 +1488,37 @@
             scrollObserver.observe(el);
         });
 
+        /* ========================================
+           DEVELOPER EASTER EGG
+           ======================================== */
+        console.log("%c🎧 Welcome to Spidy Premium Audio!", "color: #00e5ff; font-size: 20px; font-weight: bold;");
+        console.log("%cHandcrafted for audiophiles. Try the Konami Code for a surprise!", "color: #8d8fa3; font-size: 14px;");
+
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    activateEasterEgg();
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+        function activateEasterEgg() {
+            toast('🎉 Konami Code Activated: Cyberpunk Overdrive!', 'success', 5000);
+            
+            document.body.style.transition = "all 2s ease";
+            document.body.style.filter = "invert(1) hue-rotate(180deg)";
+            
+            setTimeout(() => {
+                document.body.style.filter = "none";
+                toast('System returning to normal...', 'info', 3000);
+            }, 10000);
+        }
+
     })();
