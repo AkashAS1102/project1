@@ -518,8 +518,19 @@
             { id: 1, name: 'Sequoia Pro', category: 'Over-Ear Headphones', price: 299, image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=500', desc: 'Experience uncompromising audio clarity with precision-engineered 50mm drivers. Active Noise Cancellation blocks out the world so you can focus on the music.' },
             { id: 2, name: 'X-Bud Pro', category: 'Wireless Earbuds', price: 179, image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=500', desc: 'Compact, powerful, and built for all-day comfort. Featuring adaptive EQ and up to 32 hours of battery life with the charging case.' },
             { id: 3, name: 'Studio Max', category: 'Studio Headphones', price: 349, image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&q=80&w=500', desc: 'Designed for professionals. The open-back design delivers a breathtakingly expansive soundstage and the most natural audio reproduction.' },
-            { id: 4, name: 'Pulse Speaker', category: 'Portable Speaker', price: 199, image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=500', desc: 'Take the party anywhere. Waterproof, rugged, and delivering 360-degree booming bass that defies its compact size.' }
+            { id: 4, name: 'Pulse Speaker', category: 'Portable Speaker', price: 199, image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=500', desc: 'Take the party anywhere. Waterproof, rugged, and delivering 360-degree booming bass that defies its compact size.' },
+            { id: 5, name: 'Aero Stand', category: 'Headphone Stand', price: 49, image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=500', desc: 'Minimalist aluminum headphone stand to display your Spidy gear in style.' },
+            { id: 6, name: 'Cloud Cushions', category: 'Replacement Pads', price: 29, image: 'https://images.unsplash.com/photo-1628190771804-98448f760e58?auto=format&fit=crop&q=80&w=500', desc: 'Ultra-soft memory foam replacement ear cushions for all-day listening comfort.' }
         ];
+
+        /* ========================================
+           CONTACT FORM
+           ======================================== */
+        document.getElementById('contact-form')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            toast('Message sent! We will get back to you shortly.', 'success');
+            e.target.reset();
+        });
 
         function openSearchModal() {
             searchModal?.classList.add('open');
@@ -1521,4 +1532,177 @@
             }, 10000);
         }
 
-    })();
+    // Wire up all Add to Cart buttons
+    document.querySelectorAll('.add-cart-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const name = this.dataset.name;
+            const price = parseFloat(this.dataset.price || 0);
+            
+            // Find product image
+            let img = '';
+            const card = this.closest('.product-card');
+            if (card) {
+                img = card.querySelector('img')?.src || '';
+            } else {
+                // Might be in quick view
+                img = document.querySelector('.quick-view-img img')?.src || '';
+            }
+    
+            const existing = cart.find(item => item.name === name);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ name, price, qty: 1, img, title: name });
+            }
+            
+            saveCart();
+            
+            const orig = this.innerHTML;
+            this.innerHTML = '<i class="fa-solid fa-check"></i> Added!';
+            setTimeout(() => this.innerHTML = orig, 1400);
+            toast(`${name} added to cart`, 'success');
+        });
+    });
+    
+    // Checkout logic
+    const checkoutBtnNode = document.getElementById('checkout-btn');
+    if (checkoutBtnNode) {
+        checkoutBtnNode.addEventListener('click', () => {
+            if(cart.length === 0) {
+                toast('Your cart is empty', 'error');
+                return;
+            }
+            closeCart();
+            const checkoutModal = document.getElementById('checkout-modal');
+            const checkoutOverlay = document.getElementById('checkout-overlay');
+            if(checkoutModal && checkoutOverlay) {
+                checkoutModal.classList.add('open');
+                checkoutOverlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+                
+                // reset checkout steps
+                document.querySelectorAll('.checkout-step-content').forEach(s => s.classList.remove('active'));
+                document.getElementById('checkout-step-1').classList.add('active');
+                
+                document.querySelectorAll('.checkout-steps .step').forEach(s => s.classList.remove('active'));
+                document.getElementById('step-1-dot').classList.add('active');
+            }
+        });
+    }
+    
+    // Next Step 1 -> 2
+    document.getElementById('btn-next-1')?.addEventListener('click', () => {
+        const name = document.getElementById('co-name').value;
+        const email = document.getElementById('co-email').value;
+        const address = document.getElementById('co-address').value;
+        if(!name || !email || !address) {
+            toast('Please fill all shipping details', 'error');
+            return;
+        }
+        document.getElementById('checkout-step-1').classList.remove('active');
+        document.getElementById('checkout-step-2').classList.add('active');
+        document.getElementById('step-2-dot').classList.add('active');
+    });
+    
+    // Back Step 2 -> 1
+    document.getElementById('btn-prev-2')?.addEventListener('click', () => {
+        document.getElementById('checkout-step-2').classList.remove('active');
+        document.getElementById('checkout-step-1').classList.add('active');
+        document.getElementById('step-2-dot').classList.remove('active');
+    });
+    
+    // Submit Order
+    document.getElementById('checkout-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if(document.getElementById('checkout-step-2').classList.contains('active')) {
+            const card = document.getElementById('co-card').value;
+            const exp = document.getElementById('co-exp').value;
+            const cvv = document.getElementById('co-cvv').value;
+            if(!card || !exp || !cvv) {
+                toast('Please fill all payment details', 'error');
+                return;
+            }
+            
+            document.getElementById('checkout-step-2').classList.remove('active');
+            document.getElementById('checkout-step-3').classList.add('active');
+            document.getElementById('step-3-dot').classList.add('active');
+            
+            // Clear cart
+            cart = [];
+            saveCart();
+        }
+    });
+    
+    document.getElementById('btn-close-checkout')?.addEventListener('click', () => {
+        document.getElementById('checkout-modal').classList.remove('open');
+        document.getElementById('checkout-overlay').classList.remove('open');
+        document.body.style.overflow = '';
+    });
+    
+    // Comparison logic
+    const comparisonData = {
+        'p1': { name: 'Sequoia Pro', type: 'Over-Ear', anc: 'Yes (Adaptive)', battery: '40 Hours', driver: '50mm Neodymium', waterproof: 'No' },
+        'p2': { name: 'X-Bud Pro', type: 'Earbuds', anc: 'Yes', battery: '32 Hours (with case)', driver: '11mm Dynamic', waterproof: 'IPX4' },
+        'p3': { name: 'Studio Max', type: 'Over-Ear (Open Back)', anc: 'No', battery: 'Wired', driver: '45mm Planar Magnetic', waterproof: 'No' },
+        'p4': { name: 'Pulse Speaker', type: 'Speaker', anc: 'N/A', battery: '24 Hours', driver: 'Dual 2.5"', waterproof: 'IP67' }
+    };
+    
+    function updateComparison() {
+        const p1 = document.getElementById('compare-1')?.value;
+        const p2 = document.getElementById('compare-2')?.value;
+        const table = document.getElementById('comparison-table');
+        
+        if(!p1 || !p2 || !table) return;
+        
+        const d1 = comparisonData[p1];
+        const d2 = comparisonData[p2];
+        
+        if(d1 && d2) {
+            table.innerHTML = `
+                <tr><th>Feature</th><th>${d1.name}</th><th>${d2.name}</th></tr>
+                <tr><td>Type</td><td>${d1.type}</td><td>${d2.type}</td></tr>
+                <tr><td>ANC</td><td>${d1.anc}</td><td>${d2.anc}</td></tr>
+                <tr><td>Battery</td><td>${d1.battery}</td><td>${d2.battery}</td></tr>
+                <tr><td>Driver</td><td>${d1.driver}</td><td>${d2.driver}</td></tr>
+                <tr><td>Water Resistance</td><td>${d1.waterproof}</td><td>${d2.waterproof}</td></tr>
+            `;
+        }
+    }
+    
+    document.getElementById('compare-1')?.addEventListener('change', updateComparison);
+    document.getElementById('compare-2')?.addEventListener('change', updateComparison);
+    updateComparison(); // initial load
+    
+    // Testimonial slider logic
+    const slider = document.getElementById('testimonials-slider');
+    const dotsContainer = document.getElementById('testimonial-dots');
+    if(slider && dotsContainer) {
+        const slides = slider.querySelectorAll('.slide');
+        let currentSlide = 0;
+        
+        slides.forEach((_, idx) => {
+            const dot = document.createElement('div');
+            dot.className = `slider-dot ${idx === 0 ? 'active' : ''}`;
+            dot.addEventListener('click', () => goToSlide(idx));
+            dotsContainer.appendChild(dot);
+        });
+        
+        function goToSlide(idx) {
+            currentSlide = idx;
+            slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+            document.querySelectorAll('.slider-dot').forEach((d, i) => {
+                d.classList.toggle('active', i === currentSlide);
+            });
+        }
+        
+        document.getElementById('prev-testimonial')?.addEventListener('click', () => {
+            goToSlide((currentSlide - 1 + slides.length) % slides.length);
+        });
+        document.getElementById('next-testimonial')?.addEventListener('click', () => {
+            goToSlide((currentSlide + 1) % slides.length);
+        });
+        
+        // Autoplay
+        setInterval(() => goToSlide((currentSlide + 1) % slides.length), 5000);
+    }
+})();

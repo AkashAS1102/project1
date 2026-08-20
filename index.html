@@ -54,7 +54,7 @@
             <li><a href="#products">Products</a></li>
             <li><a href="#features">Features</a></li>
             <li><a href="#testimonials">Reviews</a></li>
-            <li><a href="#newsletter">Contact</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ul>
 
         <div class="nav-actions">
@@ -108,7 +108,7 @@
         <a href="#products"><i class="fa-solid fa-headphones"></i> Products</a>
         <a href="#features"><i class="fa-solid fa-bolt"></i> Features</a>
         <a href="#testimonials"><i class="fa-solid fa-star"></i> Reviews</a>
-        <a href="#newsletter"><i class="fa-solid fa-envelope"></i> Contact</a>
+        <a href="#contact"><i class="fa-solid fa-envelope"></i> Contact</a>
         <a href="#"><i class="fa-solid fa-heart"></i> Wishlist</a>
         <a href="#" id="mobile-cart-btn"><i class="fa-solid fa-bag-shopping"></i> Cart</a>
         <a href="#"><i class="fa-solid fa-user"></i> Profile</a>
@@ -282,6 +282,7 @@
                     <button class="filter-btn" data-filter="headphones">Headphones</button>
                     <button class="filter-btn" data-filter="earbuds">Earbuds</button>
                     <button class="filter-btn" data-filter="speakers">Speakers</button>
+                    <button class="filter-btn" data-filter="accessories">Accessories</button>
                 </div>
                 <div class="select-wrapper" style="width: 170px;">
                     <select id="sort-products" aria-label="Sort products">
@@ -401,6 +402,57 @@
                     <div class="product-colors">
                         <span class="product-color active" style="background:#50E3C2" title="Teal"></span>
                         <span class="product-color" style="background:#8b5cf6" title="Violet"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card" data-category="accessories">
+                <div class="product-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=500" alt="Aero Stand" loading="lazy">
+                    <div class="product-actions-overlay">
+                        <div class="action-btns">
+                            <button class="add-cart-btn" data-name="Aero Stand" data-price="49"><i class="fa-solid fa-bag-shopping"></i> Add to Cart</button>
+                            <button class="wish-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                            <button class="quick-view-btn" data-id="p5" aria-label="Quick view"><i class="fa-solid fa-eye"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">Aero Stand</h3>
+                    <p class="product-category">Headphone Stand</p>
+                    <div class="product-bottom">
+                        <span class="product-price">$49</span>
+                        <span class="product-rating"><i class="fa-solid fa-star"></i> 4.9</span>
+                    </div>
+                    <div class="product-colors">
+                        <span class="product-color active" style="background:#1a1a1c" title="Matte Black"></span>
+                        <span class="product-color" style="background:#f5f5f0" title="Ivory White"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card" data-category="accessories">
+                <div class="product-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1628190771804-98448f760e58?auto=format&fit=crop&q=80&w=500" alt="Cloud Cushions" loading="lazy">
+                    <div class="product-actions-overlay">
+                        <div class="action-btns">
+                            <button class="add-cart-btn" data-name="Cloud Cushions" data-price="29"><i class="fa-solid fa-bag-shopping"></i> Add to Cart</button>
+                            <button class="wish-btn" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+                            <button class="quick-view-btn" data-id="p6" aria-label="Quick view"><i class="fa-solid fa-eye"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name">Cloud Cushions</h3>
+                    <p class="product-category">Replacement Pads</p>
+                    <div class="product-bottom">
+                        <span class="product-price">$29</span>
+                        <span class="product-rating"><i class="fa-solid fa-star"></i> 4.8</span>
+                    </div>
+                    <div class="product-colors">
+                        <span class="product-color active" style="background:#1a1a1c" title="Midnight"></span>
                     </div>
                 </div>
             </div>
@@ -670,45 +722,52 @@
             <p class="section-sub" style="text-align:center;margin-left:auto;margin-right:auto;">Hear what real customers have to say about their Spidy experience.</p>
         </div>
 
-        <div class="testimonials-grid reveal-stagger">
-            <div class="testimonial-card">
-                <div class="testimonial-stars">
-                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+        <div class="testimonials-slider-wrap reveal-stagger">
+            <div class="testimonials-slider" id="testimonials-slider">
+                <div class="testimonial-card slide">
+                    <div class="testimonial-stars">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"The <em>noise cancellation is unreal</em>. I use the Sequoia Pro in the studio daily — crystal clear mids and the bass never muddies the mix. Best investment I've made."</p>
+                    <div class="testimonial-author">
+                        <img src="https://i.pravatar.cc/150?img=32" alt="Sarah Chen" class="testimonial-avatar" loading="lazy">
+                        <div>
+                            <div class="testimonial-author-name">Sarah Chen</div>
+                            <div class="testimonial-author-role">Music Producer, LA</div>
+                        </div>
+                    </div>
                 </div>
-                <p class="testimonial-text">"The <em>noise cancellation is unreal</em>. I use the Sequoia Pro in the studio daily — crystal clear mids and the bass never muddies the mix. Best investment I've made."</p>
-                <div class="testimonial-author">
-                    <img src="https://i.pravatar.cc/150?img=32" alt="Sarah Chen" class="testimonial-avatar" loading="lazy">
-                    <div>
-                        <div class="testimonial-author-name">Sarah Chen</div>
-                        <div class="testimonial-author-role">Music Producer, LA</div>
+                <div class="testimonial-card slide">
+                    <div class="testimonial-stars">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">"Wore these for a <em>12-hour mixing session</em> and forgot they were on. The comfort is insane and they look absolutely stunning. Worth every single penny."</p>
+                    <div class="testimonial-author">
+                        <img src="https://i.pravatar.cc/150?img=68" alt="Marcus Johnson" class="testimonial-avatar" loading="lazy">
+                        <div>
+                            <div class="testimonial-author-name">Marcus Johnson</div>
+                            <div class="testimonial-author-role">Audio Engineer</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card slide">
+                    <div class="testimonial-stars">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
+                    </div>
+                    <p class="testimonial-text">"The X-Bud Pro earbuds are my daily driver. <em>Battery lasts forever</em>, bass hits perfectly, and pairing is instant. Finally ditched my old ones for good."</p>
+                    <div class="testimonial-author">
+                        <img src="https://i.pravatar.cc/150?img=25" alt="Emily Park" class="testimonial-avatar" loading="lazy">
+                        <div>
+                            <div class="testimonial-author-name">Emily Park</div>
+                            <div class="testimonial-author-role">Podcast Host</div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="testimonial-card">
-                <div class="testimonial-stars">
-                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                </div>
-                <p class="testimonial-text">"Wore these for a <em>12-hour mixing session</em> and forgot they were on. The comfort is insane and they look absolutely stunning. Worth every single penny."</p>
-                <div class="testimonial-author">
-                    <img src="https://i.pravatar.cc/150?img=68" alt="Marcus Johnson" class="testimonial-avatar" loading="lazy">
-                    <div>
-                        <div class="testimonial-author-name">Marcus Johnson</div>
-                        <div class="testimonial-author-role">Audio Engineer</div>
-                    </div>
-                </div>
-            </div>
-            <div class="testimonial-card">
-                <div class="testimonial-stars">
-                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star-half-stroke"></i>
-                </div>
-                <p class="testimonial-text">"The X-Bud Pro earbuds are my daily driver. <em>Battery lasts forever</em>, bass hits perfectly, and pairing is instant. Finally ditched my old ones for good."</p>
-                <div class="testimonial-author">
-                    <img src="https://i.pravatar.cc/150?img=25" alt="Emily Park" class="testimonial-avatar" loading="lazy">
-                    <div>
-                        <div class="testimonial-author-name">Emily Park</div>
-                        <div class="testimonial-author-role">Podcast Host</div>
-                    </div>
-                </div>
+            <div class="slider-controls">
+                <button class="slider-btn" id="prev-testimonial"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="slider-dots" id="testimonial-dots"></div>
+                <button class="slider-btn" id="next-testimonial"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
         </div>
     </section>
@@ -759,6 +818,49 @@
                     <p class="journal-excerpt">Explore the rigorous prototyping and ergonomic studies that led to our most comfortable earbuds ever.</p>
                 </div>
             </article>
+        </div>
+    </section>
+
+    <!-- ======== CONTACT SECTION ======== -->
+    <section class="contact-section section" id="contact">
+        <div class="reveal">
+            <span class="section-label" style="justify-content:center"><span class="dot"></span> Get In Touch</span>
+            <h2 class="section-heading" style="text-align:center;">We'd Love to Hear From You</h2>
+            <p class="section-sub" style="text-align:center;margin-left:auto;margin-right:auto;">Have a question about our products or need support? Drop us a line.</p>
+        </div>
+        <div class="contact-container reveal-stagger">
+            <div class="contact-info glass-card">
+                <h3>Contact Information</h3>
+                <p>Fill out the form and our team will get back to you within 24 hours.</p>
+                <ul>
+                    <li><i class="fa-solid fa-phone"></i> +1 (800) 123-4567</li>
+                    <li><i class="fa-solid fa-envelope"></i> support@spidy.com</li>
+                    <li><i class="fa-solid fa-location-dot"></i> 123 Audio Ave, Sound City, CA 90210</li>
+                </ul>
+            </div>
+            <div class="contact-form-wrap glass-card">
+                <form id="contact-form">
+                    <div class="form-row" style="display:flex; gap:15px; margin-bottom:15px;">
+                        <div class="form-group" style="flex:1;">
+                            <label>First Name</label>
+                            <input type="text" required placeholder="Jane" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-secondary); color:white; margin-top:5px;">
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>Last Name</label>
+                            <input type="text" required placeholder="Doe" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-secondary); color:white; margin-top:5px;">
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom:15px;">
+                        <label>Email Address</label>
+                        <input type="email" required placeholder="jane@example.com" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-secondary); color:white; margin-top:5px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom:20px;">
+                        <label>Message</label>
+                        <textarea required placeholder="How can we help?" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-secondary); color:white; margin-top:5px; min-height: 120px; resize:vertical;"></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">Send Message</button>
+                </form>
+            </div>
         </div>
     </section>
 
