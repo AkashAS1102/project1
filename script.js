@@ -1705,4 +1705,330 @@
         // Autoplay
         setInterval(() => goToSlide((currentSlide + 1) % slides.length), 5000);
     }
+    // Update productData for p5 and p6
+    if (typeof productData !== 'undefined') {
+        productData['p5'] = {
+            name: 'Aero Stand', price: '$49',
+            img: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=500',
+            gallery: ['https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=500'],
+            desc: 'Minimalist aluminum headphone stand to display your Spidy gear in style.', freq: 'N/A', battery: 'N/A', driver: 'N/A', anc: 'N/A', weight: '200g'
+        };
+        productData['p6'] = {
+            name: 'Cloud Cushions', price: '$29',
+            img: 'https://images.unsplash.com/photo-1628190771804-98448f760e58?auto=format&fit=crop&q=80&w=500',
+            gallery: ['https://images.unsplash.com/photo-1628190771804-98448f760e58?auto=format&fit=crop&q=80&w=500'],
+            desc: 'Ultra-soft memory foam replacement ear cushions for all-day listening comfort.', freq: 'N/A', battery: 'N/A', driver: 'N/A', anc: 'N/A', weight: '50g'
+        };
+    }
+
+    // 1. Functional Product Sorting
+    const sortSelect = document.getElementById('sort-products');
+    const productsGrid = document.getElementById('products-grid');
+    if (sortSelect && productsGrid) {
+        // Store original order
+        const originalCards = Array.from(productsGrid.querySelectorAll('.product-card'));
+        
+        sortSelect.addEventListener('change', (e) => {
+            const val = e.target.value;
+            let sortedCards = Array.from(productsGrid.querySelectorAll('.product-card'));
+            
+            if (val === 'featured') {
+                sortedCards = originalCards;
+            } else if (val === 'price-low') {
+                sortedCards.sort((a, b) => {
+                    const priceA = parseFloat(a.querySelector('.add-cart-btn')?.dataset.price || 0);
+                    const priceB = parseFloat(b.querySelector('.add-cart-btn')?.dataset.price || 0);
+                    return priceA - priceB;
+                });
+            } else if (val === 'price-high') {
+                sortedCards.sort((a, b) => {
+                    const priceA = parseFloat(a.querySelector('.add-cart-btn')?.dataset.price || 0);
+                    const priceB = parseFloat(b.querySelector('.add-cart-btn')?.dataset.price || 0);
+                    return priceB - priceA;
+                });
+            } else if (val === 'rating') {
+                sortedCards.sort((a, b) => {
+                    const ratingA = parseFloat(a.querySelector('.product-rating')?.textContent.replace(/[^0-9.]/g, '') || 0);
+                    const ratingB = parseFloat(b.querySelector('.product-rating')?.textContent.replace(/[^0-9.]/g, '') || 0);
+                    return ratingB - ratingA;
+                });
+            }
+            
+            // Re-append sorted cards
+            sortedCards.forEach(card => productsGrid.appendChild(card));
+        });
+    }
+
+    // 2. Recently Viewed Section
+    const recentKey = 'spidy-recent';
+    const recentScrollContainer = document.getElementById('recent-scroll-container');
+    const recentlyViewedSection = document.getElementById('recently-viewed');
+
+    function renderRecentlyViewed() {
+        if (!recentScrollContainer) return;
+        const recent = JSON.parse(localStorage.getItem(recentKey)) || [];
+        if (recent.length === 0) {
+            recentlyViewedSection.style.display = 'none';
+            return;
+        }
+        
+        recentlyViewedSection.style.display = 'block';
+        recentScrollContainer.innerHTML = recent.map(item => `
+            <div class="recent-card" onclick="document.querySelector('.quick-view-btn[data-id=\\'${item.id}\\']')?.click()">
+                <img src="${item.img}" alt="${item.name}" class="recent-img">
+                <div class="recent-title">${item.name}</div>
+                <div class="recent-price">${item.price}</div>
+            </div>
+        `).join('');
+    }
+
+    // Hook into quick view clicks
+    document.querySelectorAll('.quick-view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            const data = typeof productData !== 'undefined' ? productData[id] : null;
+            if (data) {
+                let recent = JSON.parse(localStorage.getItem(recentKey)) || [];
+                // Remove if exists
+                recent = recent.filter(item => item.id !== id);
+                // Add to start
+                recent.unshift({ id, name: data.name, price: data.price, img: data.img });
+                // Keep max 6
+                if (recent.length > 6) recent.pop();
+                localStorage.setItem(recentKey, JSON.stringify(recent));
+                renderRecentlyViewed();
+            }
+        });
+    });
+    // Initial render
+    renderRecentlyViewed();
+
+    // 3. Interactive Hero Audio Visualizer
+    const visualizer = document.getElementById('audio-visualizer');
+    if (visualizer) {
+        const bars = visualizer.querySelectorAll('.bar');
+        setInterval(() => {
+            bars.forEach(bar => {
+                const height = Math.floor(Math.random() * 80) + 20; // 20% to 100%
+                bar.style.height = `${height}%`;
+                bar.style.transition = 'height 0.1s ease';
+            });
+        }, 100);
+    }
+
+
+    /* ========================================
+       BIG FEATURE 1: EXIT INTENT POPUP
+       ======================================== */
+    const exitPopupOverlay = document.getElementById('exit-popup-overlay');
+    let exitIntentTriggered = sessionStorage.getItem('spidy_exit_intent');
+
+    document.addEventListener('mouseleave', (e) => {
+        if (e.clientY < 50 && !exitIntentTriggered && exitPopupOverlay) {
+            exitPopupOverlay.classList.add('show');
+            sessionStorage.setItem('spidy_exit_intent', 'true');
+            exitIntentTriggered = true;
+        }
+    });
+
+    document.getElementById('close-exit-popup')?.addEventListener('click', () => {
+        exitPopupOverlay.classList.remove('show');
+    });
+    document.getElementById('claim-discount-btn')?.addEventListener('click', () => {
+        exitPopupOverlay.classList.remove('show');
+        toast('Discount code SPIDY15 copied to clipboard!', 'success');
+        navigator.clipboard.writeText('SPIDY15');
+    });
+
+    /* ========================================
+       BIG FEATURE 2: AI CUSTOMER SUPPORT CHATBOT
+       ======================================== */
+    const chatToggle = document.getElementById('chatbot-toggle');
+    const chatWindow = document.getElementById('chatbot-window');
+    const closeChat = document.getElementById('close-chatbot');
+    const chatMessages = document.getElementById('chatbot-messages');
+    const chatInput = document.getElementById('chatbot-input-field');
+    const chatSendBtn = document.getElementById('chatbot-send-btn');
+
+    if (chatToggle && chatWindow) {
+        chatToggle.addEventListener('click', () => chatWindow.classList.toggle('open'));
+        closeChat.addEventListener('click', () => chatWindow.classList.remove('open'));
+
+        const botReplies = {
+            'shipping': 'We offer free 2-day shipping on all orders over $50!',
+            'return': 'We have a 30-day hassle-free return policy. Just contact support to get a return label.',
+            'recommendation': 'Based on popularity, our Sequoia Pro is the ultimate choice for audiophiles.',
+            'hello': 'Hello! How can I assist you with your Spidy audio gear today?',
+            'hi': 'Hi! Need help finding the perfect headphones?',
+            'default': 'I am still learning! For complex issues, please email support@spidy.com.'
+        };
+
+        function addMessage(text, sender) {
+            const msg = document.createElement('div');
+            msg.className = `chat-message ${sender}`;
+            msg.textContent = text;
+            chatMessages.appendChild(msg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function handleSend() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+            addMessage(text, 'user');
+            chatInput.value = '';
+
+            // Typing indicator
+            const typingMsg = document.createElement('div');
+            typingMsg.className = 'chat-message bot typing-indicator';
+            typingMsg.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+            chatMessages.appendChild(typingMsg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Process bot reply
+            setTimeout(() => {
+                typingMsg.remove();
+                const lower = text.toLowerCase();
+                let replied = false;
+                for (const key in botReplies) {
+                    if (lower.includes(key)) {
+                        addMessage(botReplies[key], 'bot');
+                        replied = true;
+                        break;
+                    }
+                }
+                if (!replied) addMessage(botReplies['default'], 'bot');
+            }, 1200);
+        }
+
+        chatSendBtn.addEventListener('click', handleSend);
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSend();
+        });
+    }
+
+    /* ========================================
+       BIG FEATURE 3: USER REVIEWS SYSTEM (Modifying QuickView)
+       ======================================== */
+    // We will override the openQuickView function to append reviews.
+    // However, since we can't easily override the exact function from here without breaking other bindings,
+    // we will listen to clicks on quick view buttons and dynamically append the reviews section 
+    // to the modal after it is populated.
+
+    const reviewsDBKey = 'spidy_reviews';
+    function getReviews(productId) {
+        const db = JSON.parse(localStorage.getItem(reviewsDBKey)) || {};
+        return db[productId] || [
+            { author: 'Jane Doe', rating: 5, date: 'Aug 10, 2026', text: 'Absolutely love the sound quality on these. Best purchase ever!' }
+        ];
+    }
+    function saveReview(productId, review) {
+        const db = JSON.parse(localStorage.getItem(reviewsDBKey)) || {};
+        if (!db[productId]) db[productId] = getReviews(productId);
+        db[productId].unshift(review);
+        localStorage.setItem(reviewsDBKey, JSON.stringify(db));
+    }
+
+    function renderReviewsSection(productId, container) {
+        let existing = container.querySelector('.reviews-section');
+        if (existing) existing.remove();
+
+        const reviews = getReviews(productId);
+        const avgRating = reviews.length ? (reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length).toFixed(1) : 5.0;
+
+        const section = document.createElement('div');
+        section.className = 'reviews-section';
+        section.innerHTML = `
+            <div class="review-header">
+                <div>
+                    <h3 style="margin-bottom:5px;">Customer Reviews</h3>
+                    <div class="review-stars">
+                        ${'<i class="fa-solid fa-star"></i>'.repeat(Math.round(avgRating))}
+                        <span style="color:var(--text-muted); margin-left:5px;">${avgRating} (${reviews.length})</span>
+                    </div>
+                </div>
+                <button class="btn-secondary" id="write-review-btn" style="padding: 8px 15px; font-size: 0.85rem;">Write a Review</button>
+            </div>
+            
+            <div class="write-review-form" id="write-review-form">
+                <div class="star-rating-input" id="star-rating-input">
+                    <i class="fa-solid fa-star" data-val="1"></i>
+                    <i class="fa-solid fa-star" data-val="2"></i>
+                    <i class="fa-solid fa-star" data-val="3"></i>
+                    <i class="fa-solid fa-star" data-val="4"></i>
+                    <i class="fa-solid fa-star" data-val="5"></i>
+                </div>
+                <input type="text" id="review-name" placeholder="Your Name" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid var(--border); background:var(--bg-card); color:var(--text);">
+                <textarea id="review-text" placeholder="Share your experience..." style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid var(--border); background:var(--bg-card); color:var(--text); min-height:80px;"></textarea>
+                <button class="btn-primary" id="submit-review-btn" style="width:100%; justify-content:center;">Submit Review</button>
+            </div>
+
+            <div class="reviews-list">
+                ${reviews.map(r => `
+                    <div class="review-item">
+                        <div class="review-item-top">
+                            <span class="review-author">${r.author}</span>
+                            <span class="review-date">${r.date}</span>
+                        </div>
+                        <div class="review-stars" style="margin-bottom:8px;">
+                            ${'<i class="fa-solid fa-star"></i>'.repeat(r.rating)}
+                        </div>
+                        <div class="review-text">${r.text}</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+        container.appendChild(section);
+
+        // Events
+        let currentRating = 5;
+        const stars = section.querySelectorAll('#star-rating-input i');
+        stars.forEach(s => {
+            s.addEventListener('click', (e) => {
+                currentRating = parseInt(e.target.dataset.val);
+                stars.forEach(st => {
+                    st.classList.toggle('active', parseInt(st.dataset.val) <= currentRating);
+                });
+            });
+            // Init active
+            s.classList.toggle('active', parseInt(s.dataset.val) <= currentRating);
+        });
+
+        section.querySelector('#write-review-btn').addEventListener('click', () => {
+            section.querySelector('#write-review-form').classList.toggle('open');
+        });
+
+        section.querySelector('#submit-review-btn').addEventListener('click', () => {
+            const name = section.querySelector('#review-name').value.trim() || 'Anonymous';
+            const text = section.querySelector('#review-text').value.trim();
+            if (!text) {
+                toast('Please write a review', 'error');
+                return;
+            }
+            saveReview(productId, {
+                author: name,
+                rating: currentRating,
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                text: text
+            });
+            toast('Review submitted!', 'success');
+            renderReviewsSection(productId, container); // Re-render
+        });
+    }
+
+    // Attach to all Quick View buttons (including newly appended ones if we delegate)
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.quick-view-btn');
+        if (btn) {
+            const id = btn.dataset.id;
+            // The modal is populated synchronously, so we can just wait a tiny tick for it to finish rendering innerHTML
+            setTimeout(() => {
+                const details = document.querySelector('#quick-view-content .quick-view-details') || document.querySelector('#quick-view-content');
+                if (details) {
+                    renderReviewsSection(id, details);
+                }
+            }, 50);
+        }
+    });
+
+
 })();
