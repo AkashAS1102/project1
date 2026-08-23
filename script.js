@@ -2005,5 +2005,97 @@
         }
     });
 
+    /* ========================================
+       GENERAL TESTIMONIALS SYSTEM
+       ======================================== */
+    const reviewModal = document.getElementById('review-modal');
+    const reviewOverlay = document.getElementById('review-overlay');
+    const writeReviewBtn = document.getElementById('write-review-btn');
+    const closeReviewBtn = document.getElementById('close-review');
+    const reviewForm = document.getElementById('review-form');
+    const testimonialsSlider = document.getElementById('testimonials-slider');
+
+    function openReviewModal() {
+        if (reviewModal && reviewOverlay) {
+            reviewModal.classList.add('open');
+            reviewOverlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function closeReviewModal() {
+        if (reviewModal && reviewOverlay) {
+            reviewModal.classList.remove('open');
+            reviewOverlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+    }
+
+    if (writeReviewBtn) writeReviewBtn.addEventListener('click', openReviewModal);
+    if (closeReviewBtn) closeReviewBtn.addEventListener('click', closeReviewModal);
+    if (reviewOverlay) reviewOverlay.addEventListener('click', closeReviewModal);
+
+    // Load testimonials from local storage
+    const customTestimonialsKey = 'spidy-custom-testimonials';
+    const customTestimonials = JSON.parse(localStorage.getItem(customTestimonialsKey)) || [];
+
+    function renderCustomTestimonials() {
+        if (!testimonialsSlider) return;
+        customTestimonials.forEach(t => {
+            const div = document.createElement('div');
+            div.className = 'testimonial-card slide';
+            const stars = '<i class="fa-solid fa-star"></i>'.repeat(t.rating) + '<i class="fa-regular fa-star"></i>'.repeat(5 - t.rating);
+            div.innerHTML = `
+                <div class="testimonial-stars">${stars}</div>
+                <p class="testimonial-text">"${t.text}"</p>
+                <div class="testimonial-author">
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(t.name)}&background=random" alt="${t.name}" class="testimonial-avatar" loading="lazy">
+                    <div>
+                        <div class="testimonial-author-name">${t.name}</div>
+                        <div class="testimonial-author-role">Verified Customer</div>
+                    </div>
+                </div>
+            `;
+            testimonialsSlider.appendChild(div);
+        });
+    }
+
+    renderCustomTestimonials();
+
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const rating = parseInt(document.getElementById('review-rating').value);
+            const name = document.getElementById('review-name').value;
+            const text = document.getElementById('review-text').value;
+
+            const newTestimonial = { rating, name, text };
+            customTestimonials.push(newTestimonial);
+            localStorage.setItem(customTestimonialsKey, JSON.stringify(customTestimonials));
+
+            // Append to slider visually
+            if (testimonialsSlider) {
+                const div = document.createElement('div');
+                div.className = 'testimonial-card slide';
+                const stars = '<i class="fa-solid fa-star"></i>'.repeat(rating) + '<i class="fa-regular fa-star"></i>'.repeat(5 - rating);
+                div.innerHTML = `
+                    <div class="testimonial-stars">${stars}</div>
+                    <p class="testimonial-text">"${text}"</p>
+                    <div class="testimonial-author">
+                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random" alt="${name}" class="testimonial-avatar" loading="lazy">
+                        <div>
+                            <div class="testimonial-author-name">${name}</div>
+                            <div class="testimonial-author-role">Verified Customer</div>
+                        </div>
+                    </div>
+                `;
+                testimonialsSlider.appendChild(div);
+            }
+
+            toast('Thank you for your review!', 'success');
+            reviewForm.reset();
+            closeReviewModal();
+        });
+    }
 
 })();

@@ -168,6 +168,37 @@
         </form>
     </div>
 
+    <!-- Review Modal -->
+    <div class="quick-view-overlay" id="review-overlay"></div>
+    <div class="quick-view-modal" id="review-modal" style="max-width: 500px; padding: 40px 30px;">
+        <button class="close-modal" id="close-review"><i class="fa-solid fa-xmark"></i></button>
+        <div style="text-align:center; margin-bottom: 25px;">
+            <h2>Write a Review</h2>
+            <p style="color:var(--text-secondary); font-size:0.9rem;">Share your Spidy experience with others</p>
+        </div>
+        <form id="review-form">
+            <div class="form-group" style="text-align:left; margin-bottom: 15px;">
+                <label>Rating</label>
+                <select id="review-rating" required style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-primary); margin-top:5px;">
+                    <option value="5">5 Stars - Excellent</option>
+                    <option value="4">4 Stars - Very Good</option>
+                    <option value="3">3 Stars - Good</option>
+                    <option value="2">2 Stars - Fair</option>
+                    <option value="1">1 Star - Poor</option>
+                </select>
+            </div>
+            <div class="form-group" style="text-align:left; margin-bottom: 15px;">
+                <label>Your Name</label>
+                <input type="text" id="review-name" required placeholder="John Doe" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-primary); margin-top:5px;">
+            </div>
+            <div class="form-group" style="text-align:left; margin-bottom: 20px;">
+                <label>Your Review</label>
+                <textarea id="review-text" required placeholder="Tell us what you think..." rows="4" style="width:100%; padding:12px; border-radius:8px; border:1px solid var(--border); background:var(--bg-card); color:var(--text-primary); margin-top:5px; resize:vertical; font-family:var(--font);"></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%; justify-content:center;">Submit Review</button>
+        </form>
+    </div>
+
     <!-- ======== HERO ======== -->
     <section class="hero section" id="hero">
         <div class="hero-inner">
@@ -720,6 +751,9 @@
             <span class="section-label" style="justify-content:center"><span class="dot"></span> Testimonials</span>
             <h2 class="section-heading">Loved by Thousands</h2>
             <p class="section-sub" style="text-align:center;margin-left:auto;margin-right:auto;">Hear what real customers have to say about their Spidy experience.</p>
+            <div style="text-align:center; margin-top: 20px;">
+                <button class="btn-secondary" id="write-review-btn"><i class="fa-solid fa-pen-nib"></i> Write a Review</button>
+            </div>
         </div>
 
         <div class="testimonials-slider-wrap reveal-stagger">
