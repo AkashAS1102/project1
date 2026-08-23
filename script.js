@@ -1397,31 +1397,6 @@
             });
         });
 
-        /* ========================================
-           PRODUCT SORTING
-           ======================================== */
-        const sortSelect = document.getElementById('sort-products');
-        const productsGrid = document.getElementById('products-grid');
-        
-        if (sortSelect && productsGrid) {
-            sortSelect.addEventListener('change', (e) => {
-                const sortValue = e.target.value;
-                const cards = Array.from(productsGrid.querySelectorAll('.product-card'));
-                
-                cards.sort((a, b) => {
-                    const priceA = parseFloat(a.querySelector('.add-cart-btn')?.dataset.price || 0);
-                    const priceB = parseFloat(b.querySelector('.add-cart-btn')?.dataset.price || 0);
-                    
-                    if (sortValue === 'price-low') return priceA - priceB;
-                    if (sortValue === 'price-high') return priceB - priceA;
-                    // Mock sorting for rating
-                    if (sortValue === 'rating') return Math.random() - 0.5;
-                    return 0; // featured defaults to original DOM order roughly
-                });
-                
-                cards.forEach(card => productsGrid.appendChild(card));
-            });
-        }
 
         /* ========================================
            3D TILT EFFECT
