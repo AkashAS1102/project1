@@ -806,6 +806,61 @@
         </div>
     </section>
 
+    <!-- ======== FAQ SECTION ======== -->
+    <section class="faq-section section" id="faq">
+        <div class="reveal">
+            <span class="section-label" style="justify-content:center"><span class="dot"></span> Support</span>
+            <h2 class="section-heading">Frequently Asked Questions</h2>
+            <p class="section-sub" style="text-align:center;margin-left:auto;margin-right:auto;">Got questions? We've got answers to help you get the best audio experience.</p>
+        </div>
+        <div class="faq-accordion reveal-stagger" style="max-width: 800px; margin: 40px auto 0;">
+            <div class="faq-item" style="border-bottom: 1px solid var(--border); padding: 20px 0;">
+                <button class="faq-btn" style="width: 100%; display: flex; justify-content: space-between; align-items: center; background: none; border: none; color: var(--text-primary); font-size: 1.1rem; font-weight: 600; cursor: pointer; text-align: left;">
+                    Do your headphones support lossless audio?
+                    <i class="fa-solid fa-chevron-down" style="color: var(--accent);"></i>
+                </button>
+                <div class="faq-content" style="display: none; padding-top: 15px; color: var(--text-secondary); line-height: 1.6;">
+                    Yes, our flagship models including the Sequoia Pro support high-resolution lossless audio via the included USB-C cable, and high-fidelity wireless audio via LDAC and aptX Adaptive codecs.
+                </div>
+            </div>
+            <div class="faq-item" style="border-bottom: 1px solid var(--border); padding: 20px 0;">
+                <button class="faq-btn" style="width: 100%; display: flex; justify-content: space-between; align-items: center; background: none; border: none; color: var(--text-primary); font-size: 1.1rem; font-weight: 600; cursor: pointer; text-align: left;">
+                    What is the warranty period?
+                    <i class="fa-solid fa-chevron-down" style="color: var(--accent);"></i>
+                </button>
+                <div class="faq-content" style="display: none; padding-top: 15px; color: var(--text-secondary); line-height: 1.6;">
+                    All Spidy products come with a standard 2-year limited warranty covering manufacturing defects. We also offer a 30-day money-back guarantee if you're not completely satisfied.
+                </div>
+            </div>
+            <div class="faq-item" style="border-bottom: 1px solid var(--border); padding: 20px 0;">
+                <button class="faq-btn" style="width: 100%; display: flex; justify-content: space-between; align-items: center; background: none; border: none; color: var(--text-primary); font-size: 1.1rem; font-weight: 600; cursor: pointer; text-align: left;">
+                    Can I pair with multiple devices simultaneously?
+                    <i class="fa-solid fa-chevron-down" style="color: var(--accent);"></i>
+                </button>
+                <div class="faq-content" style="display: none; padding-top: 15px; color: var(--text-secondary); line-height: 1.6;">
+                    Absolutely! Our multipoint bluetooth technology allows you to connect to two devices (like your phone and laptop) at the same time and seamlessly switch between them.
+                </div>
+            </div>
+        </div>
+        <script>
+            document.querySelectorAll('.faq-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const content = btn.nextElementSibling;
+                    const icon = btn.querySelector('i');
+                    if (content.style.display === 'none') {
+                        content.style.display = 'block';
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    } else {
+                        content.style.display = 'none';
+                        icon.classList.remove('fa-chevron-up');
+                        icon.classList.add('fa-chevron-down');
+                    }
+                });
+            });
+        </script>
+    </section>
+
     <!-- ======== SPIDY JOURNAL ======== -->
     <section class="journal-section section" id="journal">
         <div class="journal-header reveal">
@@ -979,6 +1034,18 @@
         </div>
         <div class="recent-scroll-container" id="recent-scroll-container">
             <!-- Populated via JS -->
+        </div>
+    </section>
+
+    <!-- ======== NEWSLETTER ======== -->
+    <section class="newsletter-section section" style="background: var(--bg-card); text-align: center; padding: 60px 20px; border-radius: var(--radius-lg); margin: 40px auto; max-width: 1200px; border: 1px solid var(--border);">
+        <div class="reveal">
+            <h2 class="section-heading" style="margin-bottom: 15px; font-size: 2rem;">Stay in the Loop</h2>
+            <p style="color: var(--text-secondary); max-width: 500px; margin: 0 auto 30px auto; font-size: 1rem;">Subscribe to our newsletter for exclusive deals, new product launches, and audio tips.</p>
+            <form id="newsletter-form" style="display: flex; justify-content: center; max-width: 450px; margin: 0 auto; gap: 10px;" onsubmit="event.preventDefault(); alert('Thanks for subscribing!');">
+                <input type="email" placeholder="Enter your email address..." required style="flex: 1; padding: 14px 20px; border-radius: var(--radius-full); border: 1px solid var(--border); background-color: var(--bg-primary); color: var(--text-primary); font-family: inherit; font-size: 0.95rem;">
+                <button type="submit" class="btn btn-primary" style="padding: 14px 28px; border-radius: var(--radius-full); font-weight: 600;">Subscribe</button>
+            </form>
         </div>
     </section>
 
