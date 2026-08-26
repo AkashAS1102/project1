@@ -276,6 +276,33 @@
         </div>
     </section>
 
+    <!-- ======== PRESS & AWARDS ======== -->
+    <section class="press-section section" style="padding: 40px 0; background: var(--bg-primary); border-bottom: 1px solid var(--border); border-top: 1px solid var(--border);">
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+            <p style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px;">As featured in and awarded by</p>
+            <div class="press-logos" style="display: flex; justify-content: center; align-items: center; gap: 40px; flex-wrap: wrap; opacity: 0.6;">
+                <div class="press-logo" style="display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.5rem; font-family: 'Outfit', sans-serif;">
+                    <i class="fa-brands fa-hacker-news" style="color: #ff6600; font-size: 2rem;"></i> THE VERGE
+                </div>
+                <div class="press-logo" style="display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.5rem; letter-spacing: -1px;">
+                    <span style="border-bottom: 3px solid white; padding-bottom: 2px;">WIRED</span>
+                </div>
+                <div class="press-logo" style="display: flex; align-items: center; font-weight: 900; font-size: 1.6rem; font-family: serif; font-style: italic;">
+                    Pitchfork
+                </div>
+                <div class="press-logo" style="display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 1.4rem;">
+                    <i class="fa-solid fa-square-rss" style="color: #ee802f;"></i> TechCrunch
+                </div>
+                <div class="press-logo" style="display: flex; align-items: center; gap: 5px; font-weight: 800; font-size: 1.6rem; font-style: italic; letter-spacing: -1px;">
+                    <span style="color: red;">C</span>NET
+                </div>
+            </div>
+            <div style="margin-top: 30px; font-style: italic; color: var(--text-primary); font-size: 1.1rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+                "Spidy has managed to do the impossible: redefine the standard for consumer audio without breaking the bank."
+            </div>
+        </div>
+    </section>
+
     <!-- ======== TRUST MARQUEE ======== -->
     <div class="trust-marquee" aria-hidden="true">
         <div class="trust-marquee-track">
@@ -580,6 +607,73 @@
         </div>
     </section>
 
+    <!-- ======== EXPLODED VIEW / TECH SPECS ======== -->
+    <section class="tech-specs-section section" id="tech-specs" style="background: #000; padding: 120px 0; overflow: hidden; border-top: 1px solid var(--border);">
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center; position: relative;">
+            <div class="reveal">
+                <span class="section-label" style="justify-content:center"><span class="dot"></span> Inside The Magic</span>
+                <h2 class="section-heading" style="font-size: 3rem;">Masterfully <span class="gradient" style="background-image: linear-gradient(to right, #ffffff, #666); -webkit-background-clip: text; color: transparent;">Engineered</span></h2>
+                <p class="section-sub" style="margin-left:auto;margin-right:auto; max-width: 600px;">Peek inside the Sequoia Pro. Every component is custom-designed for acoustic perfection and structural integrity.</p>
+            </div>
+            
+            <div class="exploded-view-container reveal-stagger" style="position: relative; width: 100%; height: 600px; margin-top: 60px; display: flex; justify-content: center; align-items: center;">
+                <div class="exploded-parts" style="position: relative; width: 300px; height: 400px; perspective: 1000px;">
+                    <!-- Part 1: Outer Shell -->
+                    <div class="part outer-shell" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); transform: translateZ(100px) translateX(-150px) scale(0.9); opacity: 0.8; filter: drop-shadow(0 0 20px rgba(255,255,255,0.1));">
+                        <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=300" style="width: 100%; height: 100%; object-fit: contain; filter: grayscale(100%) brightness(1.5) contrast(1.2) drop-shadow(0px 0px 5px rgba(255,255,255,0.2)); clip-path: circle(40% at 50% 50%);">
+                        <div class="part-label" style="position: absolute; top: -30px; left: -80px; text-align: right; width: 150px;">
+                            <h4 style="color: white; font-size: 1rem; margin-bottom: 5px;">Aerospace Aluminum</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.8rem; line-height: 1.3;">Ultra-lightweight outer shell minimizes resonance.</p>
+                            <div style="width: 50px; height: 1px; background: var(--accent); position: absolute; top: 10px; right: -60px;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Part 2: ANC Chip -->
+                    <div class="part anc-chip" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); transform: translateZ(50px) translateX(-50px) scale(0.95); opacity: 0.9;">
+                        <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #222, #000); border: 1px solid var(--border); border-radius: 10px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; box-shadow: 0 0 30px rgba(5,217,232,0.3);">
+                            <i class="fa-solid fa-microchip" style="color: var(--accent-warm); font-size: 2rem;"></i>
+                        </div>
+                        <div class="part-label" style="position: absolute; top: 250px; left: 0; text-align: center; width: 100%;">
+                            <h4 style="color: white; font-size: 1rem; margin-bottom: 5px;">H2 Sonic Chip</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.8rem; line-height: 1.3;">Processes audio 100,000 times per second.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Part 3: Driver -->
+                    <div class="part driver" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); transform: translateZ(0) translateX(50px); opacity: 1;">
+                        <div style="width: 150px; height: 150px; background: radial-gradient(circle, #333 0%, #111 60%, #000 100%); border: 3px solid #444; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5);">
+                            <div style="width: 50px; height: 50px; background: #222; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: inset 0 0 10px black;"></div>
+                        </div>
+                        <div class="part-label" style="position: absolute; top: 0; right: -80px; text-align: left; width: 150px;">
+                            <h4 style="color: white; font-size: 1rem; margin-bottom: 5px;">40mm Neodymium</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.8rem; line-height: 1.3;">Custom-tuned driver for deep bass and crisp highs.</p>
+                            <div style="width: 50px; height: 1px; background: var(--accent-warm); position: absolute; top: 10px; left: -60px;"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Part 4: Ear Cushion -->
+                    <div class="part cushion" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); transform: translateZ(-50px) translateX(150px) scale(1.05); opacity: 0.9;">
+                        <img src="https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&q=80&w=300" style="width: 100%; height: 100%; object-fit: contain; filter: grayscale(100%) brightness(0.7); clip-path: circle(42% at 50% 50%); transform: scaleX(-1);">
+                        <div class="part-label" style="position: absolute; bottom: -20px; right: -60px; text-align: left; width: 150px;">
+                            <h4 style="color: white; font-size: 1rem; margin-bottom: 5px;">Memory Foam</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.8rem; line-height: 1.3;">Acoustically sealed for passive isolation.</p>
+                            <div style="width: 30px; height: 1px; background: var(--text-secondary); position: absolute; top: 10px; left: -40px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <style>
+                .tech-specs-section:hover .outer-shell { transform: translateZ(150px) translateX(-250px) scale(0.85) !important; }
+                .tech-specs-section:hover .anc-chip { transform: translateZ(75px) translateX(-100px) scale(0.9) !important; }
+                .tech-specs-section:hover .driver { transform: translateZ(0) translateX(50px) !important; }
+                .tech-specs-section:hover .cushion { transform: translateZ(-75px) translateX(200px) scale(1.1) !important; }
+                .part-label { opacity: 0; transition: opacity 0.5s ease; }
+                .tech-specs-section:hover .part-label { opacity: 1; }
+            </style>
+        </div>
+    </section>
+
     <!-- ======== CUSTOM STUDIO ======== -->
     <section class="customizer-section section" id="customizer">
         <div class="reveal">
@@ -799,6 +893,107 @@
         </div>
     </section>
 
+    <!-- ======== COMPANION APP ======== -->
+    <section class="app-section section" id="companion-app" style="background: var(--bg-secondary); overflow: hidden; padding: 100px 0;">
+        <div class="app-container" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 0 5%;">
+            <div class="app-content reveal" style="flex: 1; min-width: 300px; margin-bottom: 40px; padding-right: 40px;">
+                <span class="section-label"><span class="dot"></span> Spidy Control</span>
+                <h2 class="section-heading" style="font-size: 2.8rem; margin-bottom: 20px;">Your Sound,<br><span class="gradient">Your Rules.</span></h2>
+                <p class="section-sub" style="margin-bottom: 30px; line-height: 1.7;">Unlock the full potential of your Spidy gear. Customize your EQ, adjust Active Noise Cancellation levels, update firmware, and find your lost earbuds instantly.</p>
+                
+                <ul class="app-features-list" style="list-style: none; padding: 0; margin-bottom: 40px;">
+                    <li style="margin-bottom: 20px; display: flex; align-items: flex-start; gap: 15px;">
+                        <div style="background: rgba(255,42,109,0.1); color: var(--accent); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i class="fa-solid fa-sliders"></i></div>
+                        <div>
+                            <h4 style="font-size: 1.1rem; margin-bottom: 5px; color: var(--text-primary);">10-Band Equalizer</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Fine-tune every frequency or choose from 15 studio-crafted presets.</p>
+                        </div>
+                    </li>
+                    <li style="margin-bottom: 20px; display: flex; align-items: flex-start; gap: 15px;">
+                        <div style="background: rgba(5,217,232,0.1); color: var(--accent-warm); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i class="fa-solid fa-ear-listen"></i></div>
+                        <div>
+                            <h4 style="font-size: 1.1rem; margin-bottom: 5px; color: var(--text-primary);">Adaptive ANC</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Automatically adjusts noise cancellation based on your environment.</p>
+                        </div>
+                    </li>
+                    <li style="margin-bottom: 20px; display: flex; align-items: flex-start; gap: 15px;">
+                        <div style="background: rgba(139,92,246,0.1); color: var(--accent-violet); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i class="fa-solid fa-location-dot"></i></div>
+                        <div>
+                            <h4 style="font-size: 1.1rem; margin-bottom: 5px; color: var(--text-primary);">Find My Gear</h4>
+                            <p style="color: var(--text-secondary); font-size: 0.9rem;">Never lose your earbuds again with precise location tracking and sound alerts.</p>
+                        </div>
+                    </li>
+                </ul>
+                
+                <div class="app-download-btns" style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <a href="#" class="store-btn" style="display: inline-flex; align-items: center; gap: 10px; background: var(--bg-card); border: 1px solid var(--border); padding: 10px 20px; border-radius: 8px; color: white; text-decoration: none; transition: 0.3s ease;">
+                        <i class="fa-brands fa-apple" style="font-size: 1.8rem;"></i>
+                        <div style="text-align: left;">
+                            <span style="display: block; font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase;">Download on the</span>
+                            <strong style="display: block; font-size: 1rem;">App Store</strong>
+                        </div>
+                    </a>
+                    <a href="#" class="store-btn" style="display: inline-flex; align-items: center; gap: 10px; background: var(--bg-card); border: 1px solid var(--border); padding: 10px 20px; border-radius: 8px; color: white; text-decoration: none; transition: 0.3s ease;">
+                        <i class="fa-brands fa-google-play" style="font-size: 1.5rem; color: #4285F4;"></i>
+                        <div style="text-align: left;">
+                            <span style="display: block; font-size: 0.65rem; color: var(--text-secondary); text-transform: uppercase;">GET IT ON</span>
+                            <strong style="display: block; font-size: 1rem;">Google Play</strong>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="app-visual reveal" style="flex: 1; min-width: 300px; display: flex; justify-content: center; position: relative;">
+                <div class="phone-mockup" style="position: relative; width: 280px; height: 580px; background: black; border-radius: 40px; border: 8px solid #222; box-shadow: 0 30px 60px rgba(0,0,0,0.6), inset 0 0 0 2px #333; overflow: hidden; z-index: 2;">
+                    <!-- App UI Mockup inside -->
+                    <div class="app-ui" style="padding: 30px 20px; background: linear-gradient(135deg, #111, #0a0a0a); height: 100%; color: white;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                            <i class="fa-solid fa-bars"></i>
+                            <span style="font-weight: 600;">Sequoia Pro</span>
+                            <i class="fa-solid fa-battery-three-quarters" style="color: var(--accent-green);"></i>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=200" alt="Headphones" style="width: 100%; border-radius: 20px; margin-bottom: 30px;">
+                        
+                        <div class="eq-ui" style="background: rgba(255,255,255,0.05); border-radius: 15px; padding: 15px; margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 0.9rem;">
+                                <span>Equalizer</span>
+                                <span style="color: var(--accent);">Custom 1</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; height: 60px; gap: 5px;">
+                                <div style="width: 15px; background: rgba(255,255,255,0.1); height: 100%; border-radius: 3px; position: relative;"><div style="position: absolute; bottom: 0; width: 100%; height: 60%; background: var(--accent); border-radius: 3px;"></div></div>
+                                <div style="width: 15px; background: rgba(255,255,255,0.1); height: 100%; border-radius: 3px; position: relative;"><div style="position: absolute; bottom: 0; width: 100%; height: 80%; background: var(--accent); border-radius: 3px;"></div></div>
+                                <div style="width: 15px; background: rgba(255,255,255,0.1); height: 100%; border-radius: 3px; position: relative;"><div style="position: absolute; bottom: 0; width: 100%; height: 40%; background: var(--accent); border-radius: 3px;"></div></div>
+                                <div style="width: 15px; background: rgba(255,255,255,0.1); height: 100%; border-radius: 3px; position: relative;"><div style="position: absolute; bottom: 0; width: 100%; height: 30%; background: var(--accent); border-radius: 3px;"></div></div>
+                                <div style="width: 15px; background: rgba(255,255,255,0.1); height: 100%; border-radius: 3px; position: relative;"><div style="position: absolute; bottom: 0; width: 100%; height: 50%; background: var(--accent); border-radius: 3px;"></div></div>
+                                <div style="width: 15px; background: rgba(255,255,255,0.1); height: 100%; border-radius: 3px; position: relative;"><div style="position: absolute; bottom: 0; width: 100%; height: 70%; background: var(--accent); border-radius: 3px;"></div></div>
+                                <div style="width: 15px; background: rgba(255,255,255,0.1); height: 100%; border-radius: 3px; position: relative;"><div style="position: absolute; bottom: 0; width: 100%; height: 90%; background: var(--accent); border-radius: 3px;"></div></div>
+                            </div>
+                        </div>
+                        
+                        <div class="anc-ui" style="background: rgba(255,255,255,0.05); border-radius: 15px; padding: 15px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 0.9rem;">
+                                <span>Noise Control</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; background: rgba(0,0,0,0.5); border-radius: 10px; padding: 5px;">
+                                <button style="flex: 1; padding: 8px; border: none; border-radius: 8px; background: var(--accent-warm); color: black; font-weight: 600; cursor: pointer;">ANC</button>
+                                <button style="flex: 1; padding: 8px; border: none; border-radius: 8px; background: transparent; color: white; cursor: pointer;">Off</button>
+                                <button style="flex: 1; padding: 8px; border: none; border-radius: 8px; background: transparent; color: white; cursor: pointer;">Trans</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Background decoration -->
+                <div style="position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,42,109,0.2) 0%, rgba(0,0,0,0) 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1;"></div>
+                <div style="position: absolute; width: 250px; height: 250px; background: radial-gradient(circle, rgba(5,217,232,0.15) 0%, rgba(0,0,0,0) 70%); bottom: -50px; right: -50px; z-index: 1;"></div>
+            </div>
+        </div>
+        
+        <style>
+            .store-btn:hover { background: rgba(255,255,255,0.1) !important; transform: translateY(-3px); }
+        </style>
+    </section>
+    
     <!-- ======== TESTIMONIALS ======== -->
     <section class="testimonials-section section" id="testimonials">
         <div class="reveal">
