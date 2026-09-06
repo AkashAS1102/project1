@@ -1039,6 +1039,66 @@
         </div>
     </section>
 
+    <!-- ======== COMPANY HISTORY ======== -->
+    <section class="history-section section" style="padding: 100px 5%; background: var(--bg-card); overflow: hidden; border-top: 1px solid var(--border);">
+        <div class="reveal" style="text-align: center; margin-bottom: 60px;">
+            <span class="section-label" style="justify-content:center"><span class="dot"></span> Our Heritage</span>
+            <h2 class="section-heading">The Evolution of <span class="gradient">Sound</span></h2>
+            <p class="section-sub" style="margin-left:auto;margin-right:auto; max-width: 600px;">From a small garage in Seattle to a global leader in premium acoustics.</p>
+        </div>
+        
+        <div style="max-width: 1000px; margin: 0 auto; position: relative;">
+            <!-- Timeline Line -->
+            <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.1); transform: translateX(-50%);"></div>
+            
+            <!-- 2012 -->
+            <div class="reveal" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 60px; position: relative;">
+                <div style="width: 45%; text-align: right; padding-right: 40px;">
+                    <h3 style="color: var(--accent); font-size: 2rem; margin-bottom: 10px;">2012</h3>
+                    <h4 style="color: white; font-size: 1.2rem; margin-bottom: 10px;">The First Prototype</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">Our founders build the first Spidy headset out of scrap metal and salvaged drivers, aiming for a perfectly flat response curve.</p>
+                </div>
+                <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; background: var(--bg-card); border: 4px solid var(--accent); border-radius: 50%; z-index: 2;"></div>
+                <div style="width: 45%; padding-left: 40px;">
+                    <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=400" alt="Prototype" style="width: 100%; height: 200px; object-fit: cover; border-radius: var(--radius-md); filter: grayscale(80%);">
+                </div>
+            </div>
+            
+            <!-- 2016 -->
+            <div class="reveal" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 60px; position: relative; flex-direction: row-reverse;">
+                <div style="width: 45%; text-align: left; padding-left: 40px;">
+                    <h3 style="color: var(--accent-warm); font-size: 2rem; margin-bottom: 10px;">2016</h3>
+                    <h4 style="color: white; font-size: 1.2rem; margin-bottom: 10px;">Going Wireless</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">The launch of the Spidy Air marks our entry into wireless audio, introducing our proprietary lossless codec.</p>
+                </div>
+                <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; background: var(--bg-card); border: 4px solid var(--accent-warm); border-radius: 50%; z-index: 2;"></div>
+                <div style="width: 45%; padding-right: 40px; text-align: right;">
+                    <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&q=80&w=400" alt="Wireless Headphones" style="width: 100%; height: 200px; object-fit: cover; border-radius: var(--radius-md); filter: grayscale(50%);">
+                </div>
+            </div>
+            
+            <!-- 2024 -->
+            <div class="reveal" style="display: flex; justify-content: space-between; align-items: center; position: relative;">
+                <div style="width: 45%; text-align: right; padding-right: 40px;">
+                    <h3 style="color: var(--accent-green); font-size: 2rem; margin-bottom: 10px;">2024</h3>
+                    <h4 style="color: white; font-size: 1.2rem; margin-bottom: 10px;">The Sequoia Pro</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">Culminating a decade of research, we release the Sequoia Pro, setting a new industry standard for active noise cancellation.</p>
+                </div>
+                <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 20px; height: 20px; background: var(--bg-card); border: 4px solid var(--accent-green); border-radius: 50%; z-index: 2;"></div>
+                <div style="width: 45%; padding-left: 40px;">
+                    <img src="https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=400" alt="Sequoia Pro" style="width: 100%; height: 200px; object-fit: cover; border-radius: var(--radius-md);">
+                </div>
+            </div>
+        </div>
+        <style>
+            @media (max-width: 768px) {
+                .history-section > div > div > div:first-child { position: absolute; left: 20px !important; transform: none !important; }
+                .history-section .reveal { flex-direction: column !important; text-align: left !important; padding-left: 40px !important; align-items: flex-start !important; }
+                .history-section .reveal > div { width: 100% !important; padding: 0 !important; margin-bottom: 20px; text-align: left !important; }
+            }
+        </style>
+    </section>
+
     <!-- ======== SUSTAINABILITY ======== -->
     <section class="sustainability-section section" id="sustainability" style="background: var(--bg-card); padding: 80px 5%; margin: 60px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
         <div class="sustainability-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 60px; align-items: center; max-width: 1200px; margin: 0 auto;">
@@ -1089,6 +1149,50 @@
                         <i class="fa-solid fa-recycle" style="color: var(--accent-green);"></i> Eco-Certified
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== SOUND PROFILES ======== -->
+    <section class="sound-profiles-section section" style="padding: 100px 5%; background: #000; border-top: 1px solid var(--border);">
+        <div class="reveal" style="text-align: center; margin-bottom: 60px;">
+            <span class="section-label" style="justify-content:center"><span class="dot"></span> Custom EQ</span>
+            <h2 class="section-heading">Your Sound. <span class="gradient">Your Way.</span></h2>
+            <p class="section-sub" style="margin-left:auto;margin-right:auto; max-width: 600px;">Switch between studio-grade presets or create your own custom 10-band EQ right from the Spidy App.</p>
+        </div>
+        
+        <div class="profiles-container reveal-stagger" style="max-width: 1000px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 40px; align-items: center; justify-content: center;">
+            <div class="eq-visualizer" style="flex: 1; min-width: 300px; background: var(--bg-card); padding: 40px; border-radius: var(--radius-lg); border: 1px solid var(--border); position: relative; height: 300px; display: flex; align-items: flex-end; justify-content: space-between; gap: 5px;">
+                <!-- Grid Lines -->
+                <div style="position: absolute; top: 20%; left: 0; width: 100%; height: 1px; background: rgba(255,255,255,0.05);"></div>
+                <div style="position: absolute; top: 40%; left: 0; width: 100%; height: 1px; background: rgba(255,255,255,0.05);"></div>
+                <div style="position: absolute; top: 60%; left: 0; width: 100%; height: 1px; background: rgba(255,255,255,0.05);"></div>
+                <div style="position: absolute; top: 80%; left: 0; width: 100%; height: 1px; background: rgba(255,255,255,0.05);"></div>
+                
+                <!-- EQ Bars (Simulated 'Signature Sound' V-Shape) -->
+                <div style="width: 100%; background: linear-gradient(to top, var(--accent), var(--accent-warm)); height: 80%; border-radius: 4px 4px 0 0; position: relative; z-index: 2; transition: height 0.5s ease;"></div>
+                <div style="width: 100%; background: linear-gradient(to top, var(--accent), var(--accent-warm)); height: 70%; border-radius: 4px 4px 0 0; position: relative; z-index: 2; transition: height 0.5s ease;"></div>
+                <div style="width: 100%; background: linear-gradient(to top, var(--accent), var(--accent-warm)); height: 50%; border-radius: 4px 4px 0 0; position: relative; z-index: 2; transition: height 0.5s ease;"></div>
+                <div style="width: 100%; background: linear-gradient(to top, var(--accent), var(--accent-warm)); height: 35%; border-radius: 4px 4px 0 0; position: relative; z-index: 2; transition: height 0.5s ease;"></div>
+                <div style="width: 100%; background: linear-gradient(to top, var(--accent), var(--accent-warm)); height: 40%; border-radius: 4px 4px 0 0; position: relative; z-index: 2; transition: height 0.5s ease;"></div>
+                <div style="width: 100%; background: linear-gradient(to top, var(--accent), var(--accent-warm)); height: 55%; border-radius: 4px 4px 0 0; position: relative; z-index: 2; transition: height 0.5s ease;"></div>
+                <div style="width: 100%; background: linear-gradient(to top, var(--accent), var(--accent-warm)); height: 65%; border-radius: 4px 4px 0 0; position: relative; z-index: 2; transition: height 0.5s ease;"></div>
+                <div style="width: 100%; background: linear-gradient(to top, var(--accent), var(--accent-warm)); height: 85%; border-radius: 4px 4px 0 0; position: relative; z-index: 2; transition: height 0.5s ease;"></div>
+            </div>
+            
+            <div class="eq-controls" style="flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 15px;">
+                <button class="eq-preset active" style="padding: 20px; background: rgba(255,42,109,0.1); border: 1px solid var(--accent); border-radius: var(--radius-md); text-align: left; cursor: pointer; transition: all 0.3s ease;">
+                    <h4 style="color: white; font-size: 1.1rem; margin-bottom: 5px;">Spidy Signature</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Elevated bass and sparkling treble. The perfect V-shape for pop and hip-hop.</p>
+                </button>
+                <button class="eq-preset" style="padding: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); text-align: left; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                    <h4 style="color: white; font-size: 1.1rem; margin-bottom: 5px;">Acoustic Pure</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Flat response curve. Hear the track exactly as the producer intended.</p>
+                </button>
+                <button class="eq-preset" style="padding: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-md); text-align: left; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+                    <h4 style="color: white; font-size: 1.1rem; margin-bottom: 5px;">Podcast & Voice</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Boosts mid-range frequencies for crystal clear dialogue and vocals.</p>
+                </button>
             </div>
         </div>
     </section>
@@ -1706,6 +1810,38 @@
             @keyframes spin { 100% { transform: rotate(360deg); } }
             @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
         </style>
+    </section>
+
+    <!-- ======== CORPORATE GIFTING ======== -->
+    <section class="corporate-section section" style="padding: 100px 5%; background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%); border-top: 1px solid var(--border);">
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 40px;">
+            <div class="corporate-content reveal" style="flex: 1; min-width: 300px;">
+                <span class="section-label"><span class="dot"></span> Spidy for Business</span>
+                <h2 class="section-heading">Corporate <span class="gradient">Gifting</span></h2>
+                <p class="section-sub" style="margin-bottom: 30px;">Reward your team, impress your clients, or outfit your entire office with premium audio. We offer bulk pricing, custom laser engraving with your company logo, and dedicated account management.</p>
+                <ul style="list-style: none; padding: 0; margin-bottom: 30px;">
+                    <li style="display: flex; align-items: center; gap: 10px; color: white; margin-bottom: 10px;">
+                        <i class="fa-solid fa-check" style="color: var(--accent-green);"></i> Discounts starting at 20+ units
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 10px; color: white; margin-bottom: 10px;">
+                        <i class="fa-solid fa-check" style="color: var(--accent-green);"></i> Free custom logo engraving
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 10px; color: white; margin-bottom: 10px;">
+                        <i class="fa-solid fa-check" style="color: var(--accent-green);"></i> Direct multi-address shipping
+                    </li>
+                </ul>
+                <button class="btn-primary" style="background: white; color: black;"><i class="fa-solid fa-building" style="margin-right: 10px;"></i> Contact B2B Sales</button>
+            </div>
+            <div class="corporate-visual reveal" style="flex: 1; min-width: 300px; position: relative;">
+                <div style="background: var(--bg-card); padding: 40px; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center;">
+                    <img src="https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?auto=format&fit=crop&q=80&w=400" alt="Corporate Headphones" style="width: 200px; height: 200px; object-fit: contain; margin-bottom: 20px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));">
+                    <div style="background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 20px; display: inline-flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-wand-magic-sparkles" style="color: var(--accent);"></i>
+                        <span style="color: white; font-weight: 600; font-size: 0.9rem;">Your Logo Here</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- ======== CONTACT SECTION ======== -->
