@@ -1334,6 +1334,88 @@
         </div>
     </section>
 
+    <!-- ======== HEADPHONE FINDER QUIZ ======== -->
+    <section class="quiz-section section" style="padding: 100px 5%; background: var(--bg-card); border-top: 1px solid var(--border); overflow: hidden; position: relative;">
+        <div style="position: absolute; right: -100px; top: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(139,92,246,0.1), transparent 70%); pointer-events: none;"></div>
+        <div style="max-width: 800px; margin: 0 auto; position: relative; z-index: 2;">
+            <div class="reveal" style="text-align: center; margin-bottom: 50px;">
+                <span class="section-label" style="justify-content:center"><span class="dot"></span> Personalized</span>
+                <h2 class="section-heading">Find Your <span class="gradient">Perfect Pair</span></h2>
+                <p class="section-sub" style="margin-left:auto;margin-right:auto; max-width: 500px;">Answer 3 quick questions and we'll recommend the exact Spidy product built for your lifestyle.</p>
+            </div>
+
+            <div class="quiz-container reveal" id="quiz-container">
+                <!-- Step 1 -->
+                <div class="quiz-step" id="quiz-step-1">
+                    <div style="background: rgba(255,255,255,0.05); border-radius: 16px; padding: 10px 20px; margin-bottom: 30px; display: flex; align-items: center; gap: 10px;">
+                        <span style="color: var(--accent); font-weight: 700; font-size: 0.9rem;">Step 1 of 3</span>
+                        <div style="flex: 1; background: rgba(255,255,255,0.1); height: 4px; border-radius: 2px;"><div style="width: 33%; height: 100%; background: var(--accent); border-radius: 2px;"></div></div>
+                    </div>
+                    <h3 style="color: white; font-size: 1.4rem; text-align: center; margin-bottom: 30px;">How do you mainly listen to music?</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <button class="quiz-choice" onclick="nextStep(2, 'pro')" style="padding: 25px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; cursor: pointer; text-align: center; transition: all 0.3s; color: white;" onmouseover="this.style.borderColor='var(--accent)';this.style.background='rgba(255,42,109,0.08)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.05)'">
+                            <i class="fa-solid fa-record-vinyl" style="font-size: 2rem; color: var(--accent); margin-bottom: 12px; display: block;"></i>
+                            <strong>At home / studio</strong>
+                        </button>
+                        <button class="quiz-choice" onclick="nextStep(2, 'commuter')" style="padding: 25px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; cursor: pointer; text-align: center; transition: all 0.3s; color: white;" onmouseover="this.style.borderColor='var(--accent-warm)';this.style.background='rgba(247,147,30,0.08)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.05)'">
+                            <i class="fa-solid fa-train" style="font-size: 2rem; color: var(--accent-warm); margin-bottom: 12px; display: block;"></i>
+                            <strong>On the commute</strong>
+                        </button>
+                        <button class="quiz-choice" onclick="nextStep(2, 'athlete')" style="padding: 25px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; cursor: pointer; text-align: center; transition: all 0.3s; color: white;" onmouseover="this.style.borderColor='var(--accent-green)';this.style.background='rgba(16,185,129,0.08)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.05)'">
+                            <i class="fa-solid fa-dumbbell" style="font-size: 2rem; color: var(--accent-green); margin-bottom: 12px; display: block;"></i>
+                            <strong>During workouts</strong>
+                        </button>
+                        <button class="quiz-choice" onclick="nextStep(2, 'gamer')" style="padding: 25px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; cursor: pointer; text-align: center; transition: all 0.3s; color: white;" onmouseover="this.style.borderColor='var(--accent-violet)';this.style.background='rgba(139,92,246,0.08)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.05)'">
+                            <i class="fa-solid fa-gamepad" style="font-size: 2rem; color: var(--accent-violet); margin-bottom: 12px; display: block;"></i>
+                            <strong>Gaming sessions</strong>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Result -->
+                <div class="quiz-step" id="quiz-result" style="display: none; text-align: center;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">🎧</div>
+                    <h3 style="color: white; font-size: 1.6rem; margin-bottom: 10px;">Your Perfect Match</h3>
+                    <div id="quiz-result-name" style="color: var(--accent); font-size: 2rem; font-weight: 900; margin-bottom: 15px;">Sequoia Pro</div>
+                    <p id="quiz-result-desc" style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 30px; max-width: 400px; margin-left: auto; margin-right: auto;"></p>
+                    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                        <button class="btn-primary">Shop Now <i class="fa-solid fa-arrow-right" style="margin-left: 8px;"></i></button>
+                        <button class="btn-secondary" onclick="restartQuiz()">Retake Quiz</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            let quizProfile = '';
+            function nextStep(step, profile) {
+                if (profile) quizProfile = profile;
+                document.querySelectorAll('.quiz-step').forEach(s => s.style.display = 'none');
+                if (step === 'result') {
+                    showQuizResult();
+                } else {
+                    const el = document.getElementById('quiz-step-' + step);
+                    if (el) el.style.display = 'block';
+                }
+            }
+            function showQuizResult() {
+                const results = {
+                    pro: { name: 'Sequoia Pro', desc: 'With its flat reference tuning and USB-C lossless mode, the Sequoia Pro is your studio-grade companion for home listening and critical mixing.' },
+                    commuter: { name: 'Apex ANC', desc: 'ANC-Max blocks 42dB of noise, and 38-hour battery means a whole work week on a single charge. The Apex ANC is built for the daily grind.' },
+                    athlete: { name: 'Surge Pro Earbuds', desc: 'IPX7 waterproof, secure sport wing-tips, and a punchy Workout EQ preset. The Surge Pro will keep pace with your most intense sessions.' },
+                    gamer: { name: 'Arsenal 7.1', desc: 'Ultra-low 2.4GHz latency, ClearCast boom mic, and 7.1 surround sound. The Arsenal 7.1 gives you a competitive edge in every match.' }
+                };
+                const r = results[quizProfile] || results['pro'];
+                document.getElementById('quiz-result-name').textContent = r.name;
+                document.getElementById('quiz-result-desc').textContent = r.desc;
+                document.getElementById('quiz-result').style.display = 'block';
+            }
+            function restartQuiz() {
+                document.querySelectorAll('.quiz-step').forEach(s => s.style.display = 'none');
+                document.getElementById('quiz-step-1').style.display = 'block';
+            }
+        </script>
+    </section>
+
     <!-- ======== COMPANION APP ======== -->
     <section class="app-section section" id="companion-app" style="background: var(--bg-secondary); overflow: hidden; padding: 100px 0;">
         <div class="app-container" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto; padding: 0 5%;">
@@ -1742,6 +1824,122 @@
                 </div>
             </div>
         </div>
+    </section>
+
+    <!-- ======== LISTENING ENVIRONMENTS ======== -->
+    <section class="environments-section section" style="padding: 100px 5%; background: #000; border-top: 1px solid var(--border);">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div class="reveal" style="text-align: center; margin-bottom: 60px;">
+                <span class="section-label" style="justify-content:center"><span class="dot"></span> Built For Every Moment</span>
+                <h2 class="section-heading">Any Place. <span class="gradient">Any Sound.</span></h2>
+                <p class="section-sub" style="margin-left:auto;margin-right:auto; max-width: 600px;">Spidy products are engineered to thrive in every environment — from the quiet studio to the chaotic commute.</p>
+            </div>
+
+            <div class="env-tabs reveal" style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 40px;" id="env-tabs">
+                <button class="env-tab active" onclick="showEnv('studio')" style="padding: 12px 24px; background: var(--accent); color: white; border: none; border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.3s;"><i class="fa-solid fa-record-vinyl" style="margin-right: 8px;"></i>Studio</button>
+                <button class="env-tab" onclick="showEnv('commute')" style="padding: 12px 24px; background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.1); border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.3s;"><i class="fa-solid fa-train" style="margin-right: 8px;"></i>Commute</button>
+                <button class="env-tab" onclick="showEnv('gym')" style="padding: 12px 24px; background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.1); border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.3s;"><i class="fa-solid fa-dumbbell" style="margin-right: 8px;"></i>Gym</button>
+                <button class="env-tab" onclick="showEnv('travel')" style="padding: 12px 24px; background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.1); border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.3s;"><i class="fa-solid fa-plane" style="margin-right: 8px;"></i>Travel</button>
+                <button class="env-tab" onclick="showEnv('home')" style="padding: 12px 24px; background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.1); border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.3s;"><i class="fa-solid fa-couch" style="margin-right: 8px;"></i>Home</button>
+            </div>
+
+            <!-- Studio -->
+            <div id="env-studio" class="env-panel" style="display: flex; flex-wrap: wrap; gap: 40px; align-items: center;">
+                <div style="flex: 1; min-width: 300px;">
+                    <img src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=700" alt="Studio" style="width: 100%; border-radius: var(--radius-lg); filter: brightness(0.85);">
+                </div>
+                <div style="flex: 1; min-width: 280px;">
+                    <h3 style="color: white; font-size: 2rem; margin-bottom: 15px;">The Perfect Studio Monitor</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 25px;">Spidy's flat frequency response mode and ultra-low THD make the Sequoia Pro the go-to reference headphone for mixing engineers who need to hear every nuance of their tracks.</p>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 30px;">
+                        <li style="display: flex; align-items: center; gap: 12px; color: white; margin-bottom: 14px;"><i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> Acoustic Pure EQ preset (flat response)</li>
+                        <li style="display: flex; align-items: center; gap: 12px; color: white; margin-bottom: 14px;"><i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> Ultra-low 0.01% total harmonic distortion</li>
+                        <li style="display: flex; align-items: center; gap: 12px; color: white;"><i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> Wired USB-C lossless monitoring mode</li>
+                    </ul>
+                    <span style="background: rgba(255,42,109,0.1); color: var(--accent); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Recommended: Sequoia Pro</span>
+                </div>
+            </div>
+
+            <!-- Commute -->
+            <div id="env-commute" class="env-panel" style="display: none; flex-wrap: wrap; gap: 40px; align-items: center;">
+                <div style="flex: 1; min-width: 300px;">
+                    <img src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&q=80&w=700" alt="Commute" style="width: 100%; border-radius: var(--radius-lg);">
+                </div>
+                <div style="flex: 1; min-width: 280px;">
+                    <h3 style="color: white; font-size: 2rem; margin-bottom: 15px;">Block the World Out</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 25px;">ANC-Max mode eliminates up to 42dB of ambient noise — trains, traffic, and chatty co-passengers all vanish so you can focus on what matters.</p>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 30px;">
+                        <li style="display: flex; align-items: center; gap: 12px; color: white; margin-bottom: 14px;"><i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> 42dB noise reduction in ANC-Max</li>
+                        <li style="display: flex; align-items: center; gap: 12px; color: white; margin-bottom: 14px;"><i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> Transparent Mode for announcements</li>
+                        <li style="display: flex; align-items: center; gap: 12px; color: white;"><i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> 38-hour battery life per charge</li>
+                    </ul>
+                    <span style="background: rgba(247,147,30,0.1); color: var(--accent-warm); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Recommended: Apex ANC</span>
+                </div>
+            </div>
+
+            <!-- Gym -->
+            <div id="env-gym" class="env-panel" style="display: none; flex-wrap: wrap; gap: 40px; align-items: center;">
+                <div style="flex: 1; min-width: 300px;">
+                    <img src="https://images.unsplash.com/photo-1534258936925-c58bed479fcb?auto=format&fit=crop&q=80&w=700" alt="Gym" style="width: 100%; border-radius: var(--radius-lg); filter: contrast(1.1) saturate(1.1);">
+                </div>
+                <div style="flex: 1; min-width: 280px;">
+                    <h3 style="color: white; font-size: 2rem; margin-bottom: 15px;">Push Harder. Sound Louder.</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 25px;">Our earbuds are rated IPX7 waterproof and stay in no matter how intense the session gets. The bass-enhanced Workout EQ preset will fuel every rep.</p>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 30px;">
+                        <li style="display: flex; align-items: center; gap: 12px; color: white; margin-bottom: 14px;"><i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> IPX7 sweat & waterproof rating</li>
+                        <li style="display: flex; align-items: center; gap: 12px; color: white; margin-bottom: 14px;"><i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> Sports wing-tip with 3 sizes</li>
+                        <li style="display: flex; align-items: center; gap: 12px; color: white;"><i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> Workout EQ: deep punchy bass</li>
+                    </ul>
+                    <span style="background: rgba(16,185,129,0.1); color: var(--accent-green); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Recommended: Surge Pro Earbuds</span>
+                </div>
+            </div>
+
+            <!-- Travel -->
+            <div id="env-travel" class="env-panel" style="display: none; flex-wrap: wrap; gap: 40px; align-items: center;">
+                <div style="flex: 1; min-width: 300px;">
+                    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80&w=700" alt="Travel" style="width: 100%; border-radius: var(--radius-lg);">
+                </div>
+                <div style="flex: 1; min-width: 280px;">
+                    <h3 style="color: white; font-size: 2rem; margin-bottom: 15px;">Your Sanctuary at 35,000 ft</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 25px;">The low-frequency rumble of jet engines is no match for Spidy's adaptive ANC. Land refreshed, not fatigued.</p>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 30px;">
+                        <li style="display: flex; align-items: center; gap: 12px; color: white; margin-bottom: 14px;"><i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> Airplane mode ANC tuning</li>
+                        <li style="display: flex; align-items: center; gap: 12px; color: white; margin-bottom: 14px;"><i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> Foldable for compact carry-on storage</li>
+                        <li style="display: flex; align-items: center; gap: 12px; color: white;"><i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> 3.5mm airline adapter included</li>
+                    </ul>
+                    <span style="background: rgba(139,92,246,0.1); color: var(--accent-violet); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Recommended: Sequoia Pro</span>
+                </div>
+            </div>
+
+            <!-- Home -->
+            <div id="env-home" class="env-panel" style="display: none; flex-wrap: wrap; gap: 40px; align-items: center;">
+                <div style="flex: 1; min-width: 300px;">
+                    <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=700" alt="Home listening" style="width: 100%; border-radius: var(--radius-lg);">
+                </div>
+                <div style="flex: 1; min-width: 280px;">
+                    <h3 style="color: white; font-size: 2rem; margin-bottom: 15px;">Your Private Concert Hall</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 25px;">Sprawl on the sofa and lose yourself in music. Spidy's 3D Spatial Audio creates a wide, room-filling soundstage that makes headphone listening feel like hi-fi speakers.</p>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 30px;">
+                        <li style="display: flex; align-items: center; gap: 12px; color: white; margin-bottom: 14px;"><i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> Spidy Spatial 3D audio mode</li>
+                        <li style="display: flex; align-items: center; gap: 12px; color: white; margin-bottom: 14px;"><i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> Hi-Res Audio certified (up to 192kHz)</li>
+                        <li style="display: flex; align-items: center; gap: 12px; color: white;"><i class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i> Works with Spotify Connect & AirPlay</li>
+                    </ul>
+                    <span style="background: rgba(247,147,30,0.1); color: var(--accent-warm); padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;">Recommended: Sequoia Pro / Home Speaker</span>
+                </div>
+            </div>
+        </div>
+        <script>
+            function showEnv(id) {
+                document.querySelectorAll('.env-panel').forEach(p => p.style.display = 'none');
+                document.querySelectorAll('.env-tab').forEach(t => {
+                    t.style.background = 'rgba(255,255,255,0.08)';
+                    t.style.border = '1px solid rgba(255,255,255,0.1)';
+                });
+                document.getElementById('env-' + id).style.display = 'flex';
+                event.currentTarget.style.background = 'var(--accent)';
+                event.currentTarget.style.border = '1px solid var(--accent)';
+            }
+        </script>
     </section>
 
     <!-- ======== COMMUNITY HUB ======== -->

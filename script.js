@@ -2099,3 +2099,153 @@
     }
 
 })();
+
+/* ========================================
+   360deg PRODUCT VIEWER — Drag to Rotate
+   ======================================== */
+(function() {
+    const stage = document.getElementById('viewer360');
+    const product = document.getElementById('viewerProduct');
+    const hint = document.getElementById('viewerHint');
+    const colorBtns = document.querySelectorAll('.viewer-color');
+    const colorNameEl = document.getElementById('viewerColorName');
+
+    if (!stage || !product) return;
+
+    const colorNames = { midnight: 'Midnight Black', navy: 'Deep Navy', rose: 'Dark Rose', white: 'Pearl White' };
+
+    let isDragging = false;
+    let startX = 0;
+    let currentRotation = 0;
+    let rafId = null;
+    let targetRotation = 0;
+
+    function onStart(x) {
+        isDragging = true;
+        startX = x;
+        if (hint) hint.classList.add('hidden');
+        stage.style.cursor = 'grabbing';
+    }
+    function onMove(x) {
+        if (!isDragging) return;
+        const delta = x - startX;
+        startX = x;
+        targetRotation += delta * 0.5;
+        if (!rafId) rafId = requestAnimationFrame(animateRotation);
+    }
+    function onEnd() {
+        isDragging = false;
+        stage.style.cursor = 'grab';
+        rafId = null;
+    }
+    function animateRotation() {
+        currentRotation += (targetRotation - currentRotation) * 0.12;
+        product.style.transform = 'perspective(800px) rotateY(' + currentRotation + 'deg)';
+        if (Math.abs(targetRotation - currentRotation) > 0.01) {
+            rafId = requestAnimationFrame(animateRotation);
+        } else {
+            rafId = null;
+        }
+    }
+
+    // Auto-rotate slowly on idle
+    let autoRot = 0;
+    let autoRaf;
+    function autoRotate() {
+        if (!isDragging) {
+            autoRot += 0.15;
+            targetRotation = autoRot;
+            currentRotation += (targetRotation - currentRotation) * 0.05;
+            product.style.transform = 'perspective(800px) rotateY(' + currentRotation + 'deg)';
+        }
+        autoRaf = requestAnimationFrame(autoRotate);
+    }
+    autoRaf = requestAnimationFrame(autoRotate);
+
+    stage.addEventListener('mousedown', e => { autoRot = currentRotation; cancelAnimationFrame(autoRaf); onStart(e.clientX); });
+    window.addEventListener('mousemove', e => onMove(e.clientX));
+    window.addEventListener('mouseup', () => { onEnd(); autoRaf = requestAnimationFrame(autoRotate); });
+
+    stage.addEventListener('touchstart', e => { autoRot = currentRotation; cancelAnimationFrame(autoRaf); onStart(e.touches[0].clientX); }, { passive: true });
+    window.addEventListener('touchmove', e => onMove(e.touches[0].clientX), { passive: true });
+    window.addEventListener('touchend', () => { onEnd(); autoRaf = requestAnimationFrame(autoRotate); });
+
+    // Color picker
+    colorBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            colorBtns.forEach(b => { b.classList.remove('active'); b.style.borderColor = 'transparent'; });
+            btn.classList.add('active');
+            btn.style.borderColor = 'var(--accent)';
+            if (colorNameEl) colorNameEl.textContent = colorNames[btn.dataset.color] || btn.dataset.color;
+        });
+    });
+})();
+
+/* ========================================
+   TRADE-IN ESTIMATOR
+   ======================================== */
+(function() {
+    const slider = document.getElementById('tradeinSlider');
+    const sliderVal = document.getElementById('tradeinSliderVal');
+    const amountEl = document.getElementById('tradeinAmount');
+    const brandSelect = document.getElementById('tradeinBrand');
+
+    if (!slider) return;
+
+    const brandMultipliers = { sony: 1.15, bose: 1.2, apple: 1.25, jbl: 1.0, sennheiser: 1.1, other: 0.85 };
+    const conditionMultipliers = { excellent: 0.38, good: 0.30, fair: 0.18 };
+
+    function calcEstimate() {
+        const price = parseInt(slider.value);
+        const brand = brandSelect ? brandSelect.value : 'other';
+        const cond = document.querySelector('input[name="condition"]:checked');
+        const condVal = cond ? cond.value : 'good';
+        const brandM = brandMultipliers[brand] || 1.0;
+        const condM = conditionMultipliers[condVal] || 0.30;
+        const estimate = Math.round(price * brandM * condM);
+        if (sliderVal) sliderVal.textContent = '$' + price;
+        if (amountEl) {
+            amountEl.textContent = '$' + estimate;
+            amountEl.style.transform = 'scale(1.15)';
+            setTimeout(() => { amountEl.style.transform = 'scale(1)'; }, 200);
+        }
+    }
+
+    slider.addEventListener('input', calcEstimate);
+    if (brandSelect) brandSelect.addEventListener('change', calcEstimate);
+    document.querySelectorAll('input[name="condition"]').forEach(r => r.addEventListener('change', calcEstimate));
+    calcEstimate();
+})();
+
+/* ========================================
+   REFERRAL CODE COPY
+   ======================================== */
+(function() {
+    const copyBtn = document.getElementById('copyReferralBtn');
+    const codeEl = document.getElementById('referralCode');
+    if (!copyBtn || !codeEl) return;
+
+    copyBtn.addEventListener('click', () => {
+        const code = codeEl.textContent.trim();
+        navigator.clipboard.writeText(code).then(() => {
+            copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+            copyBtn.style.color = 'var(--success)';
+            copyBtn.style.borderColor = 'var(--success)';
+            setTimeout(() => {
+                copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy';
+                copyBtn.style.color = '';
+                copyBtn.style.borderColor = '';
+            }, 2000);
+        }).catch(() => {
+            // Fallback
+            const ta = document.createElement('textarea');
+            ta.value = code;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            ta.remove();
+            copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+            setTimeout(() => { copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy'; }, 2000);
+        });
+    });
+})();
