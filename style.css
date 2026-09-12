@@ -3590,3 +3590,311 @@ body.easter-egg-active {
     .tradein-conditions { flex-direction: column; }
     .referral-card-stack { max-width: 100%; }
 }
+
+/* ============================================
+   NEW SECTIONS — Extended CSS
+   Listening Environments, Quiz, Stats, Podcast,
+   Community, Membership Tiers, Shipping,
+   Animations & Utilities
+   ============================================ */
+
+/* --- Listening Environments --- */
+.environments-section .env-panel {
+    animation: fadeSlideIn 0.4s var(--ease) both;
+}
+.env-tab {
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+    transition: background 0.25s var(--ease), border-color 0.25s var(--ease), transform 0.2s var(--spring);
+}
+.env-tab:hover {
+    transform: translateY(-2px);
+}
+.env-tab:active {
+    transform: scale(0.96);
+}
+
+/* --- Quiz Section --- */
+.quiz-section .quiz-choice {
+    font-family: var(--font);
+    transition: border-color 0.25s var(--ease),
+                background 0.25s var(--ease),
+                transform 0.2s var(--spring),
+                box-shadow 0.25s var(--ease);
+}
+.quiz-section .quiz-choice:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+}
+.quiz-section .quiz-choice:active {
+    transform: scale(0.97);
+}
+#quiz-result {
+    animation: quizResultReveal 0.5s var(--spring) both;
+}
+@keyframes quizResultReveal {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* --- Live Stats --- */
+.stat-card {
+    transition: background 0.3s var(--ease), transform 0.3s var(--spring);
+}
+.stat-card:hover {
+    transform: scale(1.03);
+}
+.stat-number {
+    background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.6));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-family: var(--font-display);
+}
+
+/* --- Podcast Section --- */
+.podcast-card {
+    transition: border-color 0.25s var(--ease),
+                background 0.25s var(--ease),
+                transform 0.3s var(--spring);
+}
+.podcast-card:hover {
+    transform: translateX(6px);
+}
+.podcast-section a {
+    transition: opacity 0.2s var(--ease), transform 0.2s var(--spring);
+}
+.podcast-section a:hover {
+    opacity: 0.85;
+    transform: translateY(-2px);
+}
+
+/* --- Community Hub --- */
+.forum-card {
+    transition: border-color 0.25s var(--ease),
+                background 0.25s var(--ease),
+                transform 0.3s var(--spring),
+                box-shadow 0.3s var(--ease);
+}
+.forum-card:hover {
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+}
+
+/* --- Premier Membership Tiers --- */
+.premier-grid > div {
+    transition: transform 0.3s var(--spring), box-shadow 0.3s var(--ease);
+}
+.premier-grid > div:hover {
+    transform: translateY(-6px);
+}
+.premier-grid > div:first-child:hover,
+.premier-grid > div:last-child:hover {
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+/* --- Shipping & Returns Table --- */
+.shipping-section table tr {
+    transition: background 0.2s var(--ease);
+}
+.shipping-section table tbody tr:hover {
+    background: rgba(255,255,255,0.04) !important;
+}
+.shipping-grid > div {
+    transition: border-color 0.25s var(--ease),
+                transform 0.3s var(--spring),
+                box-shadow 0.3s var(--ease);
+}
+.shipping-grid > div:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+}
+
+/* --- Accessory Cards --- */
+.accessory-card:hover img {
+    transform: scale(1.08) rotate(-2deg);
+    filter: brightness(1.1);
+}
+.accessory-card img {
+    transition: transform 0.4s var(--spring), filter 0.3s var(--ease);
+}
+
+/* --- Collab Cards --- */
+.collab-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.6) 100%);
+    border-radius: var(--radius-lg);
+    pointer-events: none;
+}
+
+/* --- Careers Section Images --- */
+.careers-visual img {
+    transition: filter 0.4s var(--ease), transform 0.4s var(--spring);
+}
+.careers-visual:hover img {
+    filter: grayscale(0%) !important;
+    transform: scale(1.03);
+}
+
+/* --- Unboxing Items --- */
+.unboxing-item > div {
+    transition: border-color 0.25s var(--ease),
+                background 0.25s var(--ease),
+                transform 0.3s var(--spring);
+}
+.unboxing-item:hover > div {
+    border-color: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.07);
+    transform: translateY(-5px);
+}
+
+/* --- Glossary Cards --- */
+.glossary-grid > div {
+    transition: background 0.25s var(--ease),
+                border-color 0.25s var(--ease),
+                transform 0.3s var(--spring);
+}
+.glossary-grid > div:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,255,255,0.15) !important;
+}
+
+/* --- Company History Timeline Dots --- */
+.history-section .reveal > div:nth-child(2) {
+    transition: transform 0.3s var(--spring), box-shadow 0.3s var(--ease);
+}
+.history-section .reveal:hover > div:nth-child(2) {
+    transform: translate(-50%, -50%) scale(1.4);
+    box-shadow: 0 0 20px var(--accent);
+}
+
+/* --- Sound Profiles EQ Bars --- */
+.eq-visualizer > div:not([style*='absolute']) {
+    transition: height 0.6s var(--spring);
+}
+.eq-preset {
+    transition: all 0.3s var(--ease);
+}
+.eq-preset:hover {
+    transform: translateX(4px);
+}
+.eq-preset.active {
+    transform: translateX(4px);
+}
+
+/* --- Store Locator Map Pins --- */
+.map-pin {
+    transition: transform 0.3s var(--spring), box-shadow 0.3s var(--ease);
+}
+.map-pin:hover {
+    transform: scale(1.4) !important;
+}
+
+/* --- Spidy Connect Signal Dots --- */
+.signal-dot {
+    filter: blur(1px);
+}
+
+/* --- General Keyframes --- */
+@keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position:  200% center; }
+}
+
+/* --- Shimmer Utility --- */
+.shimmer-text {
+    background: linear-gradient(90deg,
+        rgba(255,255,255,0.6) 25%,
+        rgba(255,255,255,1.0) 50%,
+        rgba(255,255,255,0.6) 75%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s linear infinite;
+}
+
+/* --- Gradient Text Utility (already in project, extended) --- */
+.gradient-violet {
+    background: linear-gradient(135deg, var(--accent-violet), var(--accent-warm));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.gradient-green {
+    background: linear-gradient(135deg, var(--accent-green), #05d9e8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* --- Glass Card Utility --- */
+.glass-card-v2 {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--glass-shadow);
+    transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease), transform 0.3s var(--spring);
+}
+.glass-card-v2:hover {
+    border-color: var(--glass-border-hover);
+    box-shadow: var(--glass-shadow), 0 0 30px rgba(255,42,109,0.06);
+    transform: translateY(-3px);
+}
+
+/* --- Glow Button Utility --- */
+.btn-glow-green {
+    background: var(--accent-green);
+    color: #000;
+    box-shadow: 0 0 20px rgba(55, 178, 77, 0.35);
+    border-radius: var(--radius-full);
+    padding: 14px 28px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: box-shadow 0.3s var(--ease), transform 0.2s var(--spring);
+}
+.btn-glow-green:hover {
+    box-shadow: 0 0 35px rgba(55, 178, 77, 0.6);
+    transform: translateY(-2px);
+}
+.btn-glow-violet {
+    background: var(--accent-violet);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.35);
+    border-radius: var(--radius-full);
+    padding: 14px 28px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: box-shadow 0.3s var(--ease), transform 0.2s var(--spring);
+}
+.btn-glow-violet:hover {
+    box-shadow: 0 0 35px rgba(139, 92, 246, 0.6);
+    transform: translateY(-2px);
+}
+
+/* --- Responsive extras for new sections --- */
+@media (max-width: 900px) {
+    .premier-grid { grid-template-columns: 1fr; }
+    .stats-grid   { grid-template-columns: 1fr 1fr; }
+    .env-tabs     { gap: 8px; }
+    .env-tab      { padding: 10px 16px; font-size: 0.82rem; }
+}
+@media (max-width: 600px) {
+    .stats-grid   { grid-template-columns: 1fr; }
+    .quiz-section .quiz-choice { padding: 18px; }
+    .podcast-card { flex-direction: column; align-items: flex-start !important; }
+    .community-grid { grid-template-columns: 1fr; }
+    .shipping-grid  { grid-template-columns: 1fr; }
+    .glossary-grid  { grid-template-columns: 1fr; }
+    .collabs-grid   { grid-template-columns: 1fr; }
+}
+
