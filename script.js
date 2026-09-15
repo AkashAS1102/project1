@@ -2249,3 +2249,466 @@
         });
     });
 })();
+
+/* ============================================
+   SOUND LABORATORY — EQ Sliders & Visualizer
+   ============================================ */
+(function() {
+    'use strict';
+
+    const EQ_BANDS = [
+        { freq: '60Hz',  default: 0 },
+        { freq: '150Hz', default: 0 },
+        { freq: '400Hz', default: 0 },
+        { freq: '1kHz',  default: 0 },
+        { freq: '2.4kHz',default: 0 },
+        { freq: '6kHz',  default: 0 },
+        { freq: '15kHz', default: 0 },
+    ];
+
+    const EQ_PRESETS = {
+        flat:   [0, 0, 0, 0, 0, 0, 0],
+        bass:   [8, 6, 3, 0, -1, -2, -3],
+        vocal:  [-2, -1, 2, 5, 6, 4, 1],
+        studio: [0, 1, 2, 0, 1, 2, 1],
+        gaming: [4, 3, 0, 2, 3, 4, 3],
+    };
+
+    const slidersWrap  = document.getElementById('eq-sliders-wrap');
+    const freqLabels   = document.getElementById('eq-freq-labels');
+    const vizContainer = document.getElementById('eq-visualizer');
+
+    if (!slidersWrap || !freqLabels || !vizContainer) return;
+
+    // Current EQ values
+    let eqValues = [...EQ_BANDS.map(b => b.default)];
+
+    // Build sliders
+    EQ_BANDS.forEach((band, i) => {
+        const bandDiv = document.createElement('div');
+        bandDiv.className = 'eq-band';
+
+        const dbLabel = document.createElement('div');
+        dbLabel.className = 'eq-band-db';
+        dbLabel.textContent = eqValues[i] >= 0 ? `+${eqValues[i]}` : `${eqValues[i]}`;
+
+        const slider = document.createElement('input');
+        slider.type = 'range';
+        slider.min = '-12';
+        slider.max = '12';
+        slider.step = '1';
+        slider.value = eqValues[i];
+        slider.setAttribute('aria-label', `${band.freq} EQ gain`);
+
+        slider.addEventListener('input', () => {
+            eqValues[i] = parseInt(slider.value);
+            dbLabel.textContent = eqValues[i] >= 0 ? `+${eqValues[i]}` : `${eqValues[i]}`;
+            updateViz();
+            // Deactivate any preset if user modifies manually
+            document.querySelectorAll('.eq-preset-btn').forEach(b => b.classList.remove('active'));
+        });
+
+        bandDiv.appendChild(dbLabel);
+        bandDiv.appendChild(slider);
+        slidersWrap.appendChild(bandDiv);
+
+        // Freq label
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'eq-freq-label';
+        labelDiv.textContent = band.freq;
+        freqLabels.appendChild(labelDiv);
+    });
+
+    // Build visualizer bars (more bars than bands for nicer look)
+    const VIZ_BARS = 48;
+    for (let i = 0; i < VIZ_BARS; i++) {
+        const bar = document.createElement('div');
+        bar.className = 'eq-viz-bar';
+        bar.style.height = '8px';
+        vizContainer.appendChild(bar);
+    }
+
+    let vizAnimFrame = null;
+    let isVizPlaying = false;
+
+    function updateViz() {
+        const bars = vizContainer.querySelectorAll('.eq-viz-bar');
+        const containerH = vizContainer.clientHeight - 24; // account for padding
+        bars.forEach((bar, i) => {
+            // Map bar index to EQ band
+            const bandIndex = Math.min(Math.floor(i / (VIZ_BARS / EQ_BANDS.length)), EQ_BANDS.length - 1);
+            const gain = eqValues[bandIndex]; // -12 to 12
+            // Add noise for a more natural look
+            const noise = (Math.random() - 0.5) * 6;
+            const normalizedGain = ((gain + 12) / 24); // 0 to 1
+            const heightPx = Math.max(4, (normalizedGain * containerH) + noise);
+            bar.style.height = `${heightPx}px`;
+        });
+    }
+
+    function animateViz() {
+        if (!isVizPlaying) return;
+        updateViz();
+        vizAnimFrame = requestAnimationFrame(animateViz);
+    }
+
+    updateViz(); // Initial static render
+
+    // EQ Presets
+    document.querySelectorAll('.eq-preset-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const preset = btn.dataset.preset;
+            const values = EQ_PRESETS[preset];
+            if (!values) return;
+
+            eqValues = [...values];
+
+            // Update sliders
+            const sliders = slidersWrap.querySelectorAll('input[type="range"]');
+            const dbLabels = slidersWrap.querySelectorAll('.eq-band-db');
+            sliders.forEach((slider, i) => {
+                slider.value = eqValues[i];
+                dbLabels[i].textContent = eqValues[i] >= 0 ? `+${eqValues[i]}` : `${eqValues[i]}`;
+            });
+
+            updateViz();
+
+            document.querySelectorAll('.eq-preset-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Small bounce animation on sliders
+            sliders.forEach((s, i) => {
+                setTimeout(() => {
+                    s.style.transition = 'transform 0.2s var(--spring)';
+                    s.style.transform = 'scale(1.1)';
+                    setTimeout(() => { s.style.transform = ''; }, 200);
+                }, i * 40);
+            });
+        });
+    });
+
+    // Play Demo Button — animates visualizer
+    const eqPlayBtn = document.getElementById('eq-play-demo');
+    if (eqPlayBtn) {
+        eqPlayBtn.addEventListener('click', () => {
+            isVizPlaying = !isVizPlaying;
+            if (isVizPlaying) {
+                eqPlayBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Pause Preview';
+                animateViz();
+                // Show toast
+                if (typeof toast === 'function') toast('Previewing sound profile…', 'info', 2000);
+            } else {
+                eqPlayBtn.innerHTML = '<i class="fa-solid fa-play"></i> Preview Sound Profile';
+                cancelAnimationFrame(vizAnimFrame);
+                updateViz(); // Settle to static
+            }
+        });
+    }
+
+    // Reset Button
+    document.getElementById('eq-reset')?.addEventListener('click', () => {
+        eqValues = EQ_BANDS.map(b => b.default);
+        const sliders = slidersWrap.querySelectorAll('input[type="range"]');
+        const dbLabels = slidersWrap.querySelectorAll('.eq-band-db');
+        sliders.forEach((s, i) => {
+            s.value = 0;
+            dbLabels[i].textContent = '0';
+        });
+        updateViz();
+        document.querySelectorAll('.eq-preset-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('[data-preset="flat"]')?.classList.add('active');
+        if (typeof toast === 'function') toast('EQ reset to flat', 'info', 1500);
+    });
+
+    // Save Profile Button
+    document.getElementById('eq-save')?.addEventListener('click', () => {
+        localStorage.setItem('spidy-eq-profile', JSON.stringify(eqValues));
+        if (typeof toast === 'function') toast('Sound profile saved! 🎛️', 'success');
+    });
+
+    // Restore saved profile on load
+    const savedEq = localStorage.getItem('spidy-eq-profile');
+    if (savedEq) {
+        try {
+            const saved = JSON.parse(savedEq);
+            if (Array.isArray(saved) && saved.length === EQ_BANDS.length) {
+                eqValues = saved;
+                const sliders = slidersWrap.querySelectorAll('input[type="range"]');
+                const dbLabels = slidersWrap.querySelectorAll('.eq-band-db');
+                sliders.forEach((s, i) => {
+                    s.value = eqValues[i];
+                    dbLabels[i].textContent = eqValues[i] >= 0 ? `+${eqValues[i]}` : `${eqValues[i]}`;
+                });
+                updateViz();
+            }
+        } catch(e) { /* ignore parse errors */ }
+    }
+
+})();
+
+
+/* ============================================
+   LOYALTY POINTS TRACKER
+   ============================================ */
+(function() {
+    'use strict';
+
+    const LOYALTY_TIERS = [
+        { name: 'Bronze',   min: 0,    max: 499 },
+        { name: 'Silver',   min: 500,  max: 1999 },
+        { name: 'Gold',     min: 2000, max: 4999 },
+        { name: 'Platinum', min: 5000, max: Infinity },
+    ];
+
+    const coinsDisplay   = document.getElementById('loyalty-coins-display');
+    const progressBar    = document.getElementById('loyalty-progress-bar');
+    const coinsToNextEl  = document.getElementById('loyalty-coins-to-next');
+    const nextTierEl     = document.getElementById('loyalty-next-tier');
+    const joinBtn        = document.getElementById('loyalty-join-btn');
+
+    let coins = parseInt(localStorage.getItem('spidy-loyalty-coins') || '0');
+    let isMember = localStorage.getItem('spidy-loyalty-member') === 'true';
+
+    function getCurrentTier(c) {
+        return LOYALTY_TIERS.find(t => c >= t.min && (t.max === Infinity || c <= t.max)) || LOYALTY_TIERS[0];
+    }
+
+    function updateLoyaltyUI(animate = false) {
+        if (!coinsDisplay) return;
+        const tier = getCurrentTier(coins);
+        const nextTier = LOYALTY_TIERS[LOYALTY_TIERS.indexOf(tier) + 1];
+
+        // Animate coin counter
+        if (animate) {
+            let start = 0;
+            const duration = 1500;
+            const startTime = performance.now();
+            function tick(now) {
+                const p = Math.min((now - startTime) / duration, 1);
+                const eased = 1 - Math.pow(1 - p, 3);
+                coinsDisplay.textContent = Math.round(eased * coins).toLocaleString();
+                if (p < 1) requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        } else {
+            coinsDisplay.textContent = coins.toLocaleString();
+        }
+
+        // Progress bar
+        if (progressBar) {
+            let pct = 0;
+            if (nextTier) {
+                const range = nextTier.min - tier.min;
+                const progress = coins - tier.min;
+                pct = Math.min((progress / range) * 100, 100);
+            } else {
+                pct = 100; // Platinum = maxed
+            }
+            setTimeout(() => { progressBar.style.width = pct + '%'; }, 200);
+        }
+
+        if (coinsToNextEl && nextTierEl) {
+            if (nextTier) {
+                coinsToNextEl.textContent = (nextTier.min - coins).toLocaleString();
+                nextTierEl.textContent = nextTier.name;
+            } else {
+                coinsToNextEl.textContent = '0';
+                nextTierEl.textContent = 'Platinum (Max)';
+            }
+        }
+
+        // Update join button
+        if (joinBtn) {
+            if (isMember) {
+                joinBtn.innerHTML = `<i class="fa-solid fa-star" style="color:#ffd700;"></i> Member — ${tier.name} Tier`;
+                joinBtn.style.background = 'var(--success)';
+                joinBtn.disabled = false;
+            }
+        }
+    }
+
+    // Animate when section enters viewport
+    const loyaltySection = document.getElementById('loyalty');
+    if (loyaltySection) {
+        const loyaltyObs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    updateLoyaltyUI(true);
+                    loyaltyObs.disconnect();
+                }
+            });
+        }, { threshold: 0.2 });
+        loyaltyObs.observe(loyaltySection);
+    } else {
+        updateLoyaltyUI(false);
+    }
+
+    // Join button — simulates sign-up, awards 50 welcome coins
+    joinBtn?.addEventListener('click', () => {
+        if (isMember) return;
+        isMember = true;
+        coins = 50; // Welcome bonus
+        localStorage.setItem('spidy-loyalty-member', 'true');
+        localStorage.setItem('spidy-loyalty-coins', '50');
+        updateLoyaltyUI(true);
+        if (typeof toast === 'function') {
+            toast('🎉 Welcome to Spidy Loyalty! You earned 50 welcome coins.', 'success', 4000);
+        }
+    });
+
+    // Award coins when cart checkout completes
+    // Hook into the checkout form submit
+    document.getElementById('checkout-form')?.addEventListener('submit', () => {
+        if (isMember) {
+            // Award 1 coin per $1 at minimum; actual cart total used
+            const cartTotal = parseFloat(document.getElementById('cart-total-price')?.textContent?.replace('$','') || '0');
+            const earned = Math.floor(cartTotal);
+            coins += earned;
+            localStorage.setItem('spidy-loyalty-coins', String(coins));
+            if (earned > 0 && typeof toast === 'function') {
+                setTimeout(() => toast(`+${earned} SpidyCoins™ earned from your purchase!`, 'success', 4000), 2000);
+            }
+        }
+    });
+
+})();
+
+
+/* ============================================
+   COUPON CODE SYSTEM
+   ============================================ */
+(function() {
+    'use strict';
+
+    const COUPONS = {
+        'SPIDY20':  { discount: 0.20, label: '20% off applied!' },
+        'CYBER10':  { discount: 0.10, label: '10% off applied!' },
+        'NEWUSER':  { discount: 0.15, label: '15% off for new users!' },
+        'AUDIO30':  { discount: 0.30, label: '30% off — Audiophile deal!' },
+        'SPIDYFAN': { discount: 0.05, label: '5% loyalty discount applied!' },
+    };
+
+    let appliedDiscount = 0;
+
+    const applyBtn   = document.getElementById('apply-coupon-btn');
+    const couponInput = document.getElementById('co-coupon');
+    const couponMsg  = document.getElementById('coupon-msg');
+
+    if (!applyBtn || !couponInput || !couponMsg) return;
+
+    applyBtn.addEventListener('click', () => {
+        const code = couponInput.value.trim().toUpperCase();
+        couponMsg.style.display = 'block';
+
+        if (!code) {
+            couponMsg.className = 'coupon-error';
+            couponMsg.textContent = 'Please enter a coupon code.';
+            return;
+        }
+
+        const coupon = COUPONS[code];
+        if (!coupon) {
+            couponMsg.className = 'coupon-error';
+            couponMsg.textContent = `"${code}" is not a valid coupon.`;
+            appliedDiscount = 0;
+            return;
+        }
+
+        appliedDiscount = coupon.discount;
+        couponMsg.className = 'coupon-success';
+        couponMsg.textContent = `✓ ${coupon.label}`;
+        couponInput.disabled = true;
+        applyBtn.disabled = true;
+        applyBtn.textContent = 'Applied ✓';
+
+        // Update cart total display in checkout
+        const totalEl = document.getElementById('cart-total-price');
+        if (totalEl) {
+            const original = parseFloat(totalEl.textContent.replace('$','')) || 0;
+            const discounted = (original * (1 - appliedDiscount)).toFixed(2);
+            totalEl.innerHTML = `<s style="color:var(--text-muted); font-size:0.85rem;">$${original.toFixed(2)}</s> <span style="color:var(--success);">$${discounted}</span>`;
+        }
+
+        if (typeof toast === 'function') {
+            toast(`Coupon ${code} applied!`, 'success');
+        }
+    });
+
+    // Reset coupon state when checkout closes
+    document.getElementById('close-checkout-modal')?.addEventListener('click', resetCoupon);
+    document.getElementById('checkout-overlay')?.addEventListener('click', resetCoupon);
+    document.getElementById('btn-close-checkout')?.addEventListener('click', resetCoupon);
+
+    function resetCoupon() {
+        appliedDiscount = 0;
+        if (couponInput) { couponInput.value = ''; couponInput.disabled = false; }
+        if (applyBtn)  { applyBtn.disabled = false; applyBtn.textContent = 'Apply'; }
+        if (couponMsg) { couponMsg.style.display = 'none'; couponMsg.textContent = ''; }
+    }
+
+})();
+
+
+/* ============================================
+   PRODUCT SORT (price / rating)
+   ============================================ */
+(function() {
+    'use strict';
+
+    const sortSelect = document.getElementById('sort-products');
+    const grid = document.getElementById('products-grid');
+
+    if (!sortSelect || !grid) return;
+
+    // Attach dataset info to cards for sorting
+    const cards = Array.from(grid.querySelectorAll('.product-card'));
+    cards.forEach(card => {
+        const priceText = card.querySelector('.product-price')?.firstChild?.textContent?.trim() || '$0';
+        const price = parseFloat(priceText.replace('$','').replace(',','')) || 0;
+        const ratingText = card.querySelector('.product-rating')?.textContent?.trim().split(' ').pop() || '0';
+        const rating = parseFloat(ratingText) || 0;
+        card.dataset.price = price;
+        card.dataset.rating = rating;
+    });
+
+    sortSelect.addEventListener('change', () => {
+        const val = sortSelect.value;
+        let sorted = [...cards];
+
+        if (val === 'price-low') {
+            sorted.sort((a, b) => parseFloat(a.dataset.price) - parseFloat(b.dataset.price));
+        } else if (val === 'price-high') {
+            sorted.sort((a, b) => parseFloat(b.dataset.price) - parseFloat(a.dataset.price));
+        } else if (val === 'rating') {
+            sorted.sort((a, b) => parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating));
+        } else {
+            // 'featured' — restore original DOM order
+            sorted = cards;
+        }
+
+        // Animate out
+        cards.forEach(c => {
+            c.style.transition = 'opacity 0.2s ease, transform 0.2s ease';
+            c.style.opacity = '0';
+            c.style.transform = 'translateY(8px)';
+        });
+
+        setTimeout(() => {
+            sorted.forEach(c => grid.appendChild(c));
+            // Animate in
+            sorted.forEach((c, i) => {
+                setTimeout(() => {
+                    c.style.opacity = '1';
+                    c.style.transform = 'translateY(0)';
+                }, i * 50);
+            });
+        }, 220);
+
+        if (typeof toast === 'function') {
+            const labels = { 'price-low': 'Price: Low to High', 'price-high': 'Price: High to Low', 'rating': 'Top Rated', 'featured': 'Featured' };
+            toast(`Sorted by: ${labels[val] || val}`, 'info', 1500);
+        }
+    });
+
+})();
+
