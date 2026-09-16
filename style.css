@@ -3898,3 +3898,156 @@ body.easter-egg-active {
     .collabs-grid   { grid-template-columns: 1fr; }
 }
 
+/* ============================================
+   SOUND LABORATORY — EQ Section
+   ============================================ */
+.eq-preset-btn {
+    padding: 8px 20px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border);
+    background: var(--glass-bg);
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s var(--ease);
+    backdrop-filter: blur(8px);
+}
+
+.eq-preset-btn:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+}
+
+.eq-preset-btn.active {
+    background: var(--accent);
+    color: #08090d;
+    border-color: var(--accent);
+    box-shadow: var(--shadow-accent);
+}
+
+/* Individual EQ band container */
+.eq-band {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.eq-band input[type="range"] {
+    -webkit-appearance: slider-vertical;
+    appearance: slider-vertical;
+    writing-mode: vertical-lr;
+    direction: rtl;
+    width: 28px;
+    height: 160px;
+    cursor: pointer;
+    accent-color: var(--accent);
+    background: transparent;
+}
+
+.eq-band-db {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    min-width: 30px;
+    text-align: center;
+}
+
+.eq-freq-label {
+    flex: 1;
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-family: 'Space Mono', monospace;
+}
+
+/* EQ Visualizer bars */
+.eq-viz-bar {
+    flex: 1;
+    border-radius: 3px 3px 0 0;
+    min-height: 4px;
+    transition: height 0.15s ease;
+    background: linear-gradient(to top, var(--accent), var(--accent-warm));
+    opacity: 0.85;
+}
+
+/* ============================================
+   LOYALTY TIER CARDS — Hover
+   ============================================ */
+.loyalty-tier-card {
+    transition: transform 0.3s var(--spring), box-shadow 0.3s var(--ease);
+}
+
+.loyalty-tier-card:hover {
+    transform: translateY(-6px) scale(1.02) !important;
+    box-shadow: var(--shadow-lg);
+}
+
+/* ============================================
+   CHECKOUT — Coupon Input
+   ============================================ */
+.coupon-success {
+    color: var(--success);
+}
+.coupon-error {
+    color: var(--accent-rose);
+}
+
+/* ============================================
+   PRODUCT SORT — Enhanced select styling
+   ============================================ */
+.select-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.select-wrapper select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 10px 40px 10px 16px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border);
+    background: var(--glass-bg);
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-size: 0.84rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    backdrop-filter: blur(8px);
+    width: 100%;
+}
+
+.select-wrapper select:hover,
+.select-wrapper select:focus {
+    border-color: var(--border-hover);
+    outline: none;
+}
+
+.select-wrapper > i {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+}
+
+/* ============================================
+   RESPONSIVE EXTRAS — New Sections
+   ============================================ */
+@media (max-width: 768px) {
+    .sound-lab-inner { padding: 30px 20px !important; }
+    .eq-sliders-wrap { gap: 10px !important; }
+    .eq-band input[type="range"] { height: 120px; }
+    .loyalty-tiers { grid-template-columns: 1fr 1fr !important; }
+}
+
+@media (max-width: 480px) {
+    .loyalty-tiers { grid-template-columns: 1fr !important; }
+    .eq-presets { gap: 6px !important; }
+    .eq-preset-btn { padding: 6px 12px; font-size: 0.75rem; }
+}
