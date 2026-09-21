@@ -2712,3 +2712,328 @@
 
 })();
 
+/* ============================================
+   TECH SPECS — Tab Switcher + Bar Animations
+   ============================================ */
+(function () {
+    'use strict';
+
+    const tabBtns = document.querySelectorAll('.spec-tab-btn');
+    const tabContents = document.querySelectorAll('.spec-tab-content');
+
+    if (!tabBtns.length) return;
+
+    function switchTab(tabId) {
+        tabContents.forEach(tc => { tc.style.display = 'none'; });
+        tabBtns.forEach(tb => tb.classList.remove('active'));
+
+        const target = document.getElementById('spec-tab-' + tabId);
+        if (target) {
+            target.style.display = 'block';
+            // Animate spec bars after tab switch
+            setTimeout(() => animateBarsInEl(target), 50);
+        }
+        const activeBtn = document.querySelector(`.spec-tab-btn[data-tab="${tabId}"]`);
+        if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    function animateBarsInEl(el) {
+        el.querySelectorAll('.spec-bar').forEach(bar => {
+            const targetW = bar.style.width;
+            bar.style.width = '0%';
+            requestAnimationFrame(() => {
+                setTimeout(() => { bar.style.width = targetW; }, 30);
+            });
+        });
+    }
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+
+    // Animate bars on scroll reveal for the initially visible tab
+    const specsSection = document.getElementById('specs');
+    if (specsSection) {
+        const specObs = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const activeContent = specsSection.querySelector('.spec-tab-content.active') ||
+                                         specsSection.querySelector('.spec-tab-content');
+                    if (activeContent) animateBarsInEl(activeContent);
+                    specObs.disconnect();
+                }
+            });
+        }, { threshold: 0.2 });
+        specObs.observe(specsSection);
+    }
+
+    // Init — show first tab
+    const firstTab = tabBtns[0]?.dataset.tab;
+    if (firstTab) switchTab(firstTab);
+
+})();
+
+
+/* ============================================
+   NOTIFICATION BELL SYSTEM
+   ============================================ */
+(function () {
+    'use strict';
+
+    const bellBtn   = document.getElementById('notif-bell-btn');
+    const popup     = document.getElementById('notif-popup');
+    const list      = document.getElementById('notif-list');
+    const badge     = document.getElementById('notif-badge');
+    const closeBtn  = document.getElementById('notif-close');
+
+    if (!bellBtn || !popup || !list) return;
+
+    // Seeded notifications
+    const NOTIFICATIONS = [
+        { icon: '🎧', iconBg: 'rgba(255,42,109,0.15)', iconColor: 'var(--accent)',
+          title: 'Flash Sale!',
+          body: 'Sequoia Pro is 25% off for the next 2 hours.' },
+        { icon: '📦', iconBg: 'rgba(16,185,129,0.15)', iconColor: 'var(--success)',
+          title: 'Order Shipped',
+          body: 'Your Studio Max is on its way. ETA: 2 days.' },
+        { icon: '⭐', iconBg: 'rgba(255,215,0,0.15)', iconColor: '#ffd700',
+          title: 'New Review',
+          body: 'Someone rated the X-Bud Pro 5 stars.' },
+        { icon: '🎁', iconBg: 'rgba(139,92,246,0.15)', iconColor: 'var(--accent-violet)',
+          title: 'Loyalty Reward',
+          body: 'You earned 50 bonus SpidyCoins this week!' },
+        { icon: '🔊', iconBg: 'rgba(5,217,232,0.15)', iconColor: 'var(--accent-warm)',
+          title: 'Firmware Update',
+          body: 'Spidy Pro X v2.3 is available. New features inside.' },
+    ];
+
+    let unreadCount = parseInt(localStorage.getItem('spidy-notif-count') || String(NOTIFICATIONS.length));
+
+    function renderNotifications() {
+        list.innerHTML = '';
+        NOTIFICATIONS.forEach(n => {
+            const item = document.createElement('div');
+            item.className = 'notif-item';
+            item.innerHTML = `
+                <div class="notif-item-icon" style="background:${n.iconBg}; color:${n.iconColor};">${n.icon}</div>
+                <div class="notif-item-text"><strong>${n.title}</strong><br>${n.body}</div>
+            `;
+            list.appendChild(item);
+        });
+    }
+
+    function updateBadge() {
+        if (!badge) return;
+        if (unreadCount > 0) {
+            badge.textContent = unreadCount;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    function openPopup() {
+        popup.style.display = 'block';
+        // Mark as read
+        unreadCount = 0;
+        localStorage.setItem('spidy-notif-count', '0');
+        updateBadge();
+        renderNotifications();
+    }
+
+    function closePopup() { popup.style.display = 'none'; }
+
+    bellBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        popup.style.display === 'none' ? openPopup() : closePopup();
+    });
+
+    closeBtn?.addEventListener('click', closePopup);
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#notif-bell-wrap')) closePopup();
+    });
+
+    // Show badge after 3 seconds if unread
+    setTimeout(() => {
+        if (unreadCount > 0) updateBadge();
+    }, 3000);
+
+    // Simulate a new notification arriving after 20 seconds
+    setTimeout(() => {
+        unreadCount += 1;
+        NOTIFICATIONS.unshift({
+            icon: '🛒', iconBg: 'rgba(255,42,109,0.12)', iconColor: 'var(--accent)',
+            title: 'Cart Reminder',
+            body: 'You left items in your cart. They\'re almost sold out!'
+        });
+        localStorage.setItem('spidy-notif-count', String(unreadCount));
+        updateBadge();
+        // Ring animation on bell
+        bellBtn.style.animation = 'none';
+        bellBtn.offsetHeight; // reflow
+        bellBtn.style.animation = 'notif-ring 0.5s ease 3';
+    }, 20000);
+
+    // Keyframe for bell ring via style tag
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes notif-ring {
+            0%,100% { transform: rotate(0); }
+            25% { transform: rotate(-15deg); }
+            75% { transform: rotate(15deg); }
+        }
+    `;
+    document.head.appendChild(style);
+
+    updateBadge();
+})();
+
+
+/* ============================================
+   COOKIE CONSENT BANNER
+   ============================================ */
+(function () {
+    'use strict';
+
+    const banner    = document.getElementById('cookie-banner');
+    const acceptBtn = document.getElementById('cookie-accept');
+    const rejectBtn = document.getElementById('cookie-reject');
+
+    if (!banner) return;
+
+    // Don't show if already accepted
+    if (localStorage.getItem('spidy-cookies-accepted')) return;
+
+    // Show banner after 2s delay
+    setTimeout(() => banner.classList.add('visible'), 2000);
+
+    function dismissBanner(accepted) {
+        banner.style.transition = 'transform 0.4s ease';
+        banner.style.transform = 'translateY(100%)';
+        setTimeout(() => banner.remove(), 400);
+        if (accepted) {
+            localStorage.setItem('spidy-cookies-accepted', 'true');
+            if (typeof toast === 'function') toast('Preferences saved. Thank you!', 'success', 2000);
+        } else {
+            if (typeof toast === 'function') toast('Only essential cookies are active.', 'info', 2500);
+        }
+    }
+
+    acceptBtn?.addEventListener('click', () => dismissBanner(true));
+    rejectBtn?.addEventListener('click', () => dismissBanner(false));
+
+})();
+
+
+/* ============================================
+   SMOOTH ANCHOR SCROLL (with nav offset)
+   ============================================ */
+(function () {
+    'use strict';
+
+    const NAV_HEIGHT = 72;
+
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href === '#' || !href) return;
+            const target = document.querySelector(href);
+            if (!target) return;
+            e.preventDefault();
+            const top = target.getBoundingClientRect().top + window.scrollY - NAV_HEIGHT;
+            window.scrollTo({ top, behavior: 'smooth' });
+        });
+    });
+
+})();
+
+
+/* ============================================
+   LIVE STOCK COUNTER — Product Cards
+   ============================================ */
+(function () {
+    'use strict';
+
+    // Stock data per product card (by index in DOM)
+    const STOCK_LEVELS = [
+        { qty: 12, label: 'Only {n} left!' },
+        { qty: 5,  label: 'Almost sold out — {n} left!' },
+        { qty: 34, label: '{n} in stock' },
+        { qty: 3,  label: 'Selling fast — {n} left!' },
+        { qty: 22, label: '{n} available' },
+        { qty: 8,  label: 'Only {n} left!' },
+    ];
+
+    const cards = document.querySelectorAll('#products-grid .product-card');
+
+    cards.forEach((card, i) => {
+        const data = STOCK_LEVELS[i % STOCK_LEVELS.length];
+        const isLow = data.qty <= 8;
+
+        const stockEl = document.createElement('div');
+        stockEl.className = 'stock-indicator';
+        stockEl.style.cssText = `
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: ${isLow ? 'var(--accent-rose)' : 'var(--success)'};
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 6px;
+        `;
+        stockEl.innerHTML = `
+            <span style="width:6px;height:6px;border-radius:50%;background:${isLow ? 'var(--accent-rose)' : 'var(--success)'};animation:pulse-dot 2s infinite;display:inline-block;"></span>
+            ${data.label.replace('{n}', data.qty)}
+        `;
+
+        const productInfo = card.querySelector('.product-info');
+        if (productInfo) productInfo.appendChild(stockEl);
+
+        // Randomly reduce stock on add to cart
+        const cartBtn = card.querySelector('.add-cart-btn');
+        cartBtn?.addEventListener('click', () => {
+            if (data.qty > 0) {
+                data.qty--;
+                const newLow = data.qty <= 8;
+                stockEl.innerHTML = `
+                    <span style="width:6px;height:6px;border-radius:50%;background:${newLow ? 'var(--accent-rose)' : 'var(--success)'}; animation:pulse-dot 2s infinite;display:inline-block;"></span>
+                    ${data.qty === 0 ? '⚠️ Sold out!' : data.label.replace('{n}', data.qty)}
+                `;
+                stockEl.style.color = newLow ? 'var(--accent-rose)' : 'var(--success)';
+            }
+        });
+    });
+
+})();
+
+
+/* ============================================
+   READING PROGRESS — Section Highlight in Nav
+   ============================================ */
+(function () {
+    'use strict';
+
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+
+    if (!sections.length || !navLinks.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.getAttribute('id');
+                navLinks.forEach(link => {
+                    link.style.color = '';
+                    if (link.getAttribute('href') === `#${id}`) {
+                        link.style.color = 'var(--accent)';
+                    }
+                });
+            }
+        });
+    }, { threshold: 0.4 });
+
+    sections.forEach(s => observer.observe(s));
+
+})();
+
