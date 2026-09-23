@@ -3037,3 +3037,478 @@
 
 })();
 
+
+/* ============================================
+   FLASH SALE COUNTDOWN TIMER
+   ============================================ */
+(function () {
+    'use strict';
+
+    const SALE_DURATION_HOURS = 5; // sale lasts 5 hours from first visit
+
+    const hoursEl = document.getElementById('cd-hours');
+    const minsEl  = document.getElementById('cd-mins');
+    const secsEl  = document.getElementById('cd-secs');
+
+    if (!hoursEl || !minsEl || !secsEl) return;
+
+    // Store end time in localStorage so timer persists across reloads
+    let endTime = parseInt(localStorage.getItem('spidy-sale-end') || '0');
+    if (!endTime || endTime < Date.now()) {
+        endTime = Date.now() + SALE_DURATION_HOURS * 60 * 60 * 1000;
+        localStorage.setItem('spidy-sale-end', String(endTime));
+    }
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function flipDigit(el, newVal) {
+        if (el.textContent === newVal) return;
+        el.style.transform = 'translateY(-4px)';
+        el.style.opacity   = '0.3';
+        setTimeout(() => {
+            el.textContent = newVal;
+            el.style.transform = 'translateY(0)';
+            el.style.opacity   = '1';
+        }, 150);
+    }
+
+    function tick() {
+        const remaining = endTime - Date.now();
+        if (remaining <= 0) {
+            hoursEl.textContent = minsEl.textContent = secsEl.textContent = '00';
+            const section = document.getElementById('flash-sale');
+            if (section) {
+                section.style.opacity = '0.5';
+                section.style.pointerEvents = 'none';
+                const banner = section.querySelector('.section-heading');
+                if (banner) banner.innerHTML = 'Sale <span class="gradient">Ended</span>';
+            }
+            return;
+        }
+
+        const h = Math.floor(remaining / 3_600_000);
+        const m = Math.floor((remaining % 3_600_000) / 60_000);
+        const s = Math.floor((remaining % 60_000) / 1_000);
+
+        flipDigit(hoursEl, pad(h));
+        flipDigit(minsEl,  pad(m));
+        flipDigit(secsEl,  pad(s));
+
+        // Add transition style once
+        if (!hoursEl.style.transition) {
+            [hoursEl, minsEl, secsEl].forEach(el => {
+                el.style.transition = 'transform 0.15s ease, opacity 0.15s ease';
+            });
+        }
+
+        setTimeout(tick, 1000);
+    }
+
+    tick();
+})();
+
+
+/* ============================================
+   RECENTLY VIEWED TRACKER
+   ============================================ */
+(function () {
+    'use strict';
+
+    const STORAGE_KEY = 'spidy-recently-viewed';
+    const MAX_ITEMS   = 8;
+
+    // Product catalogue (icon + price for display)
+    const PRODUCT_CATALOGUE = {
+        'Sequoia Pro':    { icon: '🎧', price: '$449', color: 'var(--accent)' },
+        'X-Bud Pro':      { icon: '🎵', price: '$199', color: 'var(--accent-warm)' },
+        'Studio Max':     { icon: '🎼', price: '$599', color: 'var(--accent-violet)' },
+        'Pulse Speaker':  { icon: '🔊', price: '$279', color: '#f59e0b' },
+        'Aero Stand':     { icon: '🖥️',  price: '$89',  color: 'var(--success)' },
+        'Cloud Cushions': { icon: '☁️',  price: '$49',  color: '#60a5fa' },
+    };
+
+    function loadViewed() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+        catch { return []; }
+    }
+
+    function saveViewed(items) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function trackView(productName) {
+        let items = loadViewed();
+        // Remove existing entry for same product
+        items = items.filter(i => i.name !== productName);
+        // Prepend new view
+        items.unshift({ name: productName, ts: Date.now() });
+        // Trim to max
+        if (items.length > MAX_ITEMS) items = items.slice(0, MAX_ITEMS);
+        saveViewed(items);
+        renderRecentlyViewed();
+    }
+
+    function timeAgo(ts) {
+        const diff = Date.now() - ts;
+        const m = Math.floor(diff / 60_000);
+        const h = Math.floor(diff / 3_600_000);
+        if (m < 1)  return 'Just now';
+        if (m < 60) return `${m}m ago`;
+        if (h < 24) return `${h}h ago`;
+        return `${Math.floor(h/24)}d ago`;
+    }
+
+    function renderRecentlyViewed() {
+        const section = document.getElementById('recently-viewed');
+        const track   = document.getElementById('recent-scroll-track');
+        if (!section || !track) return;
+
+        const items = loadViewed();
+        if (items.length === 0) {
+            section.style.display = 'none';
+            return;
+        }
+
+        section.style.display = 'block';
+        track.innerHTML = '';
+
+        items.forEach(item => {
+            const info = PRODUCT_CATALOGUE[item.name] || { icon: '🎧', price: '—', color: 'var(--accent)' };
+            const card = document.createElement('div');
+            card.className = 'recent-card';
+            card.innerHTML = `
+                <div class="recent-card-icon" style="color:${info.color};">${info.icon}</div>
+                <div class="recent-card-name" title="${item.name}">${item.name}</div>
+                <div class="recent-card-price">${info.price}</div>
+                <div class="recent-card-time">${timeAgo(item.ts)}</div>
+            `;
+            card.addEventListener('click', () => {
+                window.scrollTo({ top: document.getElementById('products')?.getBoundingClientRect().top + window.scrollY - 72 || 0, behavior: 'smooth' });
+            });
+            track.appendChild(card);
+        });
+    }
+
+    // Clear button
+    document.getElementById('clear-recent-btn')?.addEventListener('click', () => {
+        localStorage.removeItem(STORAGE_KEY);
+        renderRecentlyViewed();
+        if (typeof toast === 'function') toast('Viewing history cleared', 'info', 1500);
+    });
+
+    // Hook into quick view opens — track when a product is viewed
+    document.querySelectorAll('[data-qv]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Try to get product name from nearest card
+            const card = btn.closest('.product-card');
+            const name = card?.querySelector('.product-name, h3')?.textContent?.trim();
+            if (name && PRODUCT_CATALOGUE[name]) trackView(name);
+        });
+    });
+
+    // Also hook into add-to-cart as a "viewed" signal
+    document.querySelectorAll('.add-cart-btn').forEach((btn, i) => {
+        btn.addEventListener('click', () => {
+            const card = btn.closest('.product-card');
+            const name = card?.querySelector('.product-name, h3')?.textContent?.trim();
+            if (name && PRODUCT_CATALOGUE[name]) trackView(name);
+        });
+    });
+
+    // Seed a couple of views on first load for demo purposes
+    const existing = loadViewed();
+    if (existing.length === 0) {
+        const demos = ['Sequoia Pro', 'X-Bud Pro', 'Studio Max'];
+        demos.forEach((name, i) => {
+            const item = { name, ts: Date.now() - i * 12 * 60_000 };
+            existing.push(item);
+        });
+        saveViewed(existing);
+    }
+
+    renderRecentlyViewed();
+
+    // Refresh timestamps every minute
+    setInterval(renderRecentlyViewed, 60_000);
+
+})();
+
+
+/* ============================================
+   BATTERY LIFE ANIMATED BAR CHART
+   ============================================ */
+(function () {
+    'use strict';
+
+    const chart = document.getElementById('battery-chart');
+    if (!chart) return;
+
+    const PRODUCTS = [
+        { name: 'Sequoia Pro',    hours: 38, max: 120, gradient: 'linear-gradient(90deg, #ff2a6d, #ff6b6b)', label: '38h' },
+        { name: 'X-Bud Pro',     hours: 32, max: 120, gradient: 'linear-gradient(90deg, #05d9e8, #0af)',     label: '32h + 80h case' },
+        { name: 'Studio Max',    hours: 45, max: 120, gradient: 'linear-gradient(90deg, #8b5cf6, #a78bfa)', label: '45h' },
+        { name: 'Pulse Speaker', hours: 24, max: 120, gradient: 'linear-gradient(90deg, #f59e0b, #fbbf24)', label: '24h' },
+        { name: 'Aero Stand',    hours: 0,  max: 120, gradient: 'linear-gradient(90deg, #6b7280, #9ca3af)', label: 'Wired' },
+        { name: 'Cloud Cushions',hours: 0,  max: 120, gradient: 'linear-gradient(90deg, #60a5fa, #93c5fd)', label: 'N/A' },
+    ];
+
+    // Build rows
+    PRODUCTS.forEach(product => {
+        const pct = product.hours > 0 ? (product.hours / product.max) * 100 : 0;
+
+        const row = document.createElement('div');
+        row.className = 'battery-row';
+
+        const nameEl = document.createElement('div');
+        nameEl.className = 'battery-row-name';
+        nameEl.textContent = product.name;
+
+        const trackEl = document.createElement('div');
+        trackEl.className = 'battery-bar-track';
+
+        const fillEl = document.createElement('div');
+        fillEl.className = 'battery-bar-fill';
+        fillEl.style.background = product.gradient;
+        fillEl.dataset.width = pct + '%';
+        fillEl.textContent = product.hours > 0 ? product.label : '';
+        trackEl.appendChild(fillEl);
+
+        const hoursEl = document.createElement('div');
+        hoursEl.className = 'battery-row-hours';
+        hoursEl.textContent = product.label;
+
+        row.appendChild(nameEl);
+        row.appendChild(trackEl);
+        row.appendChild(hoursEl);
+        chart.appendChild(row);
+    });
+
+    // Animate bars when section scrolls into view
+    const batterySection = document.getElementById('battery');
+    if (batterySection) {
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    chart.querySelectorAll('.battery-bar-fill').forEach((bar, i) => {
+                        setTimeout(() => {
+                            bar.style.width = bar.dataset.width;
+                        }, i * 120);
+                    });
+                    obs.disconnect();
+                }
+            });
+        }, { threshold: 0.25 });
+        obs.observe(batterySection);
+    }
+
+})();
+
+
+/* ============================================
+   LIVE CHAT WIDGET
+   ============================================ */
+(function () {
+    'use strict';
+
+    const toggle    = document.getElementById('livechat-toggle');
+    const panel     = document.getElementById('livechat-panel');
+    const messages  = document.getElementById('livechat-messages');
+    const input     = document.getElementById('livechat-input');
+    const sendBtn   = document.getElementById('livechat-send');
+    const closeBtn  = document.getElementById('livechat-close-btn');
+    const iconOpen  = document.getElementById('livechat-icon-open');
+    const iconClose = document.getElementById('livechat-icon-close');
+
+    if (!toggle || !panel) return;
+
+    let isOpen = false;
+
+    // Auto-response rules
+    const RESPONSES = [
+        {
+            keys: ['track', 'order', 'shipping', 'delivery', 'where'],
+            replies: [
+                'Sure! To track your order, head to <strong>My Orders</strong> in the app or email us with your order number. Most orders ship within 1–2 business days. 📦',
+                'You can also use the tracking link in your confirmation email. Need the link resent? Just share your email address!'
+            ]
+        },
+        {
+            keys: ['return', 'refund', 'exchange', 'send back'],
+            replies: [
+                'We have a hassle-free <strong>30-day return policy</strong>. If you\'re not 100% happy, we\'ll sort it out — no questions asked. ↩️',
+                'To start a return, just go to your Order History in the app and tap "Return Item". We\'ll generate a prepaid label for you.'
+            ]
+        },
+        {
+            keys: ['warranty', 'broken', 'repair', 'defect', 'fix'],
+            replies: [
+                'All Spidy products come with a <strong>2-year limited warranty</strong> covering manufacturing defects. Accidental damage can be covered with Spidy Protect+. 🛡️',
+                'If your product is within warranty, we\'ll replace it at no cost. Just reach out with your purchase proof!'
+            ]
+        },
+        {
+            keys: ['best', 'recommend', 'which', 'advice', 'suggest', 'compare'],
+            replies: [
+                'Great question! For pure sound quality, the <strong>Studio Max</strong> is our audiophile pick. For all-day comfort + ANC, the <strong>Sequoia Pro</strong> is unbeatable. For gym/travel, grab the <strong>X-Bud Pro</strong>. 🎧',
+                'You can also try our interactive comparison tool on the page — just scroll up to the "Compare" section!'
+            ]
+        },
+        {
+            keys: ['price', 'discount', 'coupon', 'sale', 'deal', 'code'],
+            replies: [
+                'Check our <strong>Flash Sale</strong> section right now — up to 40% off! You can also use coupon <strong>SPIDY20</strong> at checkout for an extra 20% off. 💸',
+                'Joining our Loyalty Program also earns you SpidyCoins™ on every purchase that can be redeemed for discounts!'
+            ]
+        },
+        {
+            keys: ['battery', 'charge', 'power', 'hours'],
+            replies: [
+                'Our headphones last up to <strong>45 hours</strong> on a single charge (Studio Max), and even the buds last 8h + 80h with the case. Quick charge gives 3h in just 10 minutes. ⚡',
+            ]
+        },
+        {
+            keys: ['hello', 'hi', 'hey', 'help', 'support'],
+            replies: [
+                'Hey! 👋 Happy to help. What can I assist you with today — orders, returns, product advice, or something else?'
+            ]
+        },
+    ];
+
+    function getTime() {
+        const d = new Date();
+        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function scrollToBottom() {
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    function addMessage(text, type = 'agent') {
+        const msg = document.createElement('div');
+        msg.className = `chat-msg chat-msg-${type}`;
+        msg.innerHTML = `<div class="chat-bubble">${text}</div><div class="chat-time">${getTime()}</div>`;
+        messages.appendChild(msg);
+        scrollToBottom();
+        return msg;
+    }
+
+    function showTyping() {
+        const typing = document.createElement('div');
+        typing.className = 'chat-msg chat-msg-agent';
+        typing.id = 'typing-indicator-msg';
+        typing.innerHTML = `
+            <div class="typing-indicator">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        `;
+        messages.appendChild(typing);
+        scrollToBottom();
+    }
+
+    function removeTyping() {
+        document.getElementById('typing-indicator-msg')?.remove();
+    }
+
+    function autoReply(userText) {
+        const lower = userText.toLowerCase();
+        let chosen = null;
+        let replyIndex = 0;
+
+        for (const rule of RESPONSES) {
+            if (rule.keys.some(k => lower.includes(k))) {
+                chosen = rule;
+                break;
+            }
+        }
+
+        if (!chosen) {
+            chosen = {
+                replies: [
+                    'Thanks for reaching out! 😊 A Spidy support agent will be with you shortly. In the meantime, feel free to browse our FAQ or use the comparison tool on the page.',
+                    'I\'ve logged your question and a real team member will follow up via email within 2 hours. Is there anything else I can help with?'
+                ]
+            };
+        }
+
+        // Pick the next reply in the array (cycle)
+        const sessionKey = 'chat-reply-idx-' + (chosen.replies[0].slice(0, 10));
+        replyIndex = parseInt(sessionStorage.getItem(sessionKey) || '0');
+        const reply = chosen.replies[replyIndex % chosen.replies.length];
+        sessionStorage.setItem(sessionKey, String(replyIndex + 1));
+
+        showTyping();
+        const delay = 800 + Math.random() * 700;
+        setTimeout(() => {
+            removeTyping();
+            addMessage(reply, 'agent');
+        }, delay);
+    }
+
+    function sendMessage(text) {
+        if (!text.trim()) return;
+        addMessage(text, 'user');
+        input.value = '';
+        // Remove quick replies once user starts talking
+        document.getElementById('chat-quick-replies')?.remove();
+        autoReply(text);
+    }
+
+    // Quick reply buttons
+    document.querySelectorAll('.chat-quick-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const reply = btn.dataset.reply;
+            sendMessage(reply);
+        });
+    });
+
+    // Send button + Enter key
+    sendBtn?.addEventListener('click', () => sendMessage(input.value));
+    input?.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage(input.value);
+        }
+    });
+
+    // Toggle panel
+    function openChat() {
+        isOpen = true;
+        panel.style.display = 'flex';
+        iconOpen.style.display  = 'none';
+        iconClose.style.display = '';
+        input?.focus();
+    }
+
+    function closeChat() {
+        isOpen = false;
+        panel.style.display = 'none';
+        iconOpen.style.display  = '';
+        iconClose.style.display = 'none';
+    }
+
+    toggle?.addEventListener('click', () => isOpen ? closeChat() : openChat());
+    closeBtn?.addEventListener('click', closeChat);
+
+    // Show chat bubble hint after 8 seconds if not opened yet
+    setTimeout(() => {
+        if (!isOpen) {
+            const hint = document.createElement('div');
+            hint.style.cssText = `
+                position:absolute; bottom:70px; right:0;
+                background:var(--bg-card); border:1px solid var(--border);
+                border-radius:12px; padding:10px 14px; font-size:0.78rem;
+                color:var(--text-secondary); white-space:nowrap;
+                box-shadow:var(--shadow-md); animation:chat-pop 0.3s var(--spring);
+                cursor:pointer;
+            `;
+            hint.textContent = '👋 Need help? Chat with us!';
+            hint.addEventListener('click', () => { hint.remove(); openChat(); });
+            document.getElementById('livechat-widget')?.appendChild(hint);
+            setTimeout(() => hint.remove(), 6000);
+        }
+    }, 8000);
+
+})();
+
