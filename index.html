@@ -3819,6 +3819,310 @@
         </div>
     </div>
 
+
+    <!-- ======== PODCAST / AUDIO BLOG ======== -->
+    <section class="podcast-section section" id="podcast" style="padding:100px 5%;background:var(--bg-primary);border-top:1px solid var(--border);">
+        <div class="reveal" style="text-align:center;margin-bottom:60px;">
+            <span class="section-label" style="justify-content:center"><span class="dot"></span> Spidy Waves</span>
+            <h2 class="section-heading">Sound. <span class="gradient">Stories. Science.</span></h2>
+            <p class="section-sub" style="margin:0 auto;max-width:540px;">Deep dives into audio engineering, music production, and the science of sound. New episodes every week.</p>
+        </div>
+
+        <div class="podcast-grid reveal-stagger" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;max-width:1200px;margin:0 auto;">
+
+            <!-- Episode 1 -->
+            <div class="podcast-card">
+                <div class="podcast-thumb" style="background:linear-gradient(135deg,#1a0010,#2d0020);">
+                    <div style="font-size:2.8rem;">🎙️</div>
+                    <div class="podcast-ep-num">EP 42</div>
+                </div>
+                <div class="podcast-info">
+                    <div class="podcast-category">Audio Science</div>
+                    <h3 class="podcast-title">Why 40kHz Drivers Change Everything</h3>
+                    <p class="podcast-desc">We break down how ultra-high-frequency drivers affect perceived clarity even when humans can't technically hear above 20kHz.</p>
+                    <div class="podcast-meta">
+                        <span><i class="fa-solid fa-clock"></i> 42 min</span>
+                        <span><i class="fa-solid fa-headphones"></i> 18.4K plays</span>
+                    </div>
+                    <div class="podcast-progress-wrap">
+                        <div class="podcast-progress-bar" data-progress="0"></div>
+                    </div>
+                    <button class="podcast-play-btn" data-ep="42" data-title="Why 40kHz Drivers Change Everything">
+                        <i class="fa-solid fa-play"></i> Play Episode
+                    </button>
+                </div>
+            </div>
+
+            <!-- Episode 2 -->
+            <div class="podcast-card">
+                <div class="podcast-thumb" style="background:linear-gradient(135deg,#000e1a,#001a2d);">
+                    <div style="font-size:2.8rem;">🧪</div>
+                    <div class="podcast-ep-num">EP 41</div>
+                </div>
+                <div class="podcast-info">
+                    <div class="podcast-category" style="color:var(--accent-warm);">Engineering</div>
+                    <h3 class="podcast-title">Building the World's Quietest ANC</h3>
+                    <p class="podcast-desc">Our lead acoustic engineer walks through the 3-year journey of creating the -40dB noise cancellation system in Sequoia Pro.</p>
+                    <div class="podcast-meta">
+                        <span><i class="fa-solid fa-clock"></i> 58 min</span>
+                        <span><i class="fa-solid fa-headphones"></i> 24.1K plays</span>
+                    </div>
+                    <div class="podcast-progress-wrap">
+                        <div class="podcast-progress-bar" data-progress="0"></div>
+                    </div>
+                    <button class="podcast-play-btn" data-ep="41" data-title="Building the World's Quietest ANC">
+                        <i class="fa-solid fa-play"></i> Play Episode
+                    </button>
+                </div>
+            </div>
+
+            <!-- Episode 3 -->
+            <div class="podcast-card">
+                <div class="podcast-thumb" style="background:linear-gradient(135deg,#0a0a00,#1a1a00);">
+                    <div style="font-size:2.8rem;">🎵</div>
+                    <div class="podcast-ep-num">EP 40</div>
+                </div>
+                <div class="podcast-info">
+                    <div class="podcast-category" style="color:#ffd700;">Music</div>
+                    <h3 class="podcast-title">Mastering for Headphones vs Speakers</h3>
+                    <p class="podcast-desc">Grammy-winning mastering engineer Alex Mora joins us to debate whether music should be mixed differently for headphone listeners.</p>
+                    <div class="podcast-meta">
+                        <span><i class="fa-solid fa-clock"></i> 1h 12min</span>
+                        <span><i class="fa-solid fa-headphones"></i> 31.7K plays</span>
+                    </div>
+                    <div class="podcast-progress-wrap">
+                        <div class="podcast-progress-bar" data-progress="0"></div>
+                    </div>
+                    <button class="podcast-play-btn" data-ep="40" data-title="Mastering for Headphones vs Speakers">
+                        <i class="fa-solid fa-play"></i> Play Episode
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Mini player bar -->
+        <div class="mini-player" id="mini-player" style="display:none;">
+            <div class="mini-player-info">
+                <div class="mini-player-icon"><i class="fa-solid fa-podcast"></i></div>
+                <div>
+                    <div class="mini-player-title" id="mini-player-title">Episode title</div>
+                    <div class="mini-player-sub">Spidy Waves Podcast</div>
+                </div>
+            </div>
+            <div class="mini-player-controls">
+                <button class="mini-ctrl-btn" id="mini-rew"><i class="fa-solid fa-backward-step"></i></button>
+                <button class="mini-ctrl-btn mini-ctrl-play" id="mini-play-pause"><i class="fa-solid fa-pause"></i></button>
+                <button class="mini-ctrl-btn" id="mini-fwd"><i class="fa-solid fa-forward-step"></i></button>
+            </div>
+            <div class="mini-player-progress-wrap">
+                <div class="mini-player-progress" id="mini-progress-fill" style="width:0%"></div>
+            </div>
+            <button class="mini-player-close" id="mini-player-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+    </section>
+
+    <!-- ======== FIT GUIDE MODAL TRIGGER ======== -->
+    <section class="fitguide-section section" id="fit-guide-section" style="padding:80px 5%;background:var(--bg-secondary);border-top:1px solid var(--border);">
+        <div class="reveal" style="max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:50px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:260px;">
+                <span class="section-label"><span class="dot"></span> Comfort First</span>
+                <h2 class="section-heading" style="font-size:2.4rem;margin-top:12px;">Not sure of your <span class="gradient">size?</span></h2>
+                <p class="section-sub" style="max-width:420px;margin-top:12px;">Our fit guide helps you find the perfect headband adjustment. Measure once, enjoy forever.</p>
+                <button class="btn-primary" id="open-fitguide" style="margin-top:24px;">
+                    <i class="fa-solid fa-ruler"></i> Find My Fit
+                </button>
+            </div>
+            <div style="flex:1;min-width:260px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:22px;text-align:center;">
+                    <div style="font-size:2rem;margin-bottom:8px;">📏</div>
+                    <div style="font-weight:700;font-size:0.9rem;color:white;margin-bottom:4px;">3 Sizes</div>
+                    <div style="font-size:0.78rem;color:var(--text-secondary);">S / M / L adjustable</div>
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:22px;text-align:center;">
+                    <div style="font-size:2rem;margin-bottom:8px;">🧠</div>
+                    <div style="font-weight:700;font-size:0.9rem;color:white;margin-bottom:4px;">Memory Foam</div>
+                    <div style="font-size:0.78rem;color:var(--text-secondary);">Adaptive cushioning</div>
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:22px;text-align:center;">
+                    <div style="font-size:2rem;margin-bottom:8px;">⚖️</div>
+                    <div style="font-weight:700;font-size:0.9rem;color:white;margin-bottom:4px;">280g</div>
+                    <div style="font-size:0.78rem;color:var(--text-secondary);">Featherweight build</div>
+                </div>
+                <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md);padding:22px;text-align:center;">
+                    <div style="font-size:2rem;margin-bottom:8px;">🏆</div>
+                    <div style="font-weight:700;font-size:0.9rem;color:white;margin-bottom:4px;">4.9/5</div>
+                    <div style="font-size:0.78rem;color:var(--text-secondary);">Comfort rating</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fit Guide Modal -->
+    <div class="modal-overlay" id="fitguide-overlay" style="display:none;"></div>
+    <div class="modal-glass" id="fitguide-modal" style="display:none;" role="dialog" aria-label="Fit Guide">
+        <button class="modal-close-btn" id="fitguide-close"><i class="fa-solid fa-xmark"></i></button>
+        <div class="fitguide-inner">
+            <h3 style="font-size:1.6rem;font-weight:800;margin-bottom:6px;">Find Your <span class="gradient">Perfect Fit</span></h3>
+            <p style="color:var(--text-secondary);font-size:0.88rem;margin-bottom:30px;">Enter your head circumference and we'll recommend the ideal adjustment setting.</p>
+
+            <!-- Step indicator -->
+            <div class="fitguide-steps">
+                <div class="fg-step active" id="fg-step-1-ind">1</div>
+                <div class="fg-step-line"></div>
+                <div class="fg-step" id="fg-step-2-ind">2</div>
+                <div class="fg-step-line"></div>
+                <div class="fg-step" id="fg-step-3-ind">3</div>
+            </div>
+
+            <!-- Step 1: Measure -->
+            <div class="fg-content" id="fg-content-1">
+                <div style="font-size:3rem;text-align:center;margin:20px 0;">📏</div>
+                <h4 style="text-align:center;margin-bottom:12px;">Measure your head</h4>
+                <p style="color:var(--text-secondary);font-size:0.85rem;text-align:center;margin-bottom:24px;">Wrap a soft measuring tape around the widest part of your head, just above your ears and eyebrows.</p>
+                <div style="display:flex;gap:12px;margin-bottom:20px;justify-content:center;">
+                    <button class="fg-unit-btn active" data-unit="cm">cm</button>
+                    <button class="fg-unit-btn" data-unit="in">inches</button>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;max-width:280px;margin:0 auto 24px;">
+                    <input type="number" id="fg-measurement" min="48" max="68" step="0.5" placeholder="e.g. 56" style="flex:1;padding:14px;border-radius:var(--radius-md);border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);font-size:1.1rem;text-align:center;outline:none;font-family:var(--font);">
+                    <span id="fg-unit-label" style="color:var(--text-secondary);font-size:0.9rem;font-weight:600;">cm</span>
+                </div>
+                <button class="btn-primary" id="fg-next-1" style="width:100%;justify-content:center;">Next <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+
+            <!-- Step 2: Head Shape -->
+            <div class="fg-content" id="fg-content-2" style="display:none;">
+                <h4 style="text-align:center;margin-bottom:20px;">Head shape</h4>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;">
+                    <button class="fg-shape-btn" data-shape="round">
+                        <div style="font-size:1.8rem;">⭕</div>
+                        <div>Round</div>
+                    </button>
+                    <button class="fg-shape-btn active" data-shape="oval">
+                        <div style="font-size:1.8rem;">🥚</div>
+                        <div>Oval</div>
+                    </button>
+                    <button class="fg-shape-btn" data-shape="long">
+                        <div style="font-size:1.8rem;">📐</div>
+                        <div>Long</div>
+                    </button>
+                </div>
+                <div style="display:flex;gap:12px;">
+                    <button class="btn-secondary" id="fg-back-2" style="flex:1;justify-content:center;"><i class="fa-solid fa-arrow-left"></i> Back</button>
+                    <button class="btn-primary" id="fg-next-2" style="flex:1;justify-content:center;">See Result <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Step 3: Result -->
+            <div class="fg-content" id="fg-content-3" style="display:none;text-align:center;">
+                <div style="font-size:3.5rem;margin:10px 0;" id="fg-result-emoji">✅</div>
+                <div class="fg-result-size" id="fg-result-size">Size M</div>
+                <div class="fg-result-desc" id="fg-result-desc">Set the headband to notch position 3–4. Ear cups should sit fully over your ears with gentle pressure.</div>
+                <div style="background:var(--bg-secondary);border-radius:var(--radius-md);padding:16px;margin:20px 0;display:flex;justify-content:space-around;font-size:0.82rem;color:var(--text-secondary);">
+                    <div><strong style="color:white;display:block;font-size:1rem;" id="fg-result-cm">—</strong>Head size</div>
+                    <div><strong style="color:var(--accent);display:block;font-size:1rem;" id="fg-result-notch">3–4</strong>Notch setting</div>
+                    <div><strong style="color:var(--accent-warm);display:block;font-size:1rem;" id="fg-result-cushion">M</strong>Cushion</div>
+                </div>
+                <button class="btn-primary" style="width:100%;justify-content:center;" id="fg-add-cart-fit">
+                    <i class="fa-solid fa-bag-shopping"></i> Shop Sequoia Pro (Your Size)
+                </button>
+                <button class="btn-secondary" id="fg-back-3" style="width:100%;justify-content:center;margin-top:10px;"><i class="fa-solid fa-rotate-left"></i> Retake Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======== SUSTAINABILITY PLEDGE ======== -->
+    <section class="eco-section section" id="sustainability" style="padding:100px 5%;background:linear-gradient(135deg,#030f08,#071408,#08090d);border-top:1px solid rgba(34,197,94,0.2);position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 20% 50%,rgba(34,197,94,0.1) 0%,transparent 70%);pointer-events:none;"></div>
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 80% 60%,rgba(5,217,232,0.06) 0%,transparent 70%);pointer-events:none;"></div>
+
+        <div style="max-width:1100px;margin:0 auto;position:relative;z-index:1;">
+            <div class="reveal" style="text-align:center;margin-bottom:60px;">
+                <span class="section-label" style="justify-content:center;color:#22c55e;border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.08);">
+                    <span class="dot" style="background:#22c55e;"></span> Planet First
+                </span>
+                <h2 class="section-heading" style="margin-top:16px;">Sounds Good.<br><span style="background:linear-gradient(135deg,#22c55e,#05d9e8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Feels Right.</span></h2>
+                <p class="section-sub" style="margin:0 auto;max-width:540px;">We believe incredible audio and sustainability aren't opposites. Every Spidy product is built to leave as little a footprint as possible.</p>
+            </div>
+
+            <!-- Animated Impact Counters -->
+            <div class="eco-stats reveal-stagger" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:24px;margin-bottom:70px;" id="eco-stats-wrap">
+                <div class="eco-stat-card">
+                    <div class="eco-stat-icon" style="color:#22c55e;background:rgba(34,197,94,0.12);">♻️</div>
+                    <div class="eco-counter" data-target="60" data-suffix="%">0%</div>
+                    <div class="eco-stat-label">Recycled materials</div>
+                </div>
+                <div class="eco-stat-card">
+                    <div class="eco-stat-icon" style="color:var(--accent-warm);background:rgba(5,217,232,0.1);">🌊</div>
+                    <div class="eco-counter" data-target="12" data-suffix="t">0t</div>
+                    <div class="eco-stat-label">Ocean plastic used</div>
+                </div>
+                <div class="eco-stat-card">
+                    <div class="eco-stat-icon" style="color:#a3e635;background:rgba(163,230,53,0.1);">🌳</div>
+                    <div class="eco-counter" data-target="50000" data-suffix="">0</div>
+                    <div class="eco-stat-label">Trees planted</div>
+                </div>
+                <div class="eco-stat-card">
+                    <div class="eco-stat-icon" style="color:#fb923c;background:rgba(251,146,60,0.1);">🔋</div>
+                    <div class="eco-counter" data-target="100" data-suffix="%">0%</div>
+                    <div class="eco-stat-label">Renewable energy</div>
+                </div>
+                <div class="eco-stat-card">
+                    <div class="eco-stat-icon" style="color:#818cf8;background:rgba(129,140,248,0.1);">📦</div>
+                    <div class="eco-counter" data-target="95" data-suffix="%">0%</div>
+                    <div class="eco-stat-label">Plastic-free packaging</div>
+                </div>
+                <div class="eco-stat-card">
+                    <div class="eco-stat-icon" style="color:#f472b6;background:rgba(244,114,182,0.1);">🚚</div>
+                    <div class="eco-counter" data-target="0" data-suffix="" data-text="Net Zero">Net Zero</div>
+                    <div class="eco-stat-label">Carbon shipping by 2026</div>
+                </div>
+            </div>
+
+            <!-- Pledge Cards -->
+            <div class="eco-pledges reveal-stagger" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+                <div class="eco-pledge-card">
+                    <div style="font-size:1.8rem;margin-bottom:14px;">🌱</div>
+                    <h4 style="font-size:1rem;font-weight:700;color:white;margin-bottom:8px;">1 Purchase = 1 Tree</h4>
+                    <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.7;">Every Spidy order triggers an automatic tree planting through our partnership with One Tree Planted. Over 50,000 trees and counting.</p>
+                    <div style="margin-top:14px;font-size:0.75rem;color:#22c55e;font-weight:600;">VERIFIED BY ECOVADIS ✓</div>
+                </div>
+                <div class="eco-pledge-card">
+                    <div style="font-size:1.8rem;margin-bottom:14px;">🔄</div>
+                    <h4 style="font-size:1rem;font-weight:700;color:white;margin-bottom:8px;">Trade-In & Renew</h4>
+                    <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.7;">Our Trade-In program ensures 0% of returned gear goes to landfill. We refurbish, resell, or responsibly recycle every unit.</p>
+                    <div style="margin-top:14px;font-size:0.75rem;color:var(--accent-warm);font-weight:600;">12,400+ UNITS SAVED ✓</div>
+                </div>
+                <div class="eco-pledge-card">
+                    <div style="font-size:1.8rem;margin-bottom:14px;">📦</div>
+                    <h4 style="font-size:1rem;font-weight:700;color:white;margin-bottom:8px;">Zero Plastic Packaging</h4>
+                    <p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.7;">All packaging is 100% FSC-certified paper, soy-based inks, and compostable foam. Even the tape is recycled material.</p>
+                    <div style="margin-top:14px;font-size:0.75rem;color:#a3e635;font-weight:600;">SINCE Q1 2024 ✓</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== NEWSLETTER POPUP MODAL ======== -->
+    <div class="modal-overlay" id="newsletter-popup-overlay" style="display:none;"></div>
+    <div class="newsletter-popup" id="newsletter-popup" style="display:none;" role="dialog">
+        <button class="modal-close-btn" id="newsletter-popup-close"><i class="fa-solid fa-xmark"></i></button>
+        <div style="text-align:center;padding:10px 0 20px;">
+            <div style="font-size:3rem;margin-bottom:12px;">🎧</div>
+            <h3 style="font-size:1.5rem;font-weight:800;letter-spacing:-0.04em;margin-bottom:8px;">Get <span class="gradient">10% Off</span> Your First Order</h3>
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.6;margin-bottom:24px;">Join 380,000+ audiophiles. Get exclusive deals, early drops, and Spidy Waves podcast episodes straight to your inbox.</p>
+            <form id="newsletter-popup-form" style="display:flex;flex-direction:column;gap:10px;max-width:320px;margin:0 auto;">
+                <input type="email" id="newsletter-popup-email" placeholder="Enter your email" required
+                    style="padding:14px 18px;border-radius:var(--radius-full);border:1px solid var(--border);background:var(--bg-secondary);color:var(--text-primary);font-family:var(--font);font-size:0.9rem;outline:none;width:100%;box-sizing:border-box;">
+                <button type="submit" class="btn-primary" style="justify-content:center;padding:14px;">
+                    <i class="fa-solid fa-paper-plane"></i> Claim My 10% Off
+                </button>
+            </form>
+            <button id="newsletter-popup-skip" style="background:none;border:none;color:var(--text-muted);font-size:0.78rem;cursor:pointer;margin-top:14px;text-decoration:underline;">No thanks, I'll pay full price</button>
+        </div>
+    </div>
+
     <!-- ======== FOOTER ======== -->
     <footer class="site-footer">
         <div class="footer-grid reveal-stagger">
