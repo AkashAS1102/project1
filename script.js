@@ -3512,3 +3512,398 @@
 
 })();
 
+
+/* ============================================
+   PODCAST MINI-PLAYER
+   ============================================ */
+(function () {
+    'use strict';
+
+    const miniPlayer  = document.getElementById('mini-player');
+    const miniTitle   = document.getElementById('mini-player-title');
+    const miniPP      = document.getElementById('mini-play-pause');
+    const miniClose   = document.getElementById('mini-player-close');
+    const miniProgFil = document.getElementById('mini-progress-fill');
+    const miniIcon    = miniPlayer?.querySelector('.mini-player-icon');
+
+    if (!miniPlayer) return;
+
+    const EPISODES = {
+        42: { title: 'Why 40kHz Drivers Change Everything',  duration: 2520 },
+        41: { title: "Building the World's Quietest ANC",    duration: 3480 },
+        40: { title: 'Mastering for Headphones vs Speakers', duration: 4320 },
+    };
+
+    let currentEp = null;
+    let isPlaying = false;
+    let elapsed   = 0;
+    let ticker    = null;
+
+    function startTicker() {
+        clearInterval(ticker);
+        ticker = setInterval(() => {
+            if (!isPlaying || !currentEp) return;
+            elapsed++;
+            const pct = Math.min((elapsed / EPISODES[currentEp].duration) * 100, 100);
+            if (miniProgFil) miniProgFil.style.width = pct + '%';
+            // Also update the card progress bar
+            const cardBar = document.querySelector(`.podcast-play-btn[data-ep="${currentEp}"]`)
+                ?.closest('.podcast-info')?.querySelector('.podcast-progress-bar');
+            if (cardBar) cardBar.style.width = pct + '%';
+            if (pct >= 100) stopPlayback();
+        }, 1000);
+    }
+
+    function stopPlayback() {
+        isPlaying = false;
+        clearInterval(ticker);
+        if (miniPP) miniPP.innerHTML = '<i class="fa-solid fa-play"></i>';
+        if (miniIcon) miniIcon.classList.remove('spinning');
+        document.querySelectorAll('.podcast-play-btn').forEach(b => b.classList.remove('playing'));
+    }
+
+    function playEpisode(epNum) {
+        // Stop previous
+        stopPlayback();
+
+        if (currentEp === epNum && elapsed > 0) {
+            // Resume
+        } else {
+            currentEp = epNum;
+            elapsed = 0;
+            if (miniProgFil) miniProgFil.style.width = '0%';
+        }
+
+        isPlaying = true;
+        miniPlayer.style.display = 'flex';
+        if (miniTitle) miniTitle.textContent = EPISODES[epNum]?.title || 'Episode';
+        if (miniPP) miniPP.innerHTML = '<i class="fa-solid fa-pause"></i>';
+        if (miniIcon) miniIcon.classList.add('spinning');
+
+        // Mark card button as playing
+        document.querySelectorAll('.podcast-play-btn').forEach(b => b.classList.remove('playing'));
+        document.querySelector(`.podcast-play-btn[data-ep="${epNum}"]`)?.classList.add('playing');
+        document.querySelector(`.podcast-play-btn[data-ep="${epNum}"]`).innerHTML = '<i class="fa-solid fa-pause"></i> Now Playing';
+
+        startTicker();
+    }
+
+    // Episode card buttons
+    document.querySelectorAll('.podcast-play-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const ep = parseInt(btn.dataset.ep);
+            if (currentEp === ep && isPlaying) {
+                // Pause
+                isPlaying = false;
+                clearInterval(ticker);
+                btn.innerHTML = '<i class="fa-solid fa-play"></i> Resume';
+                btn.classList.remove('playing');
+                if (miniPP) miniPP.innerHTML = '<i class="fa-solid fa-play"></i>';
+                if (miniIcon) miniIcon.classList.remove('spinning');
+            } else {
+                playEpisode(ep);
+            }
+        });
+    });
+
+    // Mini player controls
+    miniPP?.addEventListener('click', () => {
+        if (isPlaying) {
+            isPlaying = false;
+            clearInterval(ticker);
+            miniPP.innerHTML = '<i class="fa-solid fa-play"></i>';
+            if (miniIcon) miniIcon.classList.remove('spinning');
+        } else {
+            isPlaying = true;
+            startTicker();
+            miniPP.innerHTML = '<i class="fa-solid fa-pause"></i>';
+            if (miniIcon) miniIcon.classList.add('spinning');
+        }
+    });
+
+    // Skip to next episode
+    document.getElementById('mini-fwd')?.addEventListener('click', () => {
+        const epList = Object.keys(EPISODES).map(Number).sort((a, b) => b - a);
+        const idx = epList.indexOf(currentEp);
+        const next = epList[(idx + 1) % epList.length];
+        playEpisode(next);
+    });
+
+    // Skip to previous episode
+    document.getElementById('mini-rew')?.addEventListener('click', () => {
+        const epList = Object.keys(EPISODES).map(Number).sort((a, b) => b - a);
+        const idx = epList.indexOf(currentEp);
+        const prev = epList[(idx - 1 + epList.length) % epList.length];
+        playEpisode(prev);
+    });
+
+    // Close mini player
+    miniClose?.addEventListener('click', () => {
+        stopPlayback();
+        miniPlayer.style.display = 'none';
+        document.querySelectorAll('.podcast-play-btn').forEach(b => {
+            b.classList.remove('playing');
+            b.innerHTML = '<i class="fa-solid fa-play"></i> Play Episode';
+        });
+    });
+
+})();
+
+
+/* ============================================
+   FIT GUIDE 3-STEP MODAL
+   ============================================ */
+(function () {
+    'use strict';
+
+    const overlay   = document.getElementById('fitguide-overlay');
+    const modal     = document.getElementById('fitguide-modal');
+    const openBtn   = document.getElementById('open-fitguide');
+    const closeBtn  = document.getElementById('fitguide-close');
+
+    if (!modal || !openBtn) return;
+
+    let currentStep = 1;
+    let selectedUnit = 'cm';
+    let selectedShape = 'oval';
+    let measurement = 0;
+
+    function openModal() {
+        overlay.style.display = 'block';
+        modal.style.display   = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        overlay.style.display = 'none';
+        modal.style.display   = 'none';
+        document.body.style.overflow = '';
+    }
+
+    openBtn.addEventListener('click', openModal);
+    closeBtn?.addEventListener('click', closeModal);
+    overlay?.addEventListener('click', closeModal);
+
+    function showStep(n) {
+        for (let i = 1; i <= 3; i++) {
+            const content = document.getElementById(`fg-content-${i}`);
+            const ind     = document.getElementById(`fg-step-${i}-ind`);
+            if (content) content.style.display = i === n ? 'block' : 'none';
+            if (ind) {
+                ind.classList.remove('active', 'done');
+                if (i < n) ind.classList.add('done');
+                if (i === n) ind.classList.add('active');
+            }
+        }
+        currentStep = n;
+    }
+
+    // Unit toggle
+    document.querySelectorAll('.fg-unit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            selectedUnit = btn.dataset.unit;
+            document.querySelectorAll('.fg-unit-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('fg-unit-label').textContent = selectedUnit;
+            // Adjust placeholder
+            const inp = document.getElementById('fg-measurement');
+            if (inp) inp.placeholder = selectedUnit === 'cm' ? 'e.g. 56' : 'e.g. 22';
+        });
+    });
+
+    // Head shape
+    document.querySelectorAll('.fg-shape-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            selectedShape = btn.dataset.shape;
+            document.querySelectorAll('.fg-shape-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
+    // Step 1 → 2
+    document.getElementById('fg-next-1')?.addEventListener('click', () => {
+        const inp = document.getElementById('fg-measurement');
+        let val = parseFloat(inp?.value || '0');
+        if (selectedUnit === 'in') val = val * 2.54; // convert to cm
+        if (val < 48 || val > 72) {
+            inp.style.borderColor = 'var(--accent)';
+            if (typeof toast === 'function') toast('Please enter a valid measurement (48–72 cm)', 'error', 2500);
+            return;
+        }
+        measurement = val;
+        inp.style.borderColor = '';
+        showStep(2);
+    });
+
+    // Step 2 → 3
+    document.getElementById('fg-next-2')?.addEventListener('click', () => {
+        showResult();
+        showStep(3);
+    });
+
+    // Back buttons
+    document.getElementById('fg-back-2')?.addEventListener('click', () => showStep(1));
+    document.getElementById('fg-back-3')?.addEventListener('click', () => {
+        showStep(1);
+        document.getElementById('fg-measurement').value = '';
+    });
+
+    function showResult() {
+        // Determine size from measurement
+        let size, notch, cushion, emoji, desc;
+        if (measurement < 53) {
+            size = 'Size S'; notch = '1–2'; cushion = 'S'; emoji = '✨';
+            desc = 'Set the headband to notch 1–2. The S cushion set (included) gives the snuggest seal for smaller heads.';
+        } else if (measurement <= 58) {
+            size = 'Size M'; notch = '3–4'; cushion = 'M'; emoji = '✅';
+            desc = 'Set the headband to notch 3–4. Ear cups sit fully over your ears with gentle, comfortable pressure.';
+        } else {
+            size = 'Size L'; notch = '5–6'; cushion = 'L'; emoji = '💪';
+            desc = 'Set the headband to notch 5–6. The L cushion set provides extra depth for a full surround seal.';
+        }
+
+        const measurementStr = selectedUnit === 'cm'
+            ? `${measurement.toFixed(1)} cm`
+            : `${(measurement / 2.54).toFixed(1)} in`;
+
+        document.getElementById('fg-result-emoji').textContent = emoji;
+        document.getElementById('fg-result-size').textContent  = size;
+        document.getElementById('fg-result-desc').textContent  = desc;
+        document.getElementById('fg-result-cm').textContent    = measurementStr;
+        document.getElementById('fg-result-notch').textContent = notch;
+        document.getElementById('fg-result-cushion').textContent = cushion;
+    }
+
+    // Add to cart from fit guide
+    document.getElementById('fg-add-cart-fit')?.addEventListener('click', () => {
+        closeModal();
+        window.scrollTo({ top: document.getElementById('products')?.getBoundingClientRect().top + window.scrollY - 72 || 0, behavior: 'smooth' });
+        if (typeof toast === 'function') toast('Your perfect size has been noted! Add to cart below. 🎧', 'success', 3000);
+    });
+
+    showStep(1);
+
+})();
+
+
+/* ============================================
+   ECO STATS COUNTER ANIMATION
+   ============================================ */
+(function () {
+    'use strict';
+
+    const counters = document.querySelectorAll('.eco-counter');
+    if (!counters.length) return;
+
+    function animateCounter(el) {
+        // If data-text is set, it's a static label — no animation needed
+        if (el.dataset.text) return;
+
+        const target  = parseFloat(el.dataset.target || '0');
+        const suffix  = el.dataset.suffix || '';
+        const duration = 2000;
+        const startTime = performance.now();
+
+        function tick(now) {
+            const p = Math.min((now - startTime) / duration, 1);
+            const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+            const current = Math.round(eased * target);
+            el.textContent = current.toLocaleString() + suffix;
+            if (p < 1) requestAnimationFrame(tick);
+        }
+
+        requestAnimationFrame(tick);
+    }
+
+    const ecoSection = document.getElementById('sustainability');
+    if (ecoSection) {
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    counters.forEach((el, i) => setTimeout(() => animateCounter(el), i * 150));
+                    obs.disconnect();
+                }
+            });
+        }, { threshold: 0.3 });
+        obs.observe(ecoSection);
+    }
+
+})();
+
+
+/* ============================================
+   NEWSLETTER POPUP (timed, suppressed after sign-up)
+   ============================================ */
+(function () {
+    'use strict';
+
+    const popup   = document.getElementById('newsletter-popup');
+    const overlay = document.getElementById('newsletter-popup-overlay');
+    const closeBtn  = document.getElementById('newsletter-popup-close');
+    const skipBtn   = document.getElementById('newsletter-popup-skip');
+    const form      = document.getElementById('newsletter-popup-form');
+
+    if (!popup) return;
+
+    // Don't show if user already subscribed or dismissed
+    const suppressed = localStorage.getItem('spidy-newsletter-done');
+    if (suppressed) return;
+
+    function openPopup() {
+        overlay.style.display = 'block';
+        popup.style.display   = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closePopup(suppress = false) {
+        overlay.style.display = 'none';
+        popup.style.display   = 'none';
+        document.body.style.overflow = '';
+        if (suppress) localStorage.setItem('spidy-newsletter-done', 'true');
+    }
+
+    // Show after 12 seconds OR after user scrolls 40% of the page
+    let shown = false;
+
+    function maybeShow() {
+        if (shown) return;
+        shown = true;
+        openPopup();
+    }
+
+    setTimeout(() => maybeShow(), 12000);
+
+    window.addEventListener('scroll', () => {
+        const pct = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+        if (pct > 40) maybeShow();
+    }, { passive: true });
+
+    closeBtn?.addEventListener('click', () => closePopup(false));
+    skipBtn?.addEventListener('click',  () => closePopup(false));
+    overlay?.addEventListener('click',  () => closePopup(false));
+
+    form?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = document.getElementById('newsletter-popup-email')?.value;
+        if (!email) return;
+
+        // Simulate success
+        popup.innerHTML = `
+            <div style="text-align:center;padding:20px 0;">
+                <div style="font-size:3rem;margin-bottom:16px;">🎉</div>
+                <h3 style="font-size:1.4rem;font-weight:800;margin-bottom:8px;">You're in!</h3>
+                <p style="color:var(--text-secondary);font-size:0.88rem;line-height:1.6;margin-bottom:20px;">
+                    Check your inbox for your <strong style="color:var(--accent);">10% off</strong> code.<br>
+                    Code: <strong style="color:var(--accent);font-size:1.1rem;letter-spacing:1px;">NEWUSER</strong>
+                </p>
+                <button class="btn-primary" style="justify-content:center;" id="newsletter-done-btn">
+                    <i class="fa-solid fa-check"></i> Start Shopping
+                </button>
+            </div>
+        `;
+        document.getElementById('newsletter-done-btn')?.addEventListener('click', () => closePopup(true));
+        if (typeof toast === 'function') toast(`Welcome! Use code NEWUSER for 10% off 🎧`, 'success', 5000);
+    });
+
+})();
+
