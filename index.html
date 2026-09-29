@@ -4123,6 +4123,296 @@
         </div>
     </div>
 
+
+    <!-- ======== BUILD YOUR BUNDLE ======== -->
+    <section class="bundle-section section" id="bundle" style="padding:100px 5%;background:var(--bg-secondary);border-top:1px solid var(--border);">
+        <div class="reveal" style="text-align:center;margin-bottom:60px;">
+            <span class="section-label" style="justify-content:center"><span class="dot"></span> Personalize</span>
+            <h2 class="section-heading">Build Your <span class="gradient">Bundle</span></h2>
+            <p class="section-sub" style="margin:0 auto;max-width:520px;">Mix and match Spidy products for the ultimate audio setup. Bundle discounts applied automatically.</p>
+        </div>
+
+        <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;" class="bundle-layout reveal">
+            <!-- Product picker -->
+            <div>
+                <h3 style="font-size:1rem;font-weight:700;margin-bottom:20px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;">Select Products</h3>
+                <div class="bundle-items" id="bundle-items">
+
+                    <label class="bundle-item">
+                        <input type="checkbox" class="bundle-check" data-name="Sequoia Pro" data-price="449" data-icon="🎧">
+                        <div class="bundle-item-content">
+                            <span class="bundle-item-icon">🎧</span>
+                            <div class="bundle-item-info">
+                                <div class="bundle-item-name">Sequoia Pro</div>
+                                <div class="bundle-item-cat">Over-Ear Headphones</div>
+                            </div>
+                            <div class="bundle-item-price">$449</div>
+                        </div>
+                    </label>
+
+                    <label class="bundle-item">
+                        <input type="checkbox" class="bundle-check" data-name="X-Bud Pro" data-price="199" data-icon="🎵">
+                        <div class="bundle-item-content">
+                            <span class="bundle-item-icon">🎵</span>
+                            <div class="bundle-item-info">
+                                <div class="bundle-item-name">X-Bud Pro</div>
+                                <div class="bundle-item-cat">True Wireless Earbuds</div>
+                            </div>
+                            <div class="bundle-item-price">$199</div>
+                        </div>
+                    </label>
+
+                    <label class="bundle-item">
+                        <input type="checkbox" class="bundle-check" data-name="Studio Max" data-price="599" data-icon="🎼">
+                        <div class="bundle-item-content">
+                            <span class="bundle-item-icon">🎼</span>
+                            <div class="bundle-item-info">
+                                <div class="bundle-item-name">Studio Max</div>
+                                <div class="bundle-item-cat">Studio Monitor Headphones</div>
+                            </div>
+                            <div class="bundle-item-price">$599</div>
+                        </div>
+                    </label>
+
+                    <label class="bundle-item">
+                        <input type="checkbox" class="bundle-check" data-name="Pulse Speaker" data-price="279" data-icon="🔊">
+                        <div class="bundle-item-content">
+                            <span class="bundle-item-icon">🔊</span>
+                            <div class="bundle-item-info">
+                                <div class="bundle-item-name">Pulse Speaker</div>
+                                <div class="bundle-item-cat">Bluetooth Speaker</div>
+                            </div>
+                            <div class="bundle-item-price">$279</div>
+                        </div>
+                    </label>
+
+                    <label class="bundle-item">
+                        <input type="checkbox" class="bundle-check" data-name="Audiophile Cable" data-price="89" data-icon="🔌">
+                        <div class="bundle-item-content">
+                            <span class="bundle-item-icon">🔌</span>
+                            <div class="bundle-item-info">
+                                <div class="bundle-item-name">Audiophile Cable</div>
+                                <div class="bundle-item-cat">4N OFC Balanced Cable</div>
+                            </div>
+                            <div class="bundle-item-price">$89</div>
+                        </div>
+                    </label>
+
+                    <label class="bundle-item">
+                        <input type="checkbox" class="bundle-check" data-name="Titanium Case" data-price="79" data-icon="🧳">
+                        <div class="bundle-item-content">
+                            <span class="bundle-item-icon">🧳</span>
+                            <div class="bundle-item-info">
+                                <div class="bundle-item-name">Titanium Case</div>
+                                <div class="bundle-item-cat">Hard Shell Carry Case</div>
+                            </div>
+                            <div class="bundle-item-price">$79</div>
+                        </div>
+                    </label>
+
+                </div>
+            </div>
+
+            <!-- Summary panel -->
+            <div class="bundle-summary" id="bundle-summary">
+                <h3 style="font-size:1rem;font-weight:700;margin-bottom:20px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:0.08em;">Your Bundle</h3>
+
+                <div id="bundle-selected-list" style="display:flex;flex-direction:column;gap:8px;min-height:80px;margin-bottom:20px;">
+                    <p id="bundle-empty-msg" style="color:var(--text-muted);font-size:0.85rem;padding:20px 0;">← Select products to build your bundle</p>
+                </div>
+
+                <div class="bundle-divider"></div>
+
+                <div class="bundle-discount-row" id="bundle-discount-row" style="display:none;">
+                    <span>Bundle discount</span>
+                    <span id="bundle-discount-val" style="color:#22c55e;">-$0</span>
+                </div>
+
+                <div class="bundle-total-row">
+                    <span>Total</span>
+                    <div>
+                        <span id="bundle-original-price" style="text-decoration:line-through;color:var(--text-muted);font-size:0.9rem;margin-right:8px;"></span>
+                        <span id="bundle-total-price" style="font-size:1.6rem;font-weight:800;color:white;">$0</span>
+                    </div>
+                </div>
+
+                <div class="bundle-savings-badge" id="bundle-savings-badge" style="display:none;">
+                    <i class="fa-solid fa-tag"></i> <span id="bundle-savings-text">You save $0</span>
+                </div>
+
+                <button class="btn-primary" id="bundle-add-all" style="width:100%;justify-content:center;margin-top:20px;" disabled>
+                    <i class="fa-solid fa-bag-shopping"></i> Add Bundle to Cart
+                </button>
+                <p style="text-align:center;color:var(--text-muted);font-size:0.72rem;margin-top:10px;">
+                    <i class="fa-solid fa-shield-halved"></i> 30-day returns &nbsp;·&nbsp; <i class="fa-solid fa-truck"></i> Free shipping
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== SOUND PROFILE QUIZ ======== -->
+    <section class="quiz-section section" id="quiz" style="padding:100px 5%;background:linear-gradient(135deg,#07010e,#0e0219,#08090d);border-top:1px solid rgba(139,92,246,0.2);position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 30%,rgba(139,92,246,0.12) 0%,transparent 70%);pointer-events:none;"></div>
+
+        <div style="max-width:700px;margin:0 auto;position:relative;z-index:1;">
+            <div class="reveal" style="text-align:center;margin-bottom:50px;">
+                <span class="section-label" style="justify-content:center;color:var(--accent-violet);border-color:rgba(139,92,246,0.3);background:rgba(139,92,246,0.1);">
+                    <span class="dot" style="background:var(--accent-violet)"></span> Find Your Sound
+                </span>
+                <h2 class="section-heading" style="margin-top:16px;">Which Spidy Is <span style="background:linear-gradient(135deg,var(--accent-violet),var(--accent-warm));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Right For You?</span></h2>
+                <p class="section-sub" style="margin:0 auto;max-width:460px;">Answer 5 quick questions and we'll match you with your perfect headphones.</p>
+            </div>
+
+            <div class="quiz-container reveal" id="quiz-container">
+                <!-- Progress -->
+                <div class="quiz-progress-wrap">
+                    <div class="quiz-progress-bar" id="quiz-progress-bar" style="width:0%"></div>
+                </div>
+                <div class="quiz-progress-label" id="quiz-progress-label">Question 1 of 5</div>
+
+                <!-- Question area -->
+                <div class="quiz-question-area" id="quiz-question-area">
+                    <!-- injected by JS -->
+                </div>
+
+                <!-- Navigation -->
+                <div class="quiz-nav" id="quiz-nav" style="display:flex;gap:12px;margin-top:24px;justify-content:space-between;">
+                    <button class="btn-secondary" id="quiz-back" style="display:none;">← Back</button>
+                    <button class="btn-primary" id="quiz-next" style="margin-left:auto;">Next →</button>
+                </div>
+
+                <!-- Result panel (hidden until done) -->
+                <div id="quiz-result" style="display:none;text-align:center;padding:20px 0;">
+                    <div id="quiz-result-emoji" style="font-size:4rem;margin-bottom:16px;">🎧</div>
+                    <h3 id="quiz-result-title" style="font-size:1.8rem;font-weight:800;margin-bottom:8px;">Sequoia Pro</h3>
+                    <div id="quiz-result-subtitle" style="color:var(--accent-violet);font-size:0.85rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;">Your Perfect Match</div>
+                    <p id="quiz-result-desc" style="color:var(--text-secondary);font-size:0.9rem;line-height:1.7;max-width:460px;margin:0 auto 28px;"></p>
+                    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                        <button class="btn-primary" id="quiz-shop-btn"><i class="fa-solid fa-bag-shopping"></i> Shop Now</button>
+                        <button class="btn-secondary" id="quiz-retake"><i class="fa-solid fa-rotate-left"></i> Retake Quiz</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== LIMITED EDITION DROPS ======== -->
+    <section class="drops-section section" id="drops" style="padding:100px 5%;background:var(--bg-primary);border-top:1px solid var(--border);">
+        <div class="reveal" style="text-align:center;margin-bottom:60px;">
+            <span class="section-label" style="justify-content:center"><span class="dot"></span> Exclusive</span>
+            <h2 class="section-heading">Limited <span class="gradient">Edition Drops</span></h2>
+            <p class="section-sub" style="margin:0 auto;max-width:520px;">One-of-a-kind colorways and collaborations. Only 500 units each. Once they're gone, they're gone forever.</p>
+        </div>
+
+        <div class="drops-grid reveal-stagger" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px;max-width:1100px;margin:0 auto;">
+
+            <!-- Drop 1 -->
+            <div class="drop-card">
+                <div class="drop-card-img" style="background:linear-gradient(135deg,#0a001a,#1a0035);">
+                    <div style="font-size:4rem;">🎧</div>
+                    <div class="drop-card-units">Only 42 left</div>
+                </div>
+                <div class="drop-card-body">
+                    <div class="drop-card-tag">🌌 Cosmic Edition</div>
+                    <h3 class="drop-card-title">Sequoia Pro — Deep Space</h3>
+                    <p class="drop-card-desc">Matte midnight blue with hand-applied galaxy splatter finish. Includes engraved star-map inner cup and numbered certificate.</p>
+                    <div class="drop-countdown" data-hours="47" id="drop-cd-1">
+                        <span class="drop-cd-block"><span class="drop-cd-num" id="drop-1-h">47</span><span class="drop-cd-lbl">h</span></span>
+                        <span class="drop-cd-sep">:</span>
+                        <span class="drop-cd-block"><span class="drop-cd-num" id="drop-1-m">00</span><span class="drop-cd-lbl">m</span></span>
+                        <span class="drop-cd-sep">:</span>
+                        <span class="drop-cd-block"><span class="drop-cd-num" id="drop-1-s">00</span><span class="drop-cd-lbl">s</span></span>
+                    </div>
+                    <div class="drop-price-row">
+                        <div>
+                            <div class="drop-price">$549</div>
+                            <div style="font-size:0.72rem;color:var(--text-muted);">Limited 1/500</div>
+                        </div>
+                        <button class="btn-primary drop-waitlist-btn" data-drop="Deep Space Sequoia Pro">
+                            <i class="fa-solid fa-bell"></i> Notify Me
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drop 2 -->
+            <div class="drop-card">
+                <div class="drop-card-img" style="background:linear-gradient(135deg,#1a0500,#350a00);">
+                    <div style="font-size:4rem;">🎧</div>
+                    <div class="drop-card-units" style="background:rgba(255,100,0,0.3);border-color:rgba(255,100,0,0.4);">Only 120 left</div>
+                </div>
+                <div class="drop-card-body">
+                    <div class="drop-card-tag" style="color:#fb923c;background:rgba(251,146,60,0.12);border-color:rgba(251,146,60,0.2);">🔥 Inferno Edition</div>
+                    <h3 class="drop-card-title">X-Bud Pro — Ember</h3>
+                    <p class="drop-card-desc">Gradient ember-to-black finish with heat-reactive color shift housing. Each unit reacts differently to temperature.</p>
+                    <div class="drop-countdown" data-hours="72" id="drop-cd-2">
+                        <span class="drop-cd-block"><span class="drop-cd-num" id="drop-2-h">72</span><span class="drop-cd-lbl">h</span></span>
+                        <span class="drop-cd-sep">:</span>
+                        <span class="drop-cd-block"><span class="drop-cd-num" id="drop-2-m">00</span><span class="drop-cd-lbl">m</span></span>
+                        <span class="drop-cd-sep">:</span>
+                        <span class="drop-cd-block"><span class="drop-cd-num" id="drop-2-s">00</span><span class="drop-cd-lbl">s</span></span>
+                    </div>
+                    <div class="drop-price-row">
+                        <div>
+                            <div class="drop-price" style="color:#fb923c;">$279</div>
+                            <div style="font-size:0.72rem;color:var(--text-muted);">Limited 1/500</div>
+                        </div>
+                        <button class="btn-primary drop-waitlist-btn" style="background:linear-gradient(135deg,#ea580c,#f97316);" data-drop="Ember X-Bud Pro">
+                            <i class="fa-solid fa-bell"></i> Notify Me
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drop 3 — Sold Out -->
+            <div class="drop-card drop-card-soldout">
+                <div class="drop-card-img" style="background:linear-gradient(135deg,#001205,#002010);">
+                    <div style="font-size:4rem;filter:grayscale(1);opacity:0.5;">🎧</div>
+                    <div class="drop-card-units" style="background:rgba(0,0,0,0.5);border-color:rgba(255,255,255,0.1);color:var(--text-muted);">Sold Out</div>
+                </div>
+                <div class="drop-card-body">
+                    <div class="drop-card-tag" style="color:#4ade80;background:rgba(74,222,128,0.08);border-color:rgba(74,222,128,0.15);">🌿 Bioluminescence</div>
+                    <h3 class="drop-card-title" style="opacity:0.6;">Studio Max — Glow</h3>
+                    <p class="drop-card-desc" style="opacity:0.5;">Glow-in-the-dark bio-resin finish. 500 units. All 500 claimed in 4 minutes and 12 seconds.</p>
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);padding:12px 16px;text-align:center;margin:16px 0;">
+                        <div style="font-size:0.75rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.1em;">Gone in</div>
+                        <div style="font-size:1.4rem;font-weight:800;color:var(--text-secondary);">4m 12s</div>
+                    </div>
+                    <div class="drop-price-row">
+                        <div>
+                            <div class="drop-price" style="color:var(--text-muted);">$649</div>
+                            <div style="font-size:0.72rem;color:var(--text-muted);">0 / 500 remaining</div>
+                        </div>
+                        <button class="btn-secondary" disabled style="opacity:0.5;cursor:not-allowed;">Sold Out</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ======== KEYBOARD SHORTCUT MODAL ======== -->
+    <div class="modal-overlay" id="kbd-overlay" style="display:none;"></div>
+    <div class="kbd-modal" id="kbd-modal" style="display:none;" role="dialog" aria-label="Keyboard shortcuts">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+            <h3 style="font-size:1.2rem;font-weight:800;">⌨️ Keyboard Shortcuts</h3>
+            <button id="kbd-close" style="background:none;border:none;color:var(--text-muted);font-size:1.2rem;cursor:pointer;" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="kbd-list">
+            <div class="kbd-row"><kbd>/</kbd><span>Open search</span></div>
+            <div class="kbd-row"><kbd>?</kbd><span>Show shortcuts</span></div>
+            <div class="kbd-row"><kbd>Esc</kbd><span>Close modals / drawers</span></div>
+            <div class="kbd-row"><kbd>C</kbd><span>Open cart</span></div>
+            <div class="kbd-row"><kbd>W</kbd><span>Open wishlist</span></div>
+            <div class="kbd-row"><kbd>T</kbd><span>Toggle dark / light mode</span></div>
+            <div class="kbd-row"><kbd>H</kbd><span>Scroll to hero</span></div>
+            <div class="kbd-row"><kbd>P</kbd><span>Scroll to products</span></div>
+            <div class="kbd-row"><kbd>B</kbd><span>Scroll to bundle builder</span></div>
+            <div class="kbd-row"><kbd>↑</kbd> <kbd>↓</kbd><span>Navigate search results</span></div>
+        </div>
+        <p style="font-size:0.75rem;color:var(--text-muted);margin-top:20px;text-align:center;">Press <kbd style="font-size:0.7rem;padding:2px 6px;">Esc</kbd> or click outside to close</p>
+    </div>
+
     <!-- ======== FOOTER ======== -->
     <footer class="site-footer">
         <div class="footer-grid reveal-stagger">
