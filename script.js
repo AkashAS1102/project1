@@ -3907,3 +3907,450 @@
 
 })();
 
+
+/* ============================================
+   BUILD YOUR BUNDLE — Live Price Calculator
+   ============================================ */
+(function () {
+    'use strict';
+
+    const checks     = document.querySelectorAll('.bundle-check');
+    const listEl     = document.getElementById('bundle-selected-list');
+    const totalEl    = document.getElementById('bundle-total-price');
+    const origEl     = document.getElementById('bundle-original-price');
+    const discountRow = document.getElementById('bundle-discount-row');
+    const discountVal = document.getElementById('bundle-discount-val');
+    const savingsBadge = document.getElementById('bundle-savings-badge');
+    const savingsText  = document.getElementById('bundle-savings-text');
+    const addAllBtn    = document.getElementById('bundle-add-all');
+    const emptyMsg     = document.getElementById('bundle-empty-msg');
+
+    if (!checks.length) return;
+
+    // Tiered discount: 2 items = 10%, 3 = 15%, 4+ = 20%
+    function getDiscount(count) {
+        if (count >= 4) return 0.20;
+        if (count === 3) return 0.15;
+        if (count === 2) return 0.10;
+        return 0;
+    }
+
+    function updateSummary() {
+        const selected = [...checks].filter(c => c.checked);
+        const count    = selected.length;
+
+        // Clear list
+        listEl.innerHTML = '';
+
+        if (count === 0) {
+            const empty = document.createElement('p');
+            empty.id = 'bundle-empty-msg';
+            empty.style.cssText = 'color:var(--text-muted);font-size:0.85rem;padding:20px 0;';
+            empty.textContent = '← Select products to build your bundle';
+            listEl.appendChild(empty);
+            totalEl.textContent = '$0';
+            origEl.textContent = '';
+            discountRow.style.display = 'none';
+            savingsBadge.style.display = 'none';
+            addAllBtn.disabled = true;
+            return;
+        }
+
+        let subtotal = 0;
+
+        selected.forEach(c => {
+            const price = parseInt(c.dataset.price);
+            subtotal += price;
+
+            const row = document.createElement('div');
+            row.className = 'bundle-selected-row';
+            row.innerHTML = `
+                <span>${c.dataset.icon} ${c.dataset.name}</span>
+                <span>$${price}</span>
+            `;
+            listEl.appendChild(row);
+        });
+
+        const discountRate   = getDiscount(count);
+        const discountAmount = Math.round(subtotal * discountRate);
+        const finalTotal     = subtotal - discountAmount;
+
+        totalEl.textContent = `$${finalTotal}`;
+        addAllBtn.disabled  = false;
+
+        if (discountAmount > 0) {
+            origEl.textContent = `$${subtotal}`;
+            discountRow.style.display = 'flex';
+            discountVal.textContent   = `-$${discountAmount} (${(discountRate * 100).toFixed(0)}% off)`;
+            savingsBadge.style.display = 'block';
+            savingsText.textContent    = `You save $${discountAmount} with the ${count}-item bundle!`;
+        } else {
+            origEl.textContent = '';
+            discountRow.style.display = 'none';
+            savingsBadge.style.display = 'none';
+        }
+    }
+
+    checks.forEach(c => c.addEventListener('change', updateSummary));
+
+    // Add all to cart
+    addAllBtn?.addEventListener('click', () => {
+        const selected = [...checks].filter(c => c.checked);
+        if (!selected.length) return;
+        const names = selected.map(c => c.dataset.name).join(', ');
+        if (typeof toast === 'function') toast(`Bundle added to cart: ${names} 🎧`, 'success', 3000);
+        // Uncheck all
+        checks.forEach(c => c.checked = false);
+        updateSummary();
+    });
+
+    updateSummary();
+
+})();
+
+
+/* ============================================
+   SOUND PROFILE QUIZ
+   ============================================ */
+(function () {
+    'use strict';
+
+    const questionArea = document.getElementById('quiz-question-area');
+    const progressBar  = document.getElementById('quiz-progress-bar');
+    const progressLbl  = document.getElementById('quiz-progress-label');
+    const backBtn      = document.getElementById('quiz-back');
+    const nextBtn      = document.getElementById('quiz-next');
+    const nav          = document.getElementById('quiz-nav');
+    const resultEl     = document.getElementById('quiz-result');
+
+    if (!questionArea) return;
+
+    const QUESTIONS = [
+        {
+            q: '🎯 Where do you listen to music most often?',
+            opts: [
+                { e: '🏋️', t: 'Gym / Commute',    scores: { xbud: 3, seq: 1 } },
+                { e: '🏠', t: 'Home, on my couch', scores: { seq: 2, studio: 1 } },
+                { e: '🎙️', t: 'Studio / Production', scores: { studio: 3, seq: 1 } },
+                { e: '✈️', t: 'Travel frequently',  scores: { seq: 3, xbud: 1 } },
+            ]
+        },
+        {
+            q: '🎵 What genre do you mainly listen to?',
+            opts: [
+                { e: '🥁', t: 'Hip-hop / Bass music', scores: { seq: 3, pulse: 1 } },
+                { e: '🎻', t: 'Classical / Jazz',     scores: { studio: 3, seq: 1 } },
+                { e: '🎸', t: 'Rock / Metal',         scores: { seq: 2, studio: 2 } },
+                { e: '🎉', t: 'Pop / EDM',            scores: { xbud: 2, seq: 2 } },
+            ]
+        },
+        {
+            q: '🔇 How important is noise cancellation?',
+            opts: [
+                { e: '🚫', t: 'Must-have — I need silence', scores: { seq: 3 } },
+                { e: '📣', t: 'Nice to have',               scores: { seq: 1, xbud: 2 } },
+                { e: '🤝', t: 'Transparency is more useful', scores: { xbud: 3 } },
+                { e: '🎶', t: "I prefer open-back / natural", scores: { studio: 3 } },
+            ]
+        },
+        {
+            q: '🔋 How long is a typical listening session?',
+            opts: [
+                { e: '⚡', t: '1–2 hours',    scores: { xbud: 3, pulse: 1 } },
+                { e: '🎧', t: '3–5 hours',    scores: { seq: 2, xbud: 2 } },
+                { e: '🌙', t: '6+ hours',     scores: { seq: 3, studio: 2 } },
+                { e: '🎚️', t: 'All day at my desk', scores: { studio: 3 } },
+            ]
+        },
+        {
+            q: '💸 What is your budget?',
+            opts: [
+                { e: '💰', t: 'Under $200',    scores: { xbud: 3, pulse: 1 } },
+                { e: '💵', t: '$200 – $400',   scores: { xbud: 2, seq: 2 } },
+                { e: '💳', t: '$400 – $550',   scores: { seq: 3 } },
+                { e: '🏆', t: '$550+, best only', scores: { studio: 3, seq: 1 } },
+            ]
+        }
+    ];
+
+    const PRODUCTS = {
+        seq:    { name: 'Sequoia Pro',    emoji: '🎧', price: '$449', desc: 'Your lifestyle demands the best of all worlds — world-class ANC, 38-hour battery, and studio-grade sound. The Sequoia Pro is built for you.' },
+        xbud:   { name: 'X-Bud Pro',     emoji: '🎵', price: '$199', desc: 'You need freedom of movement, excellent ANC in a compact form, and long battery life on the go. The X-Bud Pro earbuds check every box.' },
+        studio: { name: 'Studio Max',     emoji: '🎼', price: '$599', desc: 'You\'re serious about audio accuracy. The Studio Max offers planar-magnetic drivers, open/closed switching, and flat frequency response loved by pros.' },
+        pulse:  { name: 'Pulse Speaker',  emoji: '🔊', price: '$279', desc: 'You want to fill a room with sound and share the vibe. The Pulse Speaker delivers 360° spatial audio with room-filling bass.' },
+    };
+
+    let currentQ = 0;
+    const scores = { seq: 0, xbud: 0, studio: 0, pulse: 0 };
+    const answers = [];
+
+    function renderQuestion(idx) {
+        const q = QUESTIONS[idx];
+        questionArea.innerHTML = `
+            <div class="quiz-question">${q.q}</div>
+            <div class="quiz-options">
+                ${q.opts.map((opt, i) => `
+                    <button class="quiz-option${answers[idx] === i ? ' selected' : ''}" data-idx="${i}">
+                        <span class="quiz-option-emoji">${opt.e}</span>
+                        <span>${opt.t}</span>
+                    </button>
+                `).join('')}
+            </div>
+        `;
+
+        // Bind option clicks
+        questionArea.querySelectorAll('.quiz-option').forEach(btn => {
+            btn.addEventListener('click', () => {
+                questionArea.querySelectorAll('.quiz-option').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                answers[idx] = parseInt(btn.dataset.idx);
+                nextBtn.style.opacity = '1';
+                nextBtn.disabled = false;
+            });
+        });
+
+        // Progress
+        const pct = (idx / QUESTIONS.length) * 100;
+        if (progressBar) progressBar.style.width = pct + '%';
+        if (progressLbl) progressLbl.textContent = `Question ${idx + 1} of ${QUESTIONS.length}`;
+
+        // Back button visibility
+        if (backBtn) backBtn.style.display = idx > 0 ? 'block' : 'none';
+
+        // Next button state
+        nextBtn.style.opacity = answers[idx] !== undefined ? '1' : '0.5';
+        nextBtn.disabled = answers[idx] === undefined;
+    }
+
+    function showResult() {
+        // Tally scores
+        Object.keys(scores).forEach(k => scores[k] = 0);
+        QUESTIONS.forEach((q, qi) => {
+            const chosen = answers[qi];
+            if (chosen === undefined) return;
+            const optScores = q.opts[chosen].scores;
+            Object.entries(optScores).forEach(([k, v]) => { scores[k] = (scores[k] || 0) + v; });
+        });
+
+        const winner = Object.keys(scores).sort((a, b) => scores[b] - scores[a])[0];
+        const prod   = PRODUCTS[winner];
+
+        // Show result panel
+        questionArea.style.display = 'none';
+        nav.style.display = 'none';
+        document.getElementById('quiz-result').style.display = 'block';
+        document.getElementById('quiz-result-emoji').textContent = prod.emoji;
+        document.getElementById('quiz-result-title').textContent = prod.name;
+        document.getElementById('quiz-result-desc').textContent  = prod.desc;
+        if (progressBar) progressBar.style.width = '100%';
+        if (progressLbl) progressLbl.textContent = '✓ Quiz complete!';
+    }
+
+    nextBtn?.addEventListener('click', () => {
+        if (answers[currentQ] === undefined) {
+            if (typeof toast === 'function') toast('Please select an option to continue', 'info', 1800);
+            return;
+        }
+        if (currentQ < QUESTIONS.length - 1) {
+            currentQ++;
+            renderQuestion(currentQ);
+        } else {
+            showResult();
+        }
+    });
+
+    backBtn?.addEventListener('click', () => {
+        if (currentQ > 0) {
+            currentQ--;
+            renderQuestion(currentQ);
+        }
+    });
+
+    // Retake
+    document.getElementById('quiz-retake')?.addEventListener('click', () => {
+        currentQ = 0;
+        Object.keys(scores).forEach(k => scores[k] = 0);
+        answers.length = 0;
+        questionArea.style.display = 'block';
+        nav.style.display = 'flex';
+        document.getElementById('quiz-result').style.display = 'none';
+        renderQuestion(0);
+    });
+
+    // Shop Now
+    document.getElementById('quiz-shop-btn')?.addEventListener('click', () => {
+        window.scrollTo({ top: document.getElementById('products')?.getBoundingClientRect().top + window.scrollY - 72 || 0, behavior: 'smooth' });
+    });
+
+    renderQuestion(0);
+
+})();
+
+
+/* ============================================
+   LIMITED EDITION DROPS — Countdown Timers
+   ============================================ */
+(function () {
+    'use strict';
+
+    const DROPS = [
+        { h: 'drop-1-h', m: 'drop-1-m', s: 'drop-1-s', hoursKey: 'spidy-drop1-end', defaultHours: 47 },
+        { h: 'drop-2-h', m: 'drop-2-m', s: 'drop-2-s', hoursKey: 'spidy-drop2-end', defaultHours: 72 },
+    ];
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    DROPS.forEach(drop => {
+        let endTime = parseInt(localStorage.getItem(drop.hoursKey) || '0');
+        if (!endTime || endTime <= Date.now()) {
+            endTime = Date.now() + drop.defaultHours * 3_600_000;
+            localStorage.setItem(drop.hoursKey, String(endTime));
+        }
+
+        const hEl = document.getElementById(drop.h);
+        const mEl = document.getElementById(drop.m);
+        const sEl = document.getElementById(drop.s);
+        if (!hEl || !mEl || !sEl) return;
+
+        function tick() {
+            const rem = endTime - Date.now();
+            if (rem <= 0) {
+                hEl.textContent = mEl.textContent = sEl.textContent = '00';
+                return;
+            }
+            const h = Math.floor(rem / 3_600_000);
+            const m = Math.floor((rem % 3_600_000) / 60_000);
+            const s = Math.floor((rem % 60_000) / 1_000);
+            hEl.textContent = pad(h);
+            mEl.textContent = pad(m);
+            sEl.textContent = pad(s);
+            setTimeout(tick, 1000);
+        }
+        tick();
+    });
+
+    // Waitlist buttons
+    document.querySelectorAll('.drop-waitlist-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const name = btn.dataset.drop;
+            const key  = `spidy-waitlist-${name}`;
+            if (localStorage.getItem(key)) {
+                if (typeof toast === 'function') toast(`You're already on the waitlist for ${name}!`, 'info', 2000);
+                return;
+            }
+            localStorage.setItem(key, 'true');
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> On Waitlist';
+            btn.style.background = 'rgba(34,197,94,0.2)';
+            btn.style.borderColor = 'rgba(34,197,94,0.4)';
+            btn.style.color = '#22c55e';
+            if (typeof toast === 'function') toast(`You're on the waitlist for ${name}! We'll email you when it drops. 🚀`, 'success', 3500);
+        });
+    });
+
+})();
+
+
+/* ============================================
+   KEYBOARD SHORTCUT HANDLER
+   ============================================ */
+(function () {
+    'use strict';
+
+    const kbdModal   = document.getElementById('kbd-modal');
+    const kbdOverlay = document.getElementById('kbd-overlay');
+    const kbdClose   = document.getElementById('kbd-close');
+
+    function scrollTo(id) {
+        const el = document.getElementById(id);
+        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
+    }
+
+    function openKbd() {
+        if (!kbdModal) return;
+        kbdModal.style.display = 'block';
+        kbdOverlay.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeKbd() {
+        if (!kbdModal) return;
+        kbdModal.style.display = 'none';
+        kbdOverlay.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    kbdClose?.addEventListener('click', closeKbd);
+    kbdOverlay?.addEventListener('click', closeKbd);
+
+    document.addEventListener('keydown', e => {
+        // Skip if user is typing in an input
+        const tag = document.activeElement?.tagName?.toLowerCase();
+        if (tag === 'input' || tag === 'textarea' || tag === 'select' || document.activeElement?.isContentEditable) return;
+
+        const key = e.key;
+
+        switch (key) {
+            case '?':
+                e.preventDefault();
+                kbdModal?.style.display === 'block' ? closeKbd() : openKbd();
+                break;
+
+            case 'Escape':
+                closeKbd();
+                // Also close other open panels
+                document.getElementById('cart-drawer')?.classList.remove('open');
+                document.getElementById('wishlist-sidebar')?.classList.remove('open');
+                document.getElementById('search-modal')?.classList.remove('open');
+                document.querySelector('.modal-overlay')?.setAttribute('style', 'display:none');
+                document.body.style.overflow = '';
+                break;
+
+            case 'c':
+            case 'C':
+                document.getElementById('cart-btn')?.click();
+                break;
+
+            case 'w':
+            case 'W':
+                document.getElementById('wishlist-btn')?.click();
+                break;
+
+            case 't':
+            case 'T':
+                document.getElementById('theme-toggle')?.click();
+                break;
+
+            case '/':
+                e.preventDefault();
+                document.getElementById('search-btn')?.click();
+                break;
+
+            case 'h':
+            case 'H':
+                scrollTo('hero');
+                break;
+
+            case 'p':
+            case 'P':
+                scrollTo('products');
+                break;
+
+            case 'b':
+            case 'B':
+                scrollTo('bundle');
+                break;
+        }
+    });
+
+    // Show hint toast on first visit
+    if (!localStorage.getItem('spidy-kbd-seen')) {
+        setTimeout(() => {
+            if (typeof toast === 'function') {
+                toast('💡 Pro tip: Press <strong>?</strong> for keyboard shortcuts', 'info', 4000);
+            }
+            localStorage.setItem('spidy-kbd-seen', 'true');
+        }, 5000);
+    }
+
+})();
+
