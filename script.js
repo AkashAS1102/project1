@@ -4354,3 +4354,499 @@
 
 })();
 
+
+/* ============================================
+   WRITE A REVIEW — Interactive Form
+   ============================================ */
+(function () {
+    'use strict';
+
+    const picker   = document.getElementById('star-picker');
+    const label    = document.getElementById('star-label');
+    const textarea = document.getElementById('review-body');
+    const charCount = document.getElementById('review-char-count');
+    const submitBtn = document.getElementById('submit-review-btn');
+
+    if (!picker) return;
+
+    const STAR_LABELS = ['', 'Poor', 'Fair', 'Good', 'Great', 'Outstanding!'];
+    let selectedStars = 0;
+
+    // Star picker logic
+    const starBtns = picker.querySelectorAll('.star-btn');
+
+    starBtns.forEach(btn => {
+        const val = parseInt(btn.dataset.val);
+
+        btn.addEventListener('mouseenter', () => {
+            starBtns.forEach(b => {
+                b.classList.toggle('lit', parseInt(b.dataset.val) <= val);
+            });
+            if (label) label.textContent = STAR_LABELS[val] || '';
+        });
+
+        btn.addEventListener('click', () => {
+            selectedStars = val;
+            starBtns.forEach(b => {
+                b.classList.toggle('lit', parseInt(b.dataset.val) <= val);
+            });
+            if (label) label.textContent = `You selected ${val} star${val > 1 ? 's' : ''} — ${STAR_LABELS[val]}`;
+        });
+    });
+
+    picker.addEventListener('mouseleave', () => {
+        starBtns.forEach(b => {
+            b.classList.toggle('lit', parseInt(b.dataset.val) <= selectedStars);
+        });
+        if (label) label.textContent = selectedStars ? STAR_LABELS[selectedStars] : '';
+    });
+
+    // Char counter
+    textarea?.addEventListener('input', () => {
+        const len = textarea.value.length;
+        if (charCount) {
+            charCount.textContent = `${len} / 1000`;
+            charCount.style.color = len > 900 ? 'var(--accent)' : 'var(--text-muted)';
+        }
+    });
+
+    // Tag toggles
+    document.querySelectorAll('.review-tag-btn').forEach(btn => {
+        btn.addEventListener('click', () => btn.classList.toggle('active'));
+    });
+
+    // Submit handler
+    submitBtn?.addEventListener('click', () => {
+        const product = document.getElementById('review-product')?.value;
+        const title   = document.getElementById('review-title')?.value?.trim();
+        const body    = textarea?.value?.trim();
+
+        if (!product) {
+            if (typeof toast === 'function') toast('Please select a product', 'error', 2000);
+            return;
+        }
+        if (!selectedStars) {
+            if (typeof toast === 'function') toast('Please select a star rating', 'error', 2000);
+            return;
+        }
+        if (!title) {
+            if (typeof toast === 'function') toast('Please add a review title', 'error', 2000);
+            return;
+        }
+        if (!body || body.length < 20) {
+            if (typeof toast === 'function') toast('Review must be at least 20 characters', 'error', 2000);
+            return;
+        }
+
+        // Success state
+        submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Review Submitted!';
+        submitBtn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+        submitBtn.disabled = true;
+
+        if (typeof toast === 'function') toast(`Thank you! Your ${selectedStars}★ review for ${product} is live. 🎉`, 'success', 4000);
+
+        // Reset after 3s
+        setTimeout(() => {
+            submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Submit Review';
+            submitBtn.style.background = '';
+            submitBtn.disabled = false;
+            selectedStars = 0;
+            starBtns.forEach(b => b.classList.remove('lit'));
+            document.getElementById('review-product').value = '';
+            document.getElementById('review-title').value = '';
+            textarea.value = '';
+            if (charCount) charCount.textContent = '0 / 1000';
+            document.querySelectorAll('.review-tag-btn').forEach(b => b.classList.remove('active'));
+            if (label) label.textContent = '';
+        }, 3000);
+    });
+
+})();
+
+
+/* ============================================
+   SPIDY STUDIO — Canvas Audio Visualizer
+   ============================================ */
+(function () {
+    'use strict';
+
+    const canvas   = document.getElementById('studio-canvas');
+    const demoBtn  = document.getElementById('studio-demo-btn');
+    const micBtn   = document.getElementById('studio-mic-btn');
+    const vizSel   = document.getElementById('studio-viz-select');
+    const colorSel = document.getElementById('studio-color-select');
+
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const W   = canvas.width;
+    const H   = canvas.height;
+    const BAR_COUNT = 80;
+
+    let mode      = 'demo'; // 'demo' | 'mic'
+    let vizType   = 'bars';
+    let colorMode = 'accent';
+    let rafId     = null;
+    let analyser  = null;
+    let dataArray = null;
+    let simPhase  = 0; // for simulated waveform
+
+    // Simulated frequency data (beats + melody)
+    function getSimData(time) {
+        const arr = new Float32Array(BAR_COUNT);
+        for (let i = 0; i < BAR_COUNT; i++) {
+            const norm  = i / BAR_COUNT;
+            const bass  = norm < 0.1 ? (0.8 + 0.2 * Math.sin(time * 4)) : 0;
+            const mid   = (norm > 0.15 && norm < 0.5) ? (0.4 + 0.3 * Math.sin(time * 2.3 + i * 0.3)) : 0;
+            const high  = norm > 0.55 ? (0.2 + 0.15 * Math.sin(time * 5 + i * 0.2)) : 0;
+            const noise = Math.random() * 0.06;
+            arr[i] = Math.min(1, bass + mid + high + noise);
+        }
+        return arr;
+    }
+
+    function getColor(index, total, amplitude) {
+        switch (colorMode) {
+            case 'cyan':   return `rgba(5,217,232,${0.5 + amplitude * 0.5})`;
+            case 'violet': return `rgba(139,92,246,${0.5 + amplitude * 0.5})`;
+            case 'rainbow':
+                const hue = (index / total) * 300;
+                return `hsla(${hue},90%,60%,${0.6 + amplitude * 0.4})`;
+            default: // accent
+                return `rgba(255,42,109,${0.4 + amplitude * 0.6})`;
+        }
+    }
+
+    function drawBars(data) {
+        ctx.clearRect(0, 0, W, H);
+        const barW = W / BAR_COUNT;
+        const gap  = 2;
+
+        data.forEach((val, i) => {
+            const barH = val * (H * 0.85);
+            const x    = i * barW;
+            const y    = H - barH;
+
+            // Gradient per bar
+            const grad = ctx.createLinearGradient(0, y, 0, H);
+            grad.addColorStop(0, getColor(i, BAR_COUNT, val));
+            grad.addColorStop(1, 'rgba(0,0,0,0.1)');
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.roundRect(x + gap / 2, y, barW - gap, barH, [3, 3, 0, 0]);
+            ctx.fill();
+
+            // Peak dots
+            ctx.fillStyle = getColor(i, BAR_COUNT, 1);
+            ctx.fillRect(x + gap / 2, y - 2, barW - gap, 2);
+        });
+    }
+
+    function drawWave(data) {
+        ctx.clearRect(0, 0, W, H);
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = getColor(0, 1, 0.8);
+        ctx.shadowColor  = getColor(0, 1, 0.5);
+        ctx.shadowBlur   = 12;
+        ctx.beginPath();
+
+        for (let i = 0; i < data.length; i++) {
+            const x = (i / data.length) * W;
+            const y = H / 2 + (data[i] - 0.5) * H * 0.7;
+            i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+    }
+
+    function drawRadial(data) {
+        ctx.clearRect(0, 0, W, H);
+        const cx = W / 2, cy = H / 2;
+        const baseR = Math.min(W, H) * 0.18;
+
+        data.forEach((val, i) => {
+            const angle = (i / data.length) * Math.PI * 2 - Math.PI / 2;
+            const r1 = baseR;
+            const r2 = baseR + val * (Math.min(W, H) * 0.3);
+
+            ctx.strokeStyle = getColor(i, data.length, val);
+            ctx.lineWidth   = 2;
+            ctx.shadowColor = getColor(i, data.length, val);
+            ctx.shadowBlur  = val > 0.6 ? 8 : 0;
+            ctx.beginPath();
+            ctx.moveTo(cx + Math.cos(angle) * r1, cy + Math.sin(angle) * r1);
+            ctx.lineTo(cx + Math.cos(angle) * r2, cy + Math.sin(angle) * r2);
+            ctx.stroke();
+        });
+        ctx.shadowBlur = 0;
+
+        // Center circle
+        ctx.beginPath();
+        ctx.arc(cx, cy, baseR * 0.6, 0, Math.PI * 2);
+        ctx.fillStyle = getColor(0, 1, 0.2);
+        ctx.fill();
+    }
+
+    function draw(timestamp) {
+        rafId = requestAnimationFrame(draw);
+        simPhase = timestamp / 1000;
+
+        let data;
+        if (mode === 'mic' && analyser && dataArray) {
+            analyser.getByteFrequencyData(dataArray);
+            data = Float32Array.from(dataArray, v => v / 255);
+        } else {
+            data = getSimData(simPhase);
+        }
+
+        switch (vizType) {
+            case 'wave':   drawWave(data); break;
+            case 'circle': drawRadial(data); break;
+            default:       drawBars(data); break;
+        }
+    }
+
+    // Start immediately
+    rafId = requestAnimationFrame(draw);
+
+    // Demo / Mic toggle
+    demoBtn?.addEventListener('click', () => {
+        mode = 'demo';
+        demoBtn.classList.add('active');
+        micBtn.classList.remove('active');
+    });
+
+    micBtn?.addEventListener('click', async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const source   = audioCtx.createMediaStreamSource(stream);
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = BAR_COUNT * 2;
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+            source.connect(analyser);
+            mode = 'mic';
+            micBtn.classList.add('active');
+            demoBtn.classList.remove('active');
+        } catch (e) {
+            if (typeof toast === 'function') toast('Microphone access denied. Using demo mode.', 'info', 2500);
+        }
+    });
+
+    vizSel?.addEventListener('change', () => { vizType = vizSel.value; });
+    colorSel?.addEventListener('change', () => { colorMode = colorSel.value; });
+
+    // Pause when section leaves viewport
+    const studioSection = document.getElementById('studio');
+    if (studioSection) {
+        const visObs = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) {
+                    cancelAnimationFrame(rafId);
+                } else {
+                    rafId = requestAnimationFrame(draw);
+                }
+            });
+        }, { threshold: 0.1 });
+        visObs.observe(studioSection);
+    }
+
+})();
+
+
+/* ============================================
+   ORDER TRACKER
+   ============================================ */
+(function () {
+    'use strict';
+
+    const input     = document.getElementById('tracker-input');
+    const searchBtn = document.getElementById('tracker-search-btn');
+    const resultEl  = document.getElementById('tracker-result');
+    const orderIdEl = document.getElementById('tracker-order-id');
+
+    if (!searchBtn) return;
+
+    // Fake order database
+    const DEMO_ORDERS = {
+        DEFAULT: { id: 'SPD-2026-0429', eta: 'Oct 7, 2026' },
+    };
+
+    function showResult(raw) {
+        const normalized = raw.toUpperCase().replace(/\s/g, '') || 'SPD-2026-0429';
+        const order = DEMO_ORDERS[normalized] || DEMO_ORDERS.DEFAULT;
+
+        if (orderIdEl) orderIdEl.textContent = normalized.startsWith('SPD') ? normalized : `SPD-${normalized}`;
+        document.getElementById('tracker-eta').textContent = order.eta;
+
+        resultEl.style.display = 'block';
+        resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+        // Animate steps sequentially
+        const steps = document.querySelectorAll('.tracker-step');
+        steps.forEach((step, i) => {
+            setTimeout(() => {
+                step.style.opacity = '0';
+                step.style.transform = 'translateX(-10px)';
+                step.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                setTimeout(() => {
+                    step.style.opacity = '1';
+                    step.style.transform = 'translateX(0)';
+                }, 50);
+            }, i * 120);
+        });
+    }
+
+    function handleSearch() {
+        const val = input?.value?.trim();
+        if (!val) {
+            if (typeof toast === 'function') toast('Please enter an order ID', 'error', 1800);
+            return;
+        }
+        searchBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+        searchBtn.disabled = true;
+        setTimeout(() => {
+            searchBtn.innerHTML = 'Track';
+            searchBtn.disabled = false;
+            showResult(val);
+        }, 1200);
+    }
+
+    searchBtn.addEventListener('click', handleSearch);
+    input?.addEventListener('keydown', e => {
+        if (e.key === 'Enter') handleSearch();
+    });
+
+})();
+
+
+/* ============================================
+   REFERRAL DASHBOARD
+   ============================================ */
+(function () {
+    'use strict';
+
+    const STORAGE_KEY  = 'spidy-referral-data';
+    const GOLD_THRESH  = 5; // friends needed for Gold
+    const COINS_PER_REF = 300;
+    const CASH_PER_REF  = 30;
+
+    function loadData() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+        catch { return {}; }
+    }
+
+    function saveData(d) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+    }
+
+    function renderStats() {
+        const d = loadData();
+        const friends = d.friends || 0;
+        const coins   = friends * COINS_PER_REF;
+        const cash    = friends * CASH_PER_REF;
+        const pct     = Math.min((friends / GOLD_THRESH) * 100, 100);
+
+        // Animate the numbers
+        function animNum(el, target, prefix = '', suffix = '') {
+            if (!el) return;
+            let start = 0;
+            const step = target / 30;
+            const iv = setInterval(() => {
+                start = Math.min(start + step, target);
+                el.textContent = prefix + Math.round(start).toLocaleString() + suffix;
+                if (start >= target) clearInterval(iv);
+            }, 40);
+        }
+
+        animNum(document.getElementById('ref-friends-count'), friends);
+        animNum(document.getElementById('ref-coins-earned'), coins);
+        animNum(document.getElementById('ref-cash-earned'), cash, '$');
+
+        const progressLabel = document.getElementById('ref-progress-label');
+        const progressBar   = document.getElementById('ref-progress-bar');
+        if (progressLabel) progressLabel.textContent = `${friends} / ${GOLD_THRESH} friends`;
+        if (progressBar)   setTimeout(() => { progressBar.style.width = pct + '%'; }, 300);
+    }
+
+    // Generate a unique-ish referral code
+    function getRefCode() {
+        let code = localStorage.getItem('spidy-ref-code');
+        if (!code) {
+            code = 'REF' + Math.random().toString(36).slice(2, 8).toUpperCase();
+            localStorage.setItem('spidy-ref-code', code);
+        }
+        return code;
+    }
+
+    // Update referral link with personal code
+    const linkEl = document.getElementById('referral-link-text');
+    const code   = getRefCode();
+    if (linkEl) linkEl.textContent = `https://spidy.audio/ref/${code}`;
+
+    // Copy button
+    document.getElementById('referral-copy-btn')?.addEventListener('click', () => {
+        const link = linkEl?.textContent || '';
+        navigator.clipboard?.writeText(link).then(() => {
+            if (typeof toast === 'function') toast('Referral link copied! 🔗', 'success', 2000);
+        }).catch(() => {
+            if (typeof toast === 'function') toast('Couldn\'t copy — try manually selecting the link', 'info', 2500);
+        });
+    });
+
+    // Send email invite
+    document.getElementById('referral-send-btn')?.addEventListener('click', () => {
+        const emailInput = document.getElementById('referral-email-input');
+        const email = emailInput?.value?.trim();
+        if (!email || !email.includes('@')) {
+            if (typeof toast === 'function') toast('Please enter a valid email address', 'error', 2000);
+            return;
+        }
+
+        // Simulate sending + credit
+        const d = loadData();
+        d.friends = (d.friends || 0) + 1;
+        saveData(d);
+        renderStats();
+
+        emailInput.value = '';
+        if (typeof toast === 'function') toast(`Invite sent to ${email}! +${COINS_PER_REF} SpidyCoins pending 🎉`, 'success', 3500);
+    });
+
+    // Social share buttons
+    document.querySelectorAll('.referral-share-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const platform = btn.dataset.platform;
+            const link = linkEl?.textContent || '';
+            const msg  = `I'm using Spidy for premium audio gear — get $30 off your first order! ${link}`;
+
+            const urls = {
+                Twitter:   `https://twitter.com/intent/tweet?text=${encodeURIComponent(msg)}`,
+                WhatsApp:  `https://wa.me/?text=${encodeURIComponent(msg)}`,
+                LinkedIn:  `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`,
+                Instagram: null, // Instagram doesn't support URL sharing
+            };
+
+            if (urls[platform]) {
+                window.open(urls[platform], '_blank', 'width=600,height=450');
+            } else {
+                navigator.clipboard?.writeText(msg);
+                if (typeof toast === 'function') toast('Caption copied! Paste it in your Instagram story 📸', 'info', 3000);
+            }
+        });
+    });
+
+    // Initial render
+    renderStats();
+
+    // Re-render on section enter
+    const section = document.getElementById('referral-dash');
+    if (section) {
+        new IntersectionObserver(entries => {
+            if (entries[0]?.isIntersecting) renderStats();
+        }, { threshold: 0.2 }).observe(section);
+    }
+
+})();
+
