@@ -4783,6 +4783,415 @@
         </div>
     </section>
 
+    <!-- ======== INTERACTIVE HEADPHONE CONFIGURATOR ======== -->
+    <section id="configurator" class="configurator-section reveal-on-scroll">
+        <div class="section-header text-center">
+            <span class="section-tag">CUSTOM CRAFT</span>
+            <h2 class="section-title">Build Your Dream Headphone</h2>
+            <p class="section-desc">Personalize every detail from headband materials to custom laser engraving. Built to order in our lab.</p>
+        </div>
+
+        <div class="configurator-container">
+            <div class="configurator-preview-card">
+                <div class="configurator-badge">LIVE 3D PREVIEW</div>
+                <div class="configurator-visual" id="config-visual">
+                    <svg viewBox="0 0 400 400" class="headphone-svg-preview">
+                        <defs>
+                            <radialGradient id="hp-glow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
+                            </radialGradient>
+                            <filter id="neon-glow-effect">
+                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                <feMerge>
+                                    <feMergeNode in="coloredBlur"/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+
+                        <circle cx="200" cy="200" r="140" fill="url(#hp-glow)" />
+                        <path id="svg-headband" d="M 90 220 C 90 80, 310 80, 310 220" fill="none" stroke="#2a2e3d" stroke-width="24" stroke-linecap="round"/>
+                        <path id="svg-cushion" d="M 120 160 C 140 100, 260 100, 280 160" fill="none" stroke="#ff2a6d" stroke-width="12" stroke-linecap="round"/>
+
+                        <path d="M 80 210 L 80 250 L 100 250 L 100 210 Z" fill="#3a3f55"/>
+                        <path d="M 300 210 L 300 250 L 320 250 L 320 210 Z" fill="#3a3f55"/>
+
+                        <rect id="svg-cup-left" x="60" y="210" width="50" height="90" rx="25" fill="#ff2a6d" stroke="#ffffff" stroke-width="2" filter="url(#neon-glow-effect)"/>
+                        <rect x="70" y="225" width="30" height="60" rx="15" fill="#12151e"/>
+
+                        <rect id="svg-cup-right" x="290" y="210" width="50" height="90" rx="25" fill="#ff2a6d" stroke="#ffffff" stroke-width="2" filter="url(#neon-glow-effect)"/>
+                        <rect x="300" y="225" width="30" height="60" rx="15" fill="#12151e"/>
+
+                        <path id="svg-cable" d="M 85 295 C 85 360, 200 370, 200 380" fill="none" stroke="#05d9e8" stroke-width="5" stroke-dasharray="0" stroke-linecap="round"/>
+                        <text id="svg-engraving" x="200" y="325" fill="var(--text-secondary)" font-size="12" font-weight="700" text-anchor="middle" letter-spacing="2">SPIDY LABS</text>
+                    </svg>
+                </div>
+                <div class="configurator-spec-summary">
+                    <div class="config-summary-row">
+                        <span>Base Edition:</span>
+                        <strong>Spidy Apex Custom ($299)</strong>
+                    </div>
+                    <div class="config-summary-row">
+                        <span>Finish:</span>
+                        <strong id="summary-color-name">Cyber Neon Pink</strong>
+                    </div>
+                    <div class="config-summary-row">
+                        <span>Headband Cushion:</span>
+                        <strong id="summary-cushion-name">Protein Leather</strong>
+                    </div>
+                    <div class="config-summary-row">
+                        <span>Audio Connection:</span>
+                        <strong id="summary-cable-name">Standard Braided 3.5mm</strong>
+                    </div>
+                    <div class="config-summary-row">
+                        <span>Custom Laser Engraving:</span>
+                        <strong id="summary-engraving-text">"SPIDY LABS"</strong>
+                    </div>
+                    <div class="config-price-box">
+                        <span class="config-price-label">Total Custom Build</span>
+                        <span class="config-price-val" id="config-total-price">$299</span>
+                    </div>
+                    <button type="button" class="btn btn-primary config-add-cart-btn" id="config-add-cart">
+                        <i class="fas fa-shopping-bag"></i> Add Custom Headphone to Cart
+                    </button>
+                </div>
+            </div>
+
+            <div class="configurator-options-card">
+                <div class="config-step-block">
+                    <h3 class="config-step-title"><span class="step-num">01</span> Pick Ear Cup Finish</h3>
+                    <div class="color-options-grid" id="config-color-opts">
+                        <button type="button" class="color-opt-btn active" data-color="#ff2a6d" data-name="Cyber Neon Pink" data-price="0">
+                            <span class="color-dot" style="background:#ff2a6d"></span>
+                            <span class="color-opt-name">Cyber Neon</span>
+                            <span class="color-opt-price">Included</span>
+                        </button>
+                        <button type="button" class="color-opt-btn" data-color="#05d9e8" data-name="Electric Cyan" data-price="15">
+                            <span class="color-dot" style="background:#05d9e8"></span>
+                            <span class="color-opt-name">Electric Cyan</span>
+                            <span class="color-opt-price">+$15</span>
+                        </button>
+                        <button type="button" class="color-opt-btn" data-color="#8b5cf6" data-name="Aurora Violet" data-price="15">
+                            <span class="color-dot" style="background:#8b5cf6"></span>
+                            <span class="color-opt-name">Aurora Violet</span>
+                            <span class="color-opt-price">+$15</span>
+                        </button>
+                        <button type="button" class="color-opt-btn" data-color="#eab308" data-name="Solar Gold" data-price="25">
+                            <span class="color-dot" style="background:#eab308"></span>
+                            <span class="color-opt-name">Solar Gold</span>
+                            <span class="color-opt-price">+$25</span>
+                        </button>
+                        <button type="button" class="color-opt-btn" data-color="#1e293b" data-name="Stealth Obsidian" data-price="10">
+                            <span class="color-dot" style="background:#1e293b"></span>
+                            <span class="color-opt-name">Stealth Obsidian</span>
+                            <span class="color-opt-price">+$10</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="config-step-block">
+                    <h3 class="config-step-title"><span class="step-num">02</span> Headband Material</h3>
+                    <div class="material-options-grid" id="config-cushion-opts">
+                        <button type="button" class="mat-opt-btn active" data-cushion-color="#ff2a6d" data-name="Protein Leather" data-price="0">
+                            <i class="fas fa-feather-alt"></i>
+                            <div>
+                                <strong>Protein Leather</strong>
+                                <small>Ultra-soft synthetic leather</small>
+                            </div>
+                        </button>
+                        <button type="button" class="mat-opt-btn" data-cushion-color="#05d9e8" data-name="Alcantara Mesh" data-price="20">
+                            <i class="fas fa-wind"></i>
+                            <div>
+                                <strong>Alcantara Mesh</strong>
+                                <small>Breathable perforated suede (+$20)</small>
+                            </div>
+                        </button>
+                        <button type="button" class="mat-opt-btn" data-cushion-color="#8b5cf6" data-name="Cloud Memory Foam" data-price="30">
+                            <i class="fas fa-cloud"></i>
+                            <div>
+                                <strong>Cloud Memory Foam</strong>
+                                <small>Zero-pressure ergonomics (+$30)</small>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="config-step-block">
+                    <h3 class="config-step-title"><span class="step-num">03</span> Cable &amp; Wireless Mode</h3>
+                    <div class="cable-options-grid" id="config-cable-opts">
+                        <button type="button" class="mat-opt-btn active" data-cable-style="solid" data-name="Braided Nylon 3.5mm" data-price="0">
+                            <i class="fas fa-bolt"></i>
+                            <div>
+                                <strong>Braided Nylon 3.5mm</strong>
+                                <small>Oxygen-free copper core</small>
+                            </div>
+                        </button>
+                        <button type="button" class="mat-opt-btn" data-cable-style="coiled" data-name="Pro DJ Coiled Cable" data-price="15">
+                            <i class="fas fa-sliders-h"></i>
+                            <div>
+                                <strong>Pro DJ Coiled Cable</strong>
+                                <small>Extended 3m stretch cord (+$15)</small>
+                            </div>
+                        </button>
+                        <button type="button" class="mat-opt-btn" data-cable-style="wireless" data-name="Wireless BT 5.4 Dongle" data-price="45">
+                            <i class="fas fa-wifi"></i>
+                            <div>
+                                <strong>Wireless BT 5.4 + USB-C</strong>
+                                <small>Ultra-low latency 2.4Ghz transmitter (+$45)</small>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="config-step-block">
+                    <h3 class="config-step-title"><span class="step-num">04</span> Custom Laser Engraving</h3>
+                    <div class="engraving-input-wrap">
+                        <input type="text" id="config-engraving-input" maxlength="20" placeholder="e.g. AUDIOPHILE-X" value="SPIDY LABS" class="engraving-input">
+                        <span class="char-counter"><span id="engraving-len">10</span>/20</span>
+                    </div>
+                    <p class="config-hint"><i class="fas fa-info-circle"></i> Laser etched onto the lower aluminum ring of both ear cups.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== SPIDY INNOVATION TIMELINE & ROADMAP ======== -->
+    <section id="tech-roadmap" class="roadmap-section reveal-on-scroll">
+        <div class="section-header text-center">
+            <span class="section-tag">R&amp;D INNOVATION</span>
+            <h2 class="section-title">The Sound Tech Evolution</h2>
+            <p class="section-desc">Explore our acoustic breakthroughs from early driver lab experiments to futuristic neural sound engine concepts.</p>
+        </div>
+
+        <div class="roadmap-filter-bar text-center">
+            <button class="roadmap-cat-btn active" data-cat="all">All Milestones</button>
+            <button class="roadmap-cat-btn" data-cat="hardware">Hardware &amp; Acoustics</button>
+            <button class="roadmap-cat-btn" data-cat="firmware">DSP &amp; Codecs</button>
+            <button class="roadmap-cat-btn" data-cat="ai">AI Audio Engines</button>
+        </div>
+
+        <div class="roadmap-timeline-container">
+            <div class="roadmap-grid">
+                <div class="roadmap-card" data-cat="hardware">
+                    <div class="roadmap-year">2023</div>
+                    <div class="roadmap-badge badge-released">RELEASED</div>
+                    <h3 class="roadmap-title">Graphene Membrane V1</h3>
+                    <p class="roadmap-desc">Pioneered ultra-lightweight nanometer graphene diaphragms resulting in 0.01% harmonic distortion across 10Hz-40kHz.</p>
+                    <div class="roadmap-specs">
+                        <span><i class="fas fa-chart-line"></i> +40% High Clarity</span>
+                        <span><i class="fas fa-tachometer-alt"></i> 110dB SPL</span>
+                    </div>
+                </div>
+
+                <div class="roadmap-card" data-cat="firmware">
+                    <div class="roadmap-year">2024 Q1</div>
+                    <div class="roadmap-badge badge-released">RELEASED</div>
+                    <h3 class="roadmap-title">SpidySpatial™ Engine</h3>
+                    <p class="roadmap-desc">Developed real-time HRTF 3D spatial positioning algorithms with sub-5ms head tracking latency.</p>
+                    <div class="roadmap-specs">
+                        <span><i class="fas fa-cube"></i> 360° Spherical Audio</span>
+                        <span><i class="fas fa-microchip"></i> Quad-core DSP</span>
+                    </div>
+                </div>
+
+                <div class="roadmap-card" data-cat="hardware">
+                    <div class="roadmap-year">2024 Q4</div>
+                    <div class="roadmap-badge badge-released">CURRENT</div>
+                    <h3 class="roadmap-title">Active Chamber Hybrid ANC</h3>
+                    <p class="roadmap-desc">Multi-feedforward microphone array sampling external ambient noise at 192,000 times per second for -48dB cancellation.</p>
+                    <div class="roadmap-specs">
+                        <span><i class="fas fa-shield-alt"></i> -48dB Quiet Zone</span>
+                        <span><i class="fas fa-clock"></i> 65H Battery Life</span>
+                    </div>
+                </div>
+
+                <div class="roadmap-card" data-cat="ai">
+                    <div class="roadmap-year">2025 Q2</div>
+                    <div class="roadmap-badge badge-up-next">UPCOMING</div>
+                    <h3 class="roadmap-title">Neural Ear Calibration AI</h3>
+                    <p class="roadmap-desc">In-ear micro-sonics sound wave reflections measure your ear canal anatomy to construct a personalized EQ profile instantly.</p>
+                    <div class="roadmap-specs">
+                        <span><i class="fas fa-brain"></i> Neural Auto-EQ</span>
+                        <span><i class="fas fa-bolt"></i> 2-Second Scan</span>
+                    </div>
+                </div>
+
+                <div class="roadmap-card" data-cat="firmware">
+                    <div class="roadmap-year">2025 Q4</div>
+                    <div class="roadmap-badge badge-concept">CONCEPT</div>
+                    <h3 class="roadmap-title">Lossless Quantum-Link Wireless</h3>
+                    <p class="roadmap-desc">Next-gen 24-bit/192kHz uncompressed wireless transmission protocol delivering true studio master quality over 50 meters.</p>
+                    <div class="roadmap-specs">
+                        <span><i class="fas fa-broadcast-tower"></i> 9.6 Mbps Bandwidth</span>
+                        <span><i class="fas fa-infinity"></i> Zero Loss</span>
+                    </div>
+                </div>
+
+                <div class="roadmap-card" data-cat="ai">
+                    <div class="roadmap-year">2026+</div>
+                    <div class="roadmap-badge badge-concept">VISION</div>
+                    <h3 class="roadmap-title">Biometric Audio Focus</h3>
+                    <p class="roadmap-desc">EEG brainwave sensors integrated in ear pads automatically adjust soundstage and ANC intensity based on your focus and stress states.</p>
+                    <div class="roadmap-specs">
+                        <span><i class="fas fa-heartbeat"></i> Neural Feedback</span>
+                        <span><i class="fas fa-magic"></i> Adaptive Mood EQ</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== INTERACTIVE FAQ & HELP CENTER ======== -->
+    <section id="faq-section" class="faq-section reveal-on-scroll">
+        <div class="section-header text-center">
+            <span class="section-tag">KNOWLEDGE BASE</span>
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-desc">Got questions about setup, compatibility, warranty, or battery care? Find instant answers below.</p>
+        </div>
+
+        <div class="faq-search-wrapper">
+            <div class="faq-search-input-box">
+                <i class="fas fa-search faq-search-icon"></i>
+                <input type="text" id="faq-search-input" placeholder="Search keywords like 'battery', 'ANC', 'warranty', 'shipping'..." autocomplete="off">
+                <button type="button" id="faq-clear-btn" class="faq-clear-btn" style="display:none;"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="faq-cat-tags">
+                <button class="faq-tag active" data-filter="all">All</button>
+                <button class="faq-tag" data-filter="audio">Audio &amp; ANC</button>
+                <button class="faq-tag" data-filter="battery">Battery &amp; Charging</button>
+                <button class="faq-tag" data-filter="shipping">Orders &amp; Returns</button>
+                <button class="faq-tag" data-filter="warranty">Warranty &amp; Care</button>
+            </div>
+        </div>
+
+        <div class="faq-accordion-list" id="faq-accordion">
+            <div class="faq-item" data-cat="audio">
+                <button type="button" class="faq-question">
+                    <span>How does Spidy's Active Noise Cancellation (ANC) compare to competitors?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Our Spidy Hybrid ANC system uses 4 internal and external ultra-wideband microphones coupled with a dedicated DSP chip. It samples environmental ambient sound 192,000 times per second, attenuating up to -48dB across low engine rumbles and high human voice frequencies.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-cat="battery">
+                <button type="button" class="faq-question">
+                    <span>What is the actual battery life with ANC enabled?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>You get up to 50 continuous playback hours with ANC enabled at 60% volume. With ANC turned off, battery life extends up to an astounding 65 hours. A quick 10-minute USB-C Turbo Charge provides 6 hours of play time.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-cat="shipping">
+                <button type="button" class="faq-question">
+                    <span>What is your global shipping policy and delivery time?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>We provide free express global shipping on all orders over $99. Domestic orders arrive within 2-3 business days. International express orders take 4-7 business days with full end-to-end tracking and customs duty pre-paid.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-cat="warranty">
+                <button type="button" class="faq-question">
+                    <span>What coverage is included in the 2-Year Spidy Care Warranty?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Every Spidy device comes standard with a 2-Year International Warranty covering driver defects, Bluetooth chip failure, ANC microphone degradation, and battery capacity drops under 80%. We also offer free replacement ear pads within the first 12 months.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-cat="audio">
+                <button type="button" class="faq-question">
+                    <span>Can I use Spidy headphones for competitive high-framerate gaming?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Yes! With the included 2.4GHz Ultra-Low Latency USB-C Dongle, latency drops down to a imperceptible 15ms. You also have access to our desktop app with FPS Soundstage Presets tailored for footsteps and directional gunshots.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" data-cat="battery">
+                <button type="button" class="faq-question">
+                    <span>Can I charge and listen simultaneously?</span>
+                    <i class="fas fa-chevron-down faq-icon"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Absolutely. You can plug in the USB-C cable for high-res USB Digital Audio input while charging the battery simultaneously without any ground loop noise or hum.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-footer-banner">
+            <div class="faq-footer-content">
+                <h3>Still have questions?</h3>
+                <p>Our audio engineers are ready to assist you live 24/7.</p>
+            </div>
+            <a href="#livechat-widget" class="btn btn-outline"><i class="fas fa-comments"></i> Start Live Chat</a>
+        </div>
+    </section>
+
+    <!-- ======== SPIDY AMBIENT SYNTH & FOCUS LAB ======== -->
+    <section id="ambient-generator" class="ambient-section reveal-on-scroll">
+        <div class="section-header text-center">
+            <span class="section-tag">SYNTHESIZER LAB</span>
+            <h2 class="section-title">Cyber Ambient Sound Generator</h2>
+            <p class="section-desc">Generate soothing synthesized background noise &amp; binaural focus frequencies directly in your browser using the Web Audio API.</p>
+        </div>
+
+        <div class="ambient-player-card">
+            <div class="ambient-visualizer-ring" id="ambient-ring">
+                <div class="ring-core">
+                    <i class="fas fa-compact-disc ambient-disc-icon"></i>
+                </div>
+            </div>
+
+            <div class="ambient-controls">
+                <div class="ambient-preset-grid">
+                    <button class="ambient-preset-btn active" data-synth="pink">
+                        <i class="fas fa-cloud-rain"></i>
+                        <span>Cyber Rain</span>
+                    </button>
+                    <button class="ambient-preset-btn" data-synth="drone">
+                        <i class="fas fa-meteor"></i>
+                        <span>Deep Space Drone</span>
+                    </button>
+                    <button class="ambient-preset-btn" data-synth="cafe">
+                        <i class="fas fa-mug-hot"></i>
+                        <span>Neon Cafe Warmth</span>
+                    </button>
+                    <button class="ambient-preset-btn" data-synth="binaural">
+                        <i class="fas fa-brain"></i>
+                        <span>432Hz Focus Beat</span>
+                    </button>
+                </div>
+
+                <div class="ambient-sliders">
+                    <div class="ambient-slider-group">
+                        <label for="ambient-vol">Master Volume: <span id="ambient-vol-val">60%</span></label>
+                        <input type="range" id="ambient-vol" min="0" max="100" value="60" class="custom-range">
+                    </div>
+                    <div class="ambient-slider-group">
+                        <label for="ambient-pitch">Frequency Filter: <span id="ambient-pitch-val">1200 Hz</span></label>
+                        <input type="range" id="ambient-pitch" min="200" max="4000" step="50" value="1200" class="custom-range">
+                    </div>
+                </div>
+
+                <div class="ambient-action-bar">
+                    <button type="button" class="btn btn-primary ambient-play-btn" id="ambient-play-toggle">
+                        <i class="fas fa-play" id="ambient-play-icon"></i> <span id="ambient-play-text">Start Soundscape</span>
+                    </button>
+                    <span class="ambient-status-text" id="ambient-status">Status: Ready</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ======== FOOTER ======== -->
     <footer class="site-footer">
         <div class="footer-grid reveal-stagger">
