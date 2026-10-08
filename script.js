@@ -4850,3 +4850,461 @@
 
 })();
 
+/* ============================================
+   MODULE 1: Headphone Configurator
+   ============================================ */
+(function() {
+    'use strict';
+
+    const container = document.getElementById('configurator');
+    if (!container) return;
+
+    const svgCupLeft = document.getElementById('svg-cup-left');
+    const svgCupRight = document.getElementById('svg-cup-right');
+    const svgCushion = document.getElementById('svg-cushion');
+    const svgEngraving = document.getElementById('svg-engraving');
+    const svgCable = document.getElementById('svg-cable');
+
+    const colorBtns = document.querySelectorAll('#config-color-opts .color-opt-btn');
+    const cushionBtns = document.querySelectorAll('#config-cushion-opts .mat-opt-btn');
+    const cableBtns = document.querySelectorAll('#config-cable-opts .mat-opt-btn');
+    const engravingInput = document.getElementById('config-engraving-input');
+    const engravingLen = document.getElementById('engraving-len');
+
+    const summaryColor = document.getElementById('summary-color-name');
+    const summaryCushion = document.getElementById('summary-cushion-name');
+    const summaryCable = document.getElementById('summary-cable-name');
+    const summaryEngraving = document.getElementById('summary-engraving-text');
+    const totalPriceEl = document.getElementById('config-total-price');
+    const addCartBtn = document.getElementById('config-add-cart');
+
+    let state = {
+        basePrice: 299,
+        colorPrice: 0,
+        cushionPrice: 0,
+        cablePrice: 0,
+        colorName: 'Cyber Neon Pink',
+        cushionName: 'Protein Leather',
+        cableName: 'Braided Nylon 3.5mm',
+        engraving: 'SPIDY LABS',
+        hexColor: '#ff2a6d'
+    };
+
+    function updatePrice() {
+        const total = state.basePrice + state.colorPrice + state.cushionPrice + state.cablePrice;
+        if (totalPriceEl) totalPriceEl.textContent = '$' + total;
+    }
+
+    // Color Pickers
+    colorBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            colorBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const color = btn.dataset.color;
+            const name = btn.dataset.name;
+            const price = parseInt(btn.dataset.price, 10) || 0;
+
+            state.hexColor = color;
+            state.colorName = name;
+            state.colorPrice = price;
+
+            if (svgCupLeft) svgCupLeft.setAttribute('fill', color);
+            if (svgCupRight) svgCupRight.setAttribute('fill', color);
+            if (summaryColor) summaryColor.textContent = name;
+
+            updatePrice();
+        });
+    });
+
+    // Cushion Material Pickers
+    cushionBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            cushionBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const color = btn.dataset.cushionColor;
+            const name = btn.dataset.name;
+            const price = parseInt(btn.dataset.price, 10) || 0;
+
+            state.cushionName = name;
+            state.cushionPrice = price;
+
+            if (svgCushion) svgCushion.setAttribute('stroke', color);
+            if (summaryCushion) summaryCushion.textContent = name;
+
+            updatePrice();
+        });
+    });
+
+    // Cable Pickers
+    cableBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            cableBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const style = btn.dataset.cableStyle;
+            const name = btn.dataset.name;
+            const price = parseInt(btn.dataset.price, 10) || 0;
+
+            state.cableName = name;
+            state.cablePrice = price;
+
+            if (svgCable) {
+                if (style === 'coiled') {
+                    svgCable.setAttribute('stroke-dasharray', '4,4');
+                    svgCable.setAttribute('stroke', '#ff2a6d');
+                } else if (style === 'wireless') {
+                    svgCable.setAttribute('stroke-dasharray', '2,8');
+                    svgCable.setAttribute('stroke', 'transparent');
+                } else {
+                    svgCable.setAttribute('stroke-dasharray', '0');
+                    svgCable.setAttribute('stroke', '#05d9e8');
+                }
+            }
+
+            if (summaryCable) summaryCable.textContent = name;
+
+            updatePrice();
+        });
+    });
+
+    // Engraving text
+    if (engravingInput) {
+        engravingInput.addEventListener('input', (e) => {
+            const val = e.target.value.toUpperCase();
+            state.engraving = val || 'SPIDY LABS';
+            if (engravingLen) engravingLen.textContent = val.length;
+            if (svgEngraving) svgEngraving.textContent = state.engraving;
+            if (summaryEngraving) summaryEngraving.textContent = '"' + state.engraving + '"';
+        });
+    }
+
+    // Add Custom Build to Cart
+    if (addCartBtn) {
+        addCartBtn.addEventListener('click', () => {
+            const total = state.basePrice + state.colorPrice + state.cushionPrice + state.cablePrice;
+            const customItem = {
+                id: 'custom-apex-' + Date.now(),
+                title: 'Custom Spidy Apex (' + state.colorName + ')',
+                price: total,
+                img: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60',
+                qty: 1,
+                specs: state.colorName + ' | ' + state.cushionName + ' | Engraving: ' + state.engraving
+            };
+
+            if (typeof cart !== 'undefined' && Array.isArray(cart)) {
+                cart.push(customItem);
+                if (typeof saveCart === 'function') saveCart();
+                if (typeof renderCart === 'function') renderCart();
+                if (typeof openCart === 'function') openCart();
+            }
+
+            if (typeof toast === 'function') {
+                toast('🎉 Custom Headphone added to cart! ($' + total + ')', 'success', 3500);
+            }
+        });
+    }
+})();
+
+/* ============================================
+   MODULE 2: Innovation Roadmap Filter
+   ============================================ */
+(function() {
+    'use strict';
+
+    const section = document.getElementById('tech-roadmap');
+    if (!section) return;
+
+    const filterBtns = section.querySelectorAll('.roadmap-cat-btn');
+    const cards = section.querySelectorAll('.roadmap-card');
+
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const cat = btn.dataset.cat;
+
+            cards.forEach(card => {
+                if (cat === 'all' || card.dataset.cat === cat) {
+                    card.style.display = 'flex';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+})();
+
+/* ============================================
+   MODULE 3: Interactive Searchable FAQ
+   ============================================ */
+(function() {
+    'use strict';
+
+    const faqSection = document.getElementById('faq-section');
+    if (!faqSection) return;
+
+    const searchInput = document.getElementById('faq-search-input');
+    const clearBtn = document.getElementById('faq-clear-btn');
+    const tagBtns = faqSection.querySelectorAll('.faq-tag');
+    const items = faqSection.querySelectorAll('.faq-item');
+
+    // Accordion toggle
+    items.forEach(item => {
+        const questionBtn = item.querySelector('.faq-question');
+        if (questionBtn) {
+            questionBtn.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                items.forEach(i => i.classList.remove('active'));
+                if (!isActive) item.classList.add('active');
+            });
+        }
+    });
+
+    // Tag filtering
+    tagBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tagBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterFaq();
+        });
+    });
+
+    // Search filter
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            if (clearBtn) clearBtn.style.display = searchInput.value ? 'block' : 'none';
+            filterFaq();
+        });
+    }
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            if (searchInput) searchInput.value = '';
+            clearBtn.style.display = 'none';
+            filterFaq();
+        });
+    }
+
+    function filterFaq() {
+        const query = (searchInput?.value || '').toLowerCase().trim();
+        const activeTag = faqSection.querySelector('.faq-tag.active')?.dataset.filter || 'all';
+
+        items.forEach(item => {
+            const cat = item.dataset.cat;
+            const text = item.textContent.toLowerCase();
+
+            const matchesTag = (activeTag === 'all' || cat === activeTag);
+            const matchesSearch = !query || text.includes(query);
+
+            if (matchesTag && matchesSearch) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+})();
+
+/* ============================================
+   MODULE 4: Cyber Ambient Synth Generator (Web Audio API)
+   ============================================ */
+(function() {
+    'use strict';
+
+    const section = document.getElementById('ambient-generator');
+    if (!section) return;
+
+    const ring = document.getElementById('ambient-ring');
+    const playBtn = document.getElementById('ambient-play-toggle');
+    const playIcon = document.getElementById('ambient-play-icon');
+    const playText = document.getElementById('ambient-play-text');
+    const statusText = document.getElementById('ambient-status');
+
+    const volInput = document.getElementById('ambient-vol');
+    const volVal = document.getElementById('ambient-vol-val');
+    const pitchInput = document.getElementById('ambient-pitch');
+    const pitchVal = document.getElementById('ambient-pitch-val');
+
+    const presetBtns = section.querySelectorAll('.ambient-preset-btn');
+
+    let audioCtx = null;
+    let isPlaying = false;
+    let activeMode = 'pink';
+    let masterGain = null;
+    let filterNode = null;
+    let sourceNode = null;
+    let osc1 = null;
+    let osc2 = null;
+
+    function initAudio() {
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
+
+    function createPinkNoiseBuffer() {
+        const bufferSize = audioCtx.sampleRate * 2;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let b0=0, b1=0, b2=0, b3=0, b4=0, b5=0, b6=0;
+        for (let i = 0; i < bufferSize; i++) {
+            const white = Math.random() * 2 - 1;
+            b0 = 0.99886 * b0 + white * 0.0555179;
+            b1 = 0.99332 * b1 + white * 0.0750759;
+            b2 = 0.96900 * b2 + white * 0.1538520;
+            b3 = 0.86650 * b3 + white * 0.3104856;
+            b4 = 0.55000 * b4 + white * 0.5329522;
+            b5 = -0.7616 * b5 - white * 0.0168980;
+            data[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+            data[i] *= 0.11;
+            b6 = white * 0.115926;
+        }
+        return buffer;
+    }
+
+    function stopSound() {
+        if (sourceNode) {
+            try { sourceNode.stop(); sourceNode.disconnect(); } catch(e){}
+            sourceNode = null;
+        }
+        if (osc1) {
+            try { osc1.stop(); osc1.disconnect(); } catch(e){}
+            osc1 = null;
+        }
+        if (osc2) {
+            try { osc2.stop(); osc2.disconnect(); } catch(e){}
+            osc2 = null;
+        }
+    }
+
+    function startSound() {
+        initAudio();
+        stopSound();
+
+        masterGain = audioCtx.createGain();
+        const volPct = parseInt(volInput?.value || '60', 10) / 100;
+        masterGain.gain.setValueAtTime(volPct * 0.5, audioCtx.currentTime);
+
+        filterNode = audioCtx.createBiquadFilter();
+        const cutoff = parseInt(pitchInput?.value || '1200', 10);
+        filterNode.type = 'lowpass';
+        filterNode.frequency.setValueAtTime(cutoff, audioCtx.currentTime);
+
+        if (activeMode === 'pink' || activeMode === 'cafe') {
+            const buffer = createPinkNoiseBuffer();
+            sourceNode = audioCtx.createBufferSource();
+            sourceNode.buffer = buffer;
+            sourceNode.loop = true;
+
+            if (activeMode === 'cafe') {
+                filterNode.type = 'bandpass';
+                filterNode.Q.setValueAtTime(1.5, audioCtx.currentTime);
+            }
+
+            sourceNode.connect(filterNode);
+            filterNode.connect(masterGain);
+            masterGain.connect(audioCtx.destination);
+            sourceNode.start();
+        } else if (activeMode === 'drone') {
+            osc1 = audioCtx.createOscillator();
+            osc2 = audioCtx.createOscillator();
+
+            osc1.type = 'sawtooth';
+            osc1.frequency.setValueAtTime(55, audioCtx.currentTime);
+
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(110.5, audioCtx.currentTime);
+
+            osc1.connect(filterNode);
+            osc2.connect(filterNode);
+            filterNode.connect(masterGain);
+            masterGain.connect(audioCtx.destination);
+
+            osc1.start();
+            osc2.start();
+        } else if (activeMode === 'binaural') {
+            osc1 = audioCtx.createOscillator();
+            osc2 = audioCtx.createOscillator();
+
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(432, audioCtx.currentTime);
+
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(442, audioCtx.currentTime);
+
+            osc1.connect(masterGain);
+            osc2.connect(masterGain);
+            masterGain.connect(audioCtx.destination);
+
+            osc1.start();
+            osc2.start();
+        }
+    }
+
+    function togglePlay() {
+        if (!isPlaying) {
+            startSound();
+            isPlaying = true;
+            if (ring) ring.classList.add('playing');
+            if (playIcon) playIcon.className = 'fas fa-pause';
+            if (playText) playText.textContent = 'Pause Soundscape';
+            if (statusText) statusText.textContent = 'Status: Playing (' + activeMode.toUpperCase() + ')';
+        } else {
+            stopSound();
+            isPlaying = false;
+            if (ring) ring.classList.remove('playing');
+            if (playIcon) playIcon.className = 'fas fa-play';
+            if (playText) playText.textContent = 'Start Soundscape';
+            if (statusText) statusText.textContent = 'Status: Paused';
+        }
+    }
+
+    if (playBtn) playBtn.addEventListener('click', togglePlay);
+
+    // Preset selector
+    presetBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            presetBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            activeMode = btn.dataset.synth;
+            if (isPlaying) {
+                startSound();
+                if (statusText) statusText.textContent = 'Status: Playing (' + activeMode.toUpperCase() + ')';
+            }
+        });
+    });
+
+    // Volume Slider
+    if (volInput) {
+        volInput.addEventListener('input', () => {
+            const val = volInput.value;
+            if (volVal) volVal.textContent = val + '%';
+            if (masterGain && audioCtx) {
+                masterGain.gain.setValueAtTime((parseInt(val, 10)/100) * 0.5, audioCtx.currentTime);
+            }
+        });
+    }
+
+    // Frequency Pitch Slider
+    if (pitchInput) {
+        pitchInput.addEventListener('input', () => {
+            const val = pitchInput.value;
+            if (pitchVal) pitchVal.textContent = val + ' Hz';
+            if (filterNode && audioCtx) {
+                filterNode.frequency.setValueAtTime(parseInt(val, 10), audioCtx.currentTime);
+            }
+        });
+    }
+})();
+
+
