@@ -5932,3 +5932,723 @@ kbd {
     .tracker-card-header { flex-direction: column; gap: 12px; }
     .referral-dash-card { padding: 20px; }
 }
+
+/* ============================================
+   CONFIGURATOR SECTION — Round Additions
+   ============================================ */
+.configurator-section {
+    padding: 100px 5%;
+    background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    position: relative;
+}
+
+.configurator-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 40px auto 0;
+}
+
+.configurator-preview-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    position: sticky;
+    top: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(var(--glass-blur));
+}
+
+.configurator-badge {
+    align-self: flex-start;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-radius: var(--radius-full);
+    background: rgba(5, 217, 232, 0.15);
+    color: var(--accent-warm);
+    border: 1px solid rgba(5, 217, 232, 0.3);
+    margin-bottom: 20px;
+}
+
+.configurator-visual {
+    width: 100%;
+    max-width: 340px;
+    height: 340px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at center, rgba(255,42,109,0.05) 0%, transparent 70%);
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+}
+
+.headphone-svg-preview {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 10px 25px rgba(0,0,0,0.5));
+}
+
+.configurator-spec-summary {
+    width: 100%;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.config-summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+}
+
+.config-summary-row strong {
+    color: var(--text-primary);
+}
+
+.config-price-box {
+    margin-top: 15px;
+    padding: 16px;
+    background: rgba(255,255,255,0.03);
+    border-radius: var(--radius-md);
+    border: 1px dashed var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.config-price-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.config-price-val {
+    font-size: 1.8rem;
+    font-weight: 800;
+    font-family: var(--font-display);
+    color: var(--accent-warm);
+}
+
+.config-add-cart-btn {
+    width: 100%;
+    margin-top: 15px;
+    padding: 14px;
+    font-weight: 700;
+}
+
+.configurator-options-card {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.config-step-block {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+}
+
+.config-step-title {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.step-num {
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+}
+
+.color-options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+}
+
+.color-opt-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+    color: var(--text-primary);
+}
+
+.color-opt-btn:hover, .color-opt-btn.active {
+    border-color: var(--accent);
+    background: rgba(255, 42, 109, 0.1);
+}
+
+.color-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.2);
+}
+
+.color-opt-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.color-opt-price {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.material-options-grid, .cable-options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.mat-opt-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.3s var(--ease);
+    color: var(--text-primary);
+}
+
+.mat-opt-btn i {
+    font-size: 1.3rem;
+    color: var(--accent-warm);
+    width: 24px;
+    text-align: center;
+}
+
+.mat-opt-btn div {
+    display: flex;
+    flex-direction: column;
+}
+
+.mat-opt-btn strong {
+    font-size: 0.95rem;
+}
+
+.mat-opt-btn small {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.mat-opt-btn:hover, .mat-opt-btn.active {
+    border-color: var(--accent-warm);
+    background: rgba(5, 217, 232, 0.08);
+}
+
+.engraving-input-wrap {
+    position: relative;
+}
+
+.engraving-input {
+    width: 100%;
+    padding: 14px 70px 14px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.engraving-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.char-counter {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.config-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ============================================
+   ROADMAP SECTION — Round Additions
+   ============================================ */
+.roadmap-section {
+    padding: 100px 5%;
+    background: var(--bg-secondary);
+}
+
+.roadmap-filter-bar {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.roadmap-cat-btn {
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+}
+
+.roadmap-cat-btn:hover, .roadmap-cat-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    box-shadow: var(--shadow-accent);
+}
+
+.roadmap-timeline-container {
+    position: relative;
+    max-width: 1100px;
+    margin: 60px auto 0;
+}
+
+.roadmap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+.roadmap-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    position: relative;
+    transition: all 0.3s var(--ease);
+    display: flex;
+    flex-direction: column;
+}
+
+.roadmap-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent-warm);
+    box-shadow: 0 12px 30px rgba(5, 217, 232, 0.15);
+}
+
+.roadmap-year {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--accent-warm);
+    letter-spacing: 1px;
+}
+
+.roadmap-badge {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+    letter-spacing: 1px;
+}
+
+.badge-released {
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.badge-up-next {
+    background: rgba(234, 179, 8, 0.15);
+    color: #fde047;
+    border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.badge-concept {
+    background: rgba(139, 92, 246, 0.15);
+    color: #a78bfa;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.roadmap-title {
+    font-size: 1.2rem;
+    margin: 10px 0;
+}
+
+.roadmap-desc {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+.roadmap-specs {
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+    display: flex;
+    gap: 15px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.roadmap-specs span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ============================================
+   FAQ SECTION — Round Additions
+   ============================================ */
+.faq-section {
+    padding: 100px 5%;
+    background: var(--bg-primary);
+}
+
+.faq-search-wrapper {
+    max-width: 800px;
+    margin: 30px auto 40px;
+}
+
+.faq-search-input-box {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.faq-search-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+#faq-search-input {
+    width: 100%;
+    padding: 16px 50px 16px 54px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s var(--ease);
+}
+
+#faq-search-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(255, 42, 109, 0.2);
+}
+
+.faq-clear-btn {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.faq-cat-tags {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.faq-tag {
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+}
+
+.faq-tag.active, .faq-tag:hover {
+    border-color: var(--accent-warm);
+    color: var(--accent-warm);
+    background: rgba(5, 217, 232, 0.1);
+}
+
+.faq-accordion-list {
+    max-width: 850px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.faq-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: all 0.3s var(--ease);
+}
+
+.faq-item.active {
+    border-color: var(--accent);
+}
+
+.faq-question {
+    width: 100%;
+    padding: 20px 24px;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    gap: 20px;
+}
+
+.faq-icon {
+    font-size: 0.9rem;
+    color: var(--accent);
+    transition: transform 0.3s var(--ease);
+}
+
+.faq-item.active .faq-icon {
+    transform: rotate(180deg);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s var(--ease), padding 0.4s var(--ease);
+    padding: 0 24px;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.faq-item.active .faq-answer {
+    max-height: 300px;
+    padding: 0 24px 20px 24px;
+}
+
+.faq-footer-banner {
+    max-width: 850px;
+    margin: 50px auto 0;
+    padding: 30px;
+    background: linear-gradient(135deg, rgba(255,42,109,0.1), rgba(139,92,246,0.1));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* ============================================
+   AMBIENT SECTION — Round Additions
+   ============================================ */
+.ambient-section {
+    padding: 100px 5%;
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+}
+
+.ambient-player-card {
+    max-width: 900px;
+    margin: 40px auto 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 40px;
+    align-items: center;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(var(--glass-blur));
+}
+
+.ambient-visualizer-ring {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 4px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: radial-gradient(circle, rgba(5,217,232,0.1) 0%, transparent 70%);
+    transition: all 0.5s var(--ease);
+    margin: 0 auto;
+}
+
+.ambient-visualizer-ring.playing {
+    border-color: var(--accent-warm);
+    box-shadow: 0 0 30px rgba(5, 217, 232, 0.4), inset 0 0 20px rgba(5, 217, 232, 0.2);
+    animation: ambientPulse 2s infinite ease-in-out;
+}
+
+@keyframes ambientPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.ring-core {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ambient-disc-icon {
+    font-size: 2rem;
+    color: var(--accent-warm);
+    transition: transform 0.5s linear;
+}
+
+.ambient-visualizer-ring.playing .ambient-disc-icon {
+    animation: spinDisc 6s linear infinite;
+}
+
+@keyframes spinDisc {
+    100% { transform: rotate(360deg); }
+}
+
+.ambient-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.ambient-preset-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.ambient-preset-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s var(--ease);
+}
+
+.ambient-preset-btn i {
+    color: var(--accent);
+    font-size: 1.1rem;
+}
+
+.ambient-preset-btn:hover, .ambient-preset-btn.active {
+    border-color: var(--accent);
+    background: rgba(255, 42, 109, 0.1);
+}
+
+.ambient-sliders {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.ambient-slider-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+}
+
+.custom-range {
+    width: 100%;
+    accent-color: var(--accent-warm);
+}
+
+.ambient-action-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+}
+
+.ambient-play-btn {
+    padding: 12px 28px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ambient-status-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* ============================================
+   RESPONSIVE — Round Additions
+   ============================================ */
+@media (max-width: 900px) {
+    .configurator-container { grid-template-columns: 1fr; }
+    .configurator-preview-card { position: static; }
+    .ambient-player-card { grid-template-columns: 1fr; text-align: center; }
+}
+
+@media (max-width: 600px) {
+    .color-options-grid { grid-template-columns: 1fr 1fr; }
+    .ambient-preset-grid { grid-template-columns: 1fr; }
+    .faq-footer-banner { flex-direction: column; text-align: center; }
+}
+
