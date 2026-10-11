@@ -5192,6 +5192,374 @@
         </div>
     </section>
 
+    <!-- ======== ACOUSTIC EAR AGE & HEARING TEST ======== -->
+    <section id="hearing-test" class="hearing-section reveal-on-scroll">
+        <div class="section-header text-center">
+            <span class="section-tag">ACOUSTIC DIAGNOSTICS</span>
+            <h2 class="section-title">Ear Age &amp; Frequency Sensitivity Lab</h2>
+            <p class="section-desc">Test your high-frequency auditory perception. Discover your biological acoustic age and calibrate your personalized EQ profile.</p>
+        </div>
+
+        <div class="hearing-container">
+            <div class="hearing-test-card">
+                <div class="hearing-visualizer-box">
+                    <div class="freq-display-badge">
+                        <span id="test-freq-val">12,000</span> <small>Hz</small>
+                    </div>
+                    <canvas id="hearing-canvas" width="400" height="150" class="hearing-canvas"></canvas>
+                    <div class="hearing-pulse-ring" id="hearing-pulse"></div>
+                </div>
+
+                <div class="hearing-controls">
+                    <div class="hearing-stage-indicator">
+                        <span>Current Test Frequency:</span>
+                        <div class="freq-chips" id="freq-chips-list">
+                            <button type="button" class="freq-chip active" data-hz="8000">8 kHz</button>
+                            <button type="button" class="freq-chip" data-hz="10000">10 kHz</button>
+                            <button type="button" class="freq-chip" data-hz="12000">12 kHz</button>
+                            <button type="button" class="freq-chip" data-hz="14000">14 kHz</button>
+                            <button type="button" class="freq-chip" data-hz="16000">16 kHz</button>
+                            <button type="button" class="freq-chip" data-hz="18000">18 kHz</button>
+                            <button type="button" class="freq-chip" data-hz="19000">19 kHz</button>
+                        </div>
+                    </div>
+
+                    <div class="hearing-action-btns">
+                        <button type="button" class="btn btn-secondary" id="hearing-play-tone">
+                            <i class="fas fa-volume-up"></i> Play Tone (2 sec)
+                        </button>
+                        <button type="button" class="btn btn-primary" id="hearing-confirm-btn">
+                            <i class="fas fa-check-circle"></i> I Can Hear It!
+                        </button>
+                    </div>
+
+                    <p class="hearing-disclaimer">
+                        <i class="fas fa-exclamation-triangle"></i> Set volume to a comfortable 50% level before starting. Tone automatically stops after 2 seconds.
+                    </p>
+                </div>
+            </div>
+
+            <div class="hearing-results-card" id="hearing-results-card">
+                <div class="results-header">
+                    <span class="results-tag">AUDIOGRAM PROFILE</span>
+                    <h3 class="results-title" id="results-tier-title">Acoustic Age: Uncalculated</h3>
+                </div>
+
+                <div class="results-score-circle">
+                    <div class="score-number" id="results-age-num">--</div>
+                    <div class="score-label">Estimated Ear Age</div>
+                </div>
+
+                <div class="results-breakdown">
+                    <div class="breakdown-item">
+                        <span>Frequency Ceiling:</span>
+                        <strong id="results-max-hz">-- Hz</strong>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>Audiophile Tier:</span>
+                        <strong id="results-tier-name">Test Required</strong>
+                    </div>
+                    <div class="breakdown-item">
+                        <span>EQ Recommendation:</span>
+                        <strong id="results-eq-rec">Neutral Reference</strong>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-outline-primary" id="sync-eq-btn">
+                    <i class="fas fa-sliders-h"></i> Sync Profile to Sound Lab EQ
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== DIGITAL AUDIO GIFT CARD STUDIO ======== -->
+    <section id="gift-card-studio" class="gift-card-section reveal-on-scroll">
+        <div class="section-header text-center">
+            <span class="section-tag">EXCLUSIVE GIFTING</span>
+            <h2 class="section-title">Holographic Gift Card Studio</h2>
+            <p class="section-desc">Gift the ultimate listening experience. Design a customized high-fidelity digital gift voucher with instant delivery.</p>
+        </div>
+
+        <div class="gift-card-container">
+            <!-- 3D Card Preview -->
+            <div class="gift-card-preview-wrapper">
+                <div class="gift-card-3d" id="gift-card-3d" data-theme="neon">
+                    <div class="card-foil-sheen"></div>
+                    <div class="gift-card-inner">
+                        <div class="gift-card-top">
+                            <div class="gift-brand">
+                                <span class="nav-logo-icon">S</span>
+                                <span>SPIDY AUDIO</span>
+                            </div>
+                            <div class="gift-chip-icon">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                        </div>
+
+                        <div class="gift-card-center">
+                            <div class="gift-amount-badge" id="card-display-amount">$100</div>
+                            <div class="gift-card-type">VIP DIGITAL VOUCHER</div>
+                        </div>
+
+                        <div class="gift-card-bottom">
+                            <div class="gift-card-meta">
+                                <span class="meta-label">FOR</span>
+                                <strong class="meta-val" id="card-display-recipient">LUCKY AUDIOPHILE</strong>
+                            </div>
+                            <div class="gift-card-meta text-right">
+                                <span class="meta-label">CODE</span>
+                                <strong class="meta-val card-code">SPD-GIFT-****</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="gift-card-hint"><i class="fas fa-arrows-alt"></i> Hover or move mouse to tilt holographic card</div>
+            </div>
+
+            <!-- Customizer Controls -->
+            <div class="gift-card-controls-panel">
+                <div class="gift-control-group">
+                    <label class="control-label">1. Choose Hologram Edition</label>
+                    <div class="gift-theme-picker">
+                        <button type="button" class="theme-choice-btn active" data-theme="neon">
+                            <span class="theme-preview-dot theme-neon"></span>
+                            <span>Cyber Neon</span>
+                        </button>
+                        <button type="button" class="theme-choice-btn" data-theme="obsidian">
+                            <span class="theme-preview-dot theme-obsidian"></span>
+                            <span>Obsidian Black</span>
+                        </button>
+                        <button type="button" class="theme-choice-btn" data-theme="gold">
+                            <span class="theme-preview-dot theme-gold"></span>
+                            <span>Solar Aurum</span>
+                        </button>
+                        <button type="button" class="theme-choice-btn" data-theme="frost">
+                            <span class="theme-preview-dot theme-frost"></span>
+                            <span>Prismatic Frost</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="gift-control-group">
+                    <label class="control-label">2. Select Denomination</label>
+                    <div class="gift-amount-picker">
+                        <button type="button" class="amount-btn" data-amount="50">$50</button>
+                        <button type="button" class="amount-btn active" data-amount="100">$100</button>
+                        <button type="button" class="amount-btn" data-amount="150">$150</button>
+                        <button type="button" class="amount-btn" data-amount="250">$250</button>
+                    </div>
+                </div>
+
+                <div class="gift-control-group">
+                    <label class="control-label" for="gift-recipient-input">3. Recipient Name</label>
+                    <input type="text" id="gift-recipient-input" placeholder="e.g. Alex Taylor" maxlength="25" class="gift-input">
+                </div>
+
+                <div class="gift-control-group">
+                    <label class="control-label" for="gift-msg-input">4. Personal Audio Note (Optional)</label>
+                    <textarea id="gift-msg-input" placeholder="Enjoy studio grade lossless bliss on me!" maxlength="120" class="gift-textarea" rows="2"></textarea>
+                </div>
+
+                <div class="gift-actions">
+                    <button type="button" class="btn btn-primary btn-block" id="gift-add-cart-btn">
+                        <i class="fas fa-gift"></i> Add Gift Card to Cart (<span id="btn-gift-amount">$100</span>)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== AUDIOPHILE TECH CODEX & GLOSSARY ======== -->
+    <section id="audio-codex" class="codex-section reveal-on-scroll">
+        <div class="section-header text-center">
+            <span class="section-tag">ACOUSTIC DICTIONARY</span>
+            <h2 class="section-title">The Audiophile Tech Codex</h2>
+            <p class="section-desc">Master the science of acoustics. Demystify frequency curves, planar transducers, and spatial audio with live interactive sound demos.</p>
+        </div>
+
+        <div class="codex-search-bar">
+            <div class="codex-input-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="codex-search-input" placeholder="Search acoustic terms (e.g., THD, Planar, HRTF, Impedance)..." autocomplete="off">
+            </div>
+            <div class="codex-filter-tabs">
+                <button type="button" class="codex-tab active" data-filter="all">All Terms</button>
+                <button type="button" class="codex-tab" data-filter="hardware">Hardware</button>
+                <button type="button" class="codex-tab" data-filter="acoustics">Acoustics</button>
+                <button type="button" class="codex-tab" data-filter="digital">Digital &amp; Codecs</button>
+            </div>
+        </div>
+
+        <div class="codex-grid" id="codex-grid">
+            <div class="codex-card" data-cat="hardware">
+                <div class="codex-card-header">
+                    <span class="codex-cat-badge">Hardware</span>
+                    <span class="codex-level">Advanced</span>
+                </div>
+                <h3 class="codex-term">Planar Magnetic Drivers</h3>
+                <p class="codex-definition">Unlike conventional dynamic cone drivers, planar magnetic drivers utilize an ultra-thin film membrane suspended between opposing magnetic fields. This creates near-instantaneous transient response with zero cone breakup distortion.</p>
+                <div class="codex-stats-row">
+                    <span>Distortion: &lt;0.05%</span>
+                    <span>Mass: 0.5 nanometers</span>
+                </div>
+            </div>
+
+            <div class="codex-card" data-cat="acoustics">
+                <div class="codex-card-header">
+                    <span class="codex-cat-badge">Acoustics</span>
+                    <span class="codex-level">Fundamental</span>
+                </div>
+                <h3 class="codex-term">Total Harmonic Distortion (THD)</h3>
+                <p class="codex-definition">The measurement of unwanted harmonic overtone artifacts added to an audio signal by transducers or amplifiers. A lower THD percentage indicates pristine signal purity and musical transparency.</p>
+                <div class="codex-interactive-demo">
+                    <button type="button" class="demo-sound-btn" data-demo="thd">
+                        <i class="fas fa-play"></i> Compare 0.01% vs 5.0% THD Tone
+                    </button>
+                </div>
+            </div>
+
+            <div class="codex-card" data-cat="acoustics">
+                <div class="codex-card-header">
+                    <span class="codex-cat-badge">Acoustics</span>
+                    <span class="codex-level">Intermediate</span>
+                </div>
+                <h3 class="codex-term">HRTF (Head-Related Transfer Function)</h3>
+                <p class="codex-definition">A mathematical response that characterizes how an ear receives a sound from a point in space. By filtering audio through HRTF algorithms, Spidy headphones render true 360-degree holographic sound positioning.</p>
+                <div class="codex-stats-row">
+                    <span>Virtual Angles: 360° x 180°</span>
+                    <span>Latency: 3.2ms</span>
+                </div>
+            </div>
+
+            <div class="codex-card" data-cat="digital">
+                <div class="codex-card-header">
+                    <span class="codex-cat-badge">Digital &amp; Codecs</span>
+                    <span class="codex-level">Audiophile</span>
+                </div>
+                <h3 class="codex-term">LDAC &amp; Lossless Bitrates</h3>
+                <p class="codex-definition">High-resolution Bluetooth audio codec capable of transmitting up to 990 kbps at 24-bit/96kHz. Delivers three times the throughput of standard SBC codecs, preserving subtle micro-details in strings and cymbals.</p>
+                <div class="codex-stats-row">
+                    <span>Bandwidth: 990 kbps</span>
+                    <span>Sample Rate: 96kHz</span>
+                </div>
+            </div>
+
+            <div class="codex-card" data-cat="hardware">
+                <div class="codex-card-header">
+                    <span class="codex-cat-badge">Hardware</span>
+                    <span class="codex-level">Fundamental</span>
+                </div>
+                <h3 class="codex-term">Impedance &amp; Sensitivity</h3>
+                <p class="codex-definition">Impedance (measured in Ohms Ω) is electrical resistance to current. Low impedance (16–32Ω) headphones play loudly from smartphones, whereas high impedance (250–600Ω) studio models demand dedicated headphone amplifiers for full dynamics.</p>
+                <div class="codex-stats-row">
+                    <span>Spidy Apex: 32Ω (Easy Drive)</span>
+                    <span>Spidy Pro: 80Ω</span>
+                </div>
+            </div>
+
+            <div class="codex-card" data-cat="digital">
+                <div class="codex-card-header">
+                    <span class="codex-cat-badge">Digital &amp; Codecs</span>
+                    <span class="codex-level">Advanced</span>
+                </div>
+                <h3 class="codex-term">Noise Floor &amp; SNR</h3>
+                <p class="codex-definition">Signal-to-Noise Ratio (SNR) specifies how much louder the music is compared to background amplifier hiss (noise floor). A 120dB+ SNR provides inky black silences during pauses in classical and acoustic passages.</p>
+                <div class="codex-stats-row">
+                    <span>Spidy Amp SNR: 124dB</span>
+                    <span>Hiss: Inaudible</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== ACOUSTIC DECIBEL METER & NOISE HEALTH MONITOR ======== -->
+    <section id="decibel-meter" class="decibel-section reveal-on-scroll">
+        <div class="section-header text-center">
+            <span class="section-tag">HEARING PROTECTION</span>
+            <h2 class="section-title">Live Acoustic Decibel &amp; Health Monitor</h2>
+            <p class="section-desc">Protect your hearing health. Monitor real-time environmental sound pressure levels or test safe listening exposure limits.</p>
+        </div>
+
+        <div class="decibel-container">
+            <div class="decibel-meter-card">
+                <div class="meter-gauge-wrapper">
+                    <svg viewBox="0 0 300 180" class="meter-gauge-svg">
+                        <defs>
+                            <linearGradient id="gauge-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#22c55e" />
+                                <stop offset="60%" stop-color="#eab308" />
+                                <stop offset="100%" stop-color="#ff2a6d" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M 40 150 A 110 110 0 0 1 260 150" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="22" stroke-linecap="round"/>
+                        <path id="gauge-meter-path" d="M 40 150 A 110 110 0 0 1 260 150" fill="none" stroke="url(#gauge-gradient)" stroke-width="22" stroke-linecap="round" stroke-dasharray="345" stroke-dashoffset="200"/>
+                        <line id="gauge-needle" x1="150" y1="150" x2="150" y2="55" stroke="#ffffff" stroke-width="4" stroke-linecap="round" transform="rotate(-45, 150, 150)"/>
+                        <circle cx="150" cy="150" r="10" fill="#ff2a6d" />
+                    </svg>
+                    
+                    <div class="meter-readout-center">
+                        <span class="readout-db-num" id="current-db-val">42</span>
+                        <span class="readout-db-unit">dB SPL</span>
+                        <span class="readout-hazard-badge badge-safe" id="db-hazard-badge">SAFE (QUIET)</span>
+                    </div>
+                </div>
+
+                <div class="meter-toggle-bar">
+                    <button type="button" class="btn btn-outline" id="toggle-mic-btn">
+                        <i class="fas fa-microphone"></i> <span id="mic-btn-label">Enable Live Microphone</span>
+                    </button>
+                    <div class="meter-mode-select">
+                        <span>Or test scenario:</span>
+                        <select id="simulated-env-select" class="custom-select-dark">
+                            <option value="40">Whisper / Quiet Room (40 dB)</option>
+                            <option value="60">Coffee Shop / Office (60 dB)</option>
+                            <option value="75">Busy Traffic / Commute (75 dB)</option>
+                            <option value="85">Subway Train / Ear Threshold (85 dB)</option>
+                            <option value="105">Rock Concert / Club (105 dB)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="decibel-health-card">
+                <h3 class="health-card-title"><i class="fas fa-heartbeat"></i> WHO Hearing Safety Guidelines</h3>
+                
+                <div class="exposure-time-box">
+                    <span class="exposure-label">Max Recommended Daily Listening Time:</span>
+                    <strong class="exposure-time-val" id="safe-exposure-time">&gt; 8 Hours (Safe)</strong>
+                </div>
+
+                <div class="db-guidelines-list">
+                    <div class="guideline-row">
+                        <span class="guideline-dot dot-green"></span>
+                        <span class="guideline-range">&lt; 70 dB</span>
+                        <span class="guideline-desc">Completely harmless. Unlimited exposure.</span>
+                    </div>
+                    <div class="guideline-row">
+                        <span class="guideline-dot dot-yellow"></span>
+                        <span class="guideline-range">70 – 85 dB</span>
+                        <span class="guideline-desc">Safe for up to 8 hours daily. Typical commuter volume.</span>
+                    </div>
+                    <div class="guideline-row">
+                        <span class="guideline-dot dot-orange"></span>
+                        <span class="guideline-range">85 – 95 dB</span>
+                        <span class="guideline-desc">Hearing fatigue risk. Limit to under 1 hour daily.</span>
+                    </div>
+                    <div class="guideline-row">
+                        <span class="guideline-dot dot-red"></span>
+                        <span class="guideline-range">&gt; 100 dB</span>
+                        <span class="guideline-desc">Dangerous without protection. Limit to &lt; 15 mins.</span>
+                    </div>
+                </div>
+
+                <div class="anc-recommendation-box">
+                    <i class="fas fa-shield-alt"></i>
+                    <p><strong>Spidy Hybrid ANC Tip:</strong> Turning on Active Noise Cancellation lowers needed playback volume by up to 15 dB in noisy environments, dramatically extending safe listening duration!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ======== FOOTER ======== -->
     <footer class="site-footer">
         <div class="footer-grid reveal-stagger">
