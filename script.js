@@ -5307,4 +5307,565 @@
     }
 })();
 
+/* ============================================
+   MODULE 5: Hearing Test & Ear Age Scanner
+   ============================================ */
+(function() {
+    'use strict';
+
+    const section = document.getElementById('hearing-test');
+    if (!section) return;
+
+    const freqDisplay = document.getElementById('test-freq-val');
+    const canvas = document.getElementById('hearing-canvas');
+    const pulseRing = document.getElementById('hearing-pulse');
+    const chips = section.querySelectorAll('.freq-chip');
+    const playBtn = document.getElementById('hearing-play-tone');
+    const confirmBtn = document.getElementById('hearing-confirm-btn');
+    const resultsCard = document.getElementById('hearing-results-card');
+    const ageNum = document.getElementById('results-age-num');
+    const tierTitle = document.getElementById('results-tier-title');
+    const maxHzEl = document.getElementById('results-max-hz');
+    const tierNameEl = document.getElementById('results-tier-name');
+    const eqRecEl = document.getElementById('results-eq-rec');
+    const syncEqBtn = document.getElementById('sync-eq-btn');
+
+    let currentHz = 8000;
+    let highestConfirmedHz = 0;
+    let audioCtx = null;
+    let osc = null;
+    let gainNode = null;
+    let animId = null;
+
+    function getAudioCtx() {
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        return audioCtx;
+    }
+
+    function drawWave() {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width;
+        const h = canvas.height;
+        let t = 0;
+
+        function render() {
+            ctx.fillStyle = 'rgba(10, 12, 18, 0.3)';
+            ctx.fillRect(0, 0, w, h);
+
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#05d9e8';
+            ctx.beginPath();
+
+            const cycles = currentHz / 1000;
+            for (let x = 0; x < w; x++) {
+                const y = h / 2 + Math.sin(x * 0.05 * cycles + t) * (h * 0.3);
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            t += 0.2;
+            animId = requestAnimationFrame(render);
+        }
+        render();
+    }
+
+    function stopTone() {
+        if (osc) {
+            try { osc.stop(); osc.disconnect(); } catch(e){}
+            osc = null;
+        }
+        if (pulseRing) pulseRing.classList.remove('active');
+        if (animId) {
+            cancelAnimationFrame(animId);
+            animId = null;
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+    }
+
+    function playTone(hz) {
+        stopTone();
+        const ctx = getAudioCtx();
+
+        osc = ctx.createOscillator();
+        gainNode = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(hz, ctx.currentTime);
+
+        // Gentle volume ramp to protect hearing
+        gainNode.gain.setValueAtTime(0.001, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 0.1);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.0);
+
+        osc.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        osc.start();
+        if (pulseRing) pulseRing.classList.add('active');
+        drawWave();
+
+        setTimeout(() => {
+            stopTone();
+        }, 2000);
+    }
+
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            chips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            currentHz = parseInt(chip.dataset.hz, 10);
+            if (freqDisplay) freqDisplay.textContent = currentHz.toLocaleString();
+        });
+    });
+
+    if (playBtn) {
+        playBtn.addEventListener('click', () => {
+            playTone(currentHz);
+            if (typeof toast === 'function') {
+                toast('Playing ' + (currentHz / 1000) + ' kHz tone...', 'info', 2000);
+            }
+        });
+    }
+
+    function calculateResults() {
+        let age = '60+';
+        let tier = 'Vintage Vinyl Ear';
+        let eq = 'Air & Treble Boost (+4dB 10k-16k)';
+
+        if (highestConfirmedHz >= 19000) {
+            age = '< 20';
+            tier = 'Golden Bat Ears (Hyper-Sonic)';
+            eq = 'Neutral Studio Reference (Flat)';
+        } else if (highestConfirmedHz >= 18000) {
+            age = '20-25';
+            tier = 'Pro Studio Engineer';
+            eq = 'Slight Warmth (+1dB Bass)';
+        } else if (highestConfirmedHz >= 16000) {
+            age = '26-34';
+            tier = 'High Fidelity Audiophile';
+            eq = 'Subtle Treble Lift (+1.5dB 12k)';
+        } else if (highestConfirmedHz >= 14000) {
+            age = '35-44';
+            tier = 'Concert Veteran';
+            eq = 'Clarity Profile (+2.5dB 10k)';
+        } else if (highestConfirmedHz >= 12000) {
+            age = '45-54';
+            tier = 'Warm Tube Aficionado';
+            eq = 'Speech Intelligibility (+3dB 8k-12k)';
+        } else {
+            age = '55+';
+            tier = 'Analog Purist';
+            eq = 'High Frequency Restorer (+5dB 8k+)';
+        }
+
+        if (ageNum) ageNum.textContent = age;
+        if (tierTitle) tierTitle.textContent = 'Acoustic Profile: ' + tier;
+        if (maxHzEl) maxHzEl.textContent = (highestConfirmedHz / 1000) + ' kHz';
+        if (tierNameEl) tierNameEl.textContent = tier;
+        if (eqRecEl) eqRecEl.textContent = eq;
+    }
+
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', () => {
+            if (currentHz > highestConfirmedHz) {
+                highestConfirmedHz = currentHz;
+            }
+            calculateResults();
+
+            // Advance to next chip if available
+            let nextIndex = -1;
+            chips.forEach((c, idx) => {
+                if (c.classList.contains('active')) nextIndex = idx + 1;
+            });
+
+            if (nextIndex >= 0 && nextIndex < chips.length) {
+                chips[nextIndex].click();
+                if (typeof toast === 'function') {
+                    toast('Heard ' + (currentHz / 1000) + ' kHz! Testing ' + (chips[nextIndex].dataset.hz / 1000) + ' kHz next.', 'success', 2500);
+                }
+            } else {
+                if (typeof toast === 'function') {
+                    toast('🎉 Hearing test complete! Audiogram updated.', 'success', 3500);
+                }
+            }
+        });
+    }
+
+    if (syncEqBtn) {
+        syncEqBtn.addEventListener('click', () => {
+            try {
+                localStorage.setItem('spidy-eq-profile', JSON.stringify({
+                    mode: 'custom-calibrated',
+                    date: new Date().toISOString(),
+                    hearingLimitHz: highestConfirmedHz
+                }));
+            } catch(e){}
+
+            if (typeof toast === 'function') {
+                toast('⚡ Custom calibration profile synced to Sound Lab!', 'success', 3000);
+            }
+        });
+    }
+})();
+
+/* ============================================
+   MODULE 6: Holographic Gift Card Studio
+   ============================================ */
+(function() {
+    'use strict';
+
+    const card = document.getElementById('gift-card-3d');
+    if (!card) return;
+
+    const sheen = card.querySelector('.card-foil-sheen');
+    const amountBadge = document.getElementById('card-display-amount');
+    const recipientBadge = document.getElementById('card-display-recipient');
+    const btnAmount = document.getElementById('btn-gift-amount');
+    const recipientInput = document.getElementById('gift-recipient-input');
+    const msgInput = document.getElementById('gift-msg-input');
+    const addCartBtn = document.getElementById('gift-add-cart-btn');
+
+    const themeBtns = document.querySelectorAll('.theme-choice-btn');
+    const amountBtns = document.querySelectorAll('.amount-btn');
+
+    let currentAmount = 100;
+    let currentTheme = 'neon';
+
+    // 3D Tilt interaction
+    const wrapper = card.parentElement;
+    if (wrapper) {
+        wrapper.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = ((y - centerY) / centerY) * -14;
+            const rotateY = ((x - centerX) / centerX) * 14;
+
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
+
+            if (sheen) {
+                const moveX = (x / rect.width) * 100;
+                sheen.style.background = `linear-gradient(${115 + rotateY}deg, transparent 20%, rgba(255,255,255,0.25) ${moveX}%, transparent ${moveX + 25}%)`;
+            }
+        });
+
+        wrapper.addEventListener('mouseleave', () => {
+            card.style.transform = 'rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+            if (sheen) {
+                sheen.style.background = 'linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.2) 45%, transparent 60%)';
+            }
+        });
+    }
+
+    // Theme Picker
+    themeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            themeBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentTheme = btn.dataset.theme;
+            card.setAttribute('data-theme', currentTheme);
+        });
+    });
+
+    // Amount Picker
+    amountBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            amountBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentAmount = parseInt(btn.dataset.amount, 10);
+            if (amountBadge) amountBadge.textContent = '$' + currentAmount;
+            if (btnAmount) btnAmount.textContent = '$' + currentAmount;
+        });
+    });
+
+    // Recipient Name
+    if (recipientInput) {
+        recipientInput.addEventListener('input', (e) => {
+            const name = e.target.value.trim().toUpperCase();
+            if (recipientBadge) recipientBadge.textContent = name || 'LUCKY AUDIOPHILE';
+        });
+    }
+
+    // Add to Cart
+    if (addCartBtn) {
+        addCartBtn.addEventListener('click', () => {
+            const recipient = recipientInput?.value.trim() || 'Lucky Audiophile';
+            const note = msgInput?.value.trim() || '';
+            const giftItem = {
+                id: 'giftcard-' + Date.now(),
+                title: 'Spidy VIP Gift Voucher ($' + currentAmount + ')',
+                price: currentAmount,
+                img: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=500&auto=format&fit=crop&q=60',
+                qty: 1,
+                specs: 'Theme: ' + currentTheme.toUpperCase() + ' | For: ' + recipient + (note ? ' | Note: "' + note + '"' : '')
+            };
+
+            if (typeof cart !== 'undefined' && Array.isArray(cart)) {
+                cart.push(giftItem);
+                if (typeof saveCart === 'function') saveCart();
+                if (typeof renderCart === 'function') renderCart();
+                if (typeof openCart === 'function') openCart();
+            }
+
+            if (typeof toast === 'function') {
+                toast('🎁 $' + currentAmount + ' Digital Gift Card added to cart for ' + recipient + '!', 'success', 3500);
+            }
+        });
+    }
+})();
+
+/* ============================================
+   MODULE 7: Audiophile Tech Codex & Audio Demos
+   ============================================ */
+(function() {
+    'use strict';
+
+    const section = document.getElementById('audio-codex');
+    if (!section) return;
+
+    const searchInput = document.getElementById('codex-search-input');
+    const tabs = section.querySelectorAll('.codex-tab');
+    const cards = section.querySelectorAll('.codex-card');
+    const demoBtns = section.querySelectorAll('.demo-sound-btn');
+
+    function filterCodex() {
+        const query = (searchInput?.value || '').toLowerCase().trim();
+        const activeTab = section.querySelector('.codex-tab.active')?.dataset.filter || 'all';
+
+        cards.forEach(card => {
+            const cat = card.dataset.cat;
+            const text = card.textContent.toLowerCase();
+
+            const matchesTab = (activeTab === 'all' || cat === activeTab);
+            const matchesQuery = !query || text.includes(query);
+
+            if (matchesTab && matchesQuery) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', filterCodex);
+    }
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            filterCodex();
+        });
+    });
+
+    // THD Interactive sound demo
+    let audioCtx = null;
+    demoBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            // 1) Play clean sine tone
+            const cleanOsc = audioCtx.createOscillator();
+            const cleanGain = audioCtx.createGain();
+            cleanOsc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            cleanGain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            cleanGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+
+            cleanOsc.connect(cleanGain);
+            cleanGain.connect(audioCtx.destination);
+            cleanOsc.start();
+            cleanOsc.stop(audioCtx.currentTime + 1.2);
+
+            if (typeof toast === 'function') {
+                toast('Playing pure 440Hz sine (0.01% THD)... followed by 5% saturated distortion.', 'info', 2500);
+            }
+
+            // 2) Play waveshaped/distorted tone 1.4s later
+            setTimeout(() => {
+                const distOsc = audioCtx.createOscillator();
+                const distGain = audioCtx.createGain();
+                const shaper = audioCtx.createWaveShaper();
+
+                // Create gentle distortion curve
+                const n = 256;
+                const curve = new Float32Array(n);
+                for (let i = 0; i < n; i++) {
+                    const x = (i * 2) / n - 1;
+                    curve[i] = (Math.PI + 5) * x / (Math.PI + 5 * Math.abs(x));
+                }
+                shaper.curve = curve;
+
+                distOsc.frequency.setValueAtTime(440, audioCtx.currentTime);
+                distGain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                distGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+
+                distOsc.connect(shaper);
+                shaper.connect(distGain);
+                distGain.connect(audioCtx.destination);
+                distOsc.start();
+                distOsc.stop(audioCtx.currentTime + 1.2);
+            }, 1400);
+        });
+    });
+})();
+
+/* ============================================
+   MODULE 8: Decibel Meter & Noise Health Monitor
+   ============================================ */
+(function() {
+    'use strict';
+
+    const section = document.getElementById('decibel-meter');
+    if (!section) return;
+
+    const needle = document.getElementById('gauge-needle');
+    const path = document.getElementById('gauge-meter-path');
+    const dbNum = document.getElementById('current-db-val');
+    const badge = document.getElementById('db-hazard-badge');
+    const micBtn = document.getElementById('toggle-mic-btn');
+    const micLabel = document.getElementById('mic-btn-label');
+    const scenarioSelect = document.getElementById('simulated-env-select');
+    const exposureVal = document.getElementById('safe-exposure-time');
+
+    let currentDB = 42;
+    let targetDB = 42;
+    let isLiveMic = false;
+    let micStream = null;
+    let audioCtx = null;
+    let analyser = null;
+    let simInterval = null;
+
+    function updateGauge(db) {
+        if (dbNum) dbNum.textContent = Math.round(db);
+
+        // Map 20dB - 120dB to -90deg to +90deg
+        const clamped = Math.max(20, Math.min(120, db));
+        const angle = -90 + ((clamped - 20) / 100) * 180;
+        if (needle) needle.setAttribute('transform', `rotate(${angle}, 150, 150)`);
+
+        // Gauge arc dashoffset: 345 is total, offset from 345 down to 0
+        const offset = 345 - ((clamped - 20) / 100) * 345;
+        if (path) path.setAttribute('stroke-dashoffset', offset);
+
+        // Badge & Exposure time
+        if (badge) {
+            if (db < 70) {
+                badge.className = 'readout-hazard-badge badge-safe';
+                badge.textContent = 'SAFE (QUIET)';
+                if (exposureVal) exposureVal.textContent = '> 8 Hours (Safe)';
+            } else if (db < 85) {
+                badge.className = 'readout-hazard-badge badge-caution';
+                badge.textContent = 'MODERATE';
+                if (exposureVal) exposureVal.textContent = 'Up to 8 Hours';
+            } else if (db < 100) {
+                badge.className = 'readout-hazard-badge badge-hazard';
+                badge.textContent = 'FATIGUE RISK';
+                if (exposureVal) exposureVal.textContent = '< 1 Hour Daily';
+            } else {
+                badge.className = 'readout-hazard-badge badge-hazard';
+                badge.textContent = 'DANGEROUS (ANC RECOMMENDED)';
+                if (exposureVal) exposureVal.textContent = '< 15 Minutes!';
+            }
+        }
+    }
+
+    // Realistic natural jitter simulation
+    function startSimulation(baseDB) {
+        if (simInterval) clearInterval(simInterval);
+        targetDB = baseDB;
+
+        simInterval = setInterval(() => {
+            if (isLiveMic) return;
+            const jitter = (Math.random() - 0.5) * 5;
+            currentDB += (targetDB + jitter - currentDB) * 0.2;
+            updateGauge(currentDB);
+        }, 120);
+    }
+
+    startSimulation(42);
+
+    if (scenarioSelect) {
+        scenarioSelect.addEventListener('change', (e) => {
+            if (isLiveMic) return;
+            const val = parseInt(e.target.value, 10);
+            startSimulation(val);
+        });
+    }
+
+    // Microphone audio stream processing
+    if (micBtn) {
+        micBtn.addEventListener('click', async () => {
+            if (!isLiveMic) {
+                try {
+                    micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContext();
+                    const source = audioCtx.createMediaStreamSource(micStream);
+                    analyser = audioCtx.createAnalyser();
+                    analyser.fftSize = 256;
+                    source.connect(analyser);
+
+                    isLiveMic = true;
+                    if (micLabel) micLabel.textContent = 'Stop Microphone';
+                    micBtn.classList.add('btn-primary');
+                    micBtn.classList.remove('btn-outline');
+                    if (typeof toast === 'function') toast('🎤 Live microphone monitoring active!', 'success', 2500);
+
+                    const data = new Uint8Array(analyser.frequencyBinCount);
+                    function processMic() {
+                        if (!isLiveMic) return;
+                        analyser.getByteFrequencyData(data);
+                        let sum = 0;
+                        for (let i = 0; i < data.length; i++) {
+                            sum += data[i] * data[i];
+                        }
+                        const rms = Math.sqrt(sum / data.length);
+                        // Approximate dB SPL
+                        const liveDB = Math.max(30, Math.min(115, 30 + (rms / 255) * 80));
+                        currentDB += (liveDB - currentDB) * 0.3;
+                        updateGauge(currentDB);
+                        requestAnimationFrame(processMic);
+                    }
+                    processMic();
+                } catch(err) {
+                    if (typeof toast === 'function') {
+                        toast('Microphone permission denied or unavailable. Using simulator mode.', 'info', 3000);
+                    }
+                }
+            } else {
+                isLiveMic = false;
+                if (micStream) {
+                    micStream.getTracks().forEach(track => track.stop());
+                    micStream = null;
+                }
+                if (audioCtx) {
+                    audioCtx.close();
+                    audioCtx = null;
+                }
+                if (micLabel) micLabel.textContent = 'Enable Live Microphone';
+                micBtn.classList.remove('btn-primary');
+                micBtn.classList.add('btn-outline');
+                startSimulation(parseInt(scenarioSelect?.value || '40', 10));
+            }
+        });
+    }
+})();
+
+
 
