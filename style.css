@@ -6652,3 +6652,884 @@ kbd {
     .faq-footer-banner { flex-direction: column; text-align: center; }
 }
 
+/* ============================================
+   HEARING TEST SECTION — Round Additions
+   ============================================ */
+.hearing-section {
+    padding: 100px 5%;
+    background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+}
+
+.hearing-container {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 40px;
+    max-width: 1100px;
+    margin: 40px auto 0;
+}
+
+.hearing-test-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.hearing-visualizer-box {
+    position: relative;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.freq-display-badge {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    font-size: 1.6rem;
+    font-weight: 800;
+    font-family: var(--font-display);
+    color: var(--accent-warm);
+    z-index: 2;
+}
+
+.freq-display-badge small {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.hearing-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.hearing-pulse-ring {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.hearing-pulse-ring.active {
+    animation: ringPing 1.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ringPing {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(3.5); opacity: 0; }
+}
+
+.hearing-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.hearing-stage-indicator span {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: 10px;
+}
+
+.freq-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.freq-chip {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+}
+
+.freq-chip:hover, .freq-chip.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    box-shadow: var(--shadow-accent);
+}
+
+.hearing-action-btns {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.hearing-action-btns .btn {
+    flex: 1;
+    min-width: 160px;
+    padding: 14px 20px;
+    font-weight: 700;
+}
+
+.hearing-disclaimer {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hearing-disclaimer i {
+    color: #eab308;
+}
+
+.hearing-results-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(var(--glass-blur));
+}
+
+.results-header {
+    margin-bottom: 20px;
+}
+
+.results-tag {
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.results-title {
+    font-size: 1.3rem;
+    margin-top: 5px;
+}
+
+.results-score-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 4px solid var(--accent-warm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, rgba(5,217,232,0.15) 0%, transparent 70%);
+    box-shadow: 0 0 25px rgba(5, 217, 232, 0.25);
+    margin: 10px 0 25px;
+}
+
+.score-number {
+    font-size: 3rem;
+    font-weight: 900;
+    font-family: var(--font-display);
+    color: #fff;
+    line-height: 1;
+}
+
+.score-label {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.results-breakdown {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    margin-bottom: 25px;
+}
+
+.breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+}
+
+.breakdown-item strong {
+    color: var(--text-primary);
+}
+
+#sync-eq-btn {
+    width: 100%;
+    padding: 12px;
+    font-weight: 600;
+}
+
+/* ============================================
+   GIFT CARD STUDIO — Round Additions
+   ============================================ */
+.gift-card-section {
+    padding: 100px 5%;
+    background: var(--bg-secondary);
+}
+
+.gift-card-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    max-width: 1150px;
+    margin: 40px auto 0;
+    align-items: center;
+}
+
+.gift-card-preview-wrapper {
+    perspective: 1000px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.gift-card-3d {
+    width: 100%;
+    max-width: 420px;
+    height: 250px;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s var(--ease);
+    transform-style: preserve-3d;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+
+.card-foil-sheen {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.2) 45%, transparent 60%);
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0.7;
+    transition: opacity 0.3s var(--ease);
+}
+
+.gift-card-inner {
+    width: 100%;
+    height: 100%;
+    padding: 26px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+}
+
+/* Gift Card Themes */
+.gift-card-3d[data-theme="neon"] {
+    background: linear-gradient(135deg, #18052e 0%, #2b0b3f 40%, #ff2a6d 100%);
+    border: 1px solid rgba(255, 42, 109, 0.4);
+}
+.gift-card-3d[data-theme="obsidian"] {
+    background: linear-gradient(135deg, #090a0f 0%, #171923 50%, #2d3748 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.gift-card-3d[data-theme="gold"] {
+    background: linear-gradient(135deg, #2b1d03 0%, #573b06 50%, #d97706 100%);
+    border: 1px solid rgba(217, 119, 6, 0.5);
+}
+.gift-card-3d[data-theme="frost"] {
+    background: linear-gradient(135deg, #042f2e 0%, #0d5958 50%, #05d9e8 100%);
+    border: 1px solid rgba(5, 217, 232, 0.4);
+}
+
+.gift-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.gift-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+}
+
+.gift-chip-icon {
+    font-size: 1.8rem;
+    color: #f59e0b;
+}
+
+.gift-card-center {
+    display: flex;
+    flex-direction: column;
+}
+
+.gift-amount-badge {
+    font-size: 3rem;
+    font-weight: 900;
+    font-family: var(--font-display);
+    color: #ffffff;
+    line-height: 1;
+    text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+.gift-card-type {
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+.gift-card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.gift-card-meta .meta-label {
+    display: block;
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 1px;
+}
+
+.gift-card-meta .meta-val {
+    font-size: 0.95rem;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+}
+
+.card-code {
+    font-family: monospace;
+    font-size: 0.85rem !important;
+}
+
+.gift-card-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.gift-card-controls-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.control-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    display: block;
+}
+
+.gift-theme-picker {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 8px;
+}
+
+.theme-choice-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+}
+
+.theme-choice-btn.active, .theme-choice-btn:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+    background: rgba(255,42,109,0.08);
+}
+
+.theme-preview-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+}
+.theme-neon { background: #ff2a6d; }
+.theme-obsidian { background: #374151; }
+.theme-gold { background: #f59e0b; }
+.theme-frost { background: #05d9e8; }
+
+.gift-amount-picker {
+    display: flex;
+    gap: 10px;
+}
+
+.amount-btn {
+    flex: 1;
+    padding: 10px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+}
+
+.amount-btn:hover, .amount-btn.active {
+    background: var(--accent-warm);
+    color: #000;
+    border-color: var(--accent-warm);
+}
+
+.gift-input, .gift-textarea {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    transition: border-color 0.3s var(--ease);
+}
+
+.gift-input:focus, .gift-textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.btn-block {
+    width: 100%;
+    padding: 14px;
+    font-weight: 700;
+}
+
+/* ============================================
+   AUDIO CODEX SECTION — Round Additions
+   ============================================ */
+.codex-section {
+    padding: 100px 5%;
+    background: var(--bg-primary);
+}
+
+.codex-search-bar {
+    max-width: 800px;
+    margin: 30px auto 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.codex-input-box {
+    position: relative;
+}
+
+.codex-input-box i {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+}
+
+#codex-search-input {
+    width: 100%;
+    padding: 16px 20px 16px 50px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    transition: all 0.3s var(--ease);
+}
+
+#codex-search-input:focus {
+    outline: none;
+    border-color: var(--accent-warm);
+    box-shadow: 0 0 20px rgba(5, 217, 232, 0.2);
+}
+
+.codex-filter-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.codex-tab {
+    padding: 8px 18px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+}
+
+.codex-tab:hover, .codex-tab.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+.codex-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.codex-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s var(--ease);
+}
+
+.codex-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-warm);
+    box-shadow: 0 12px 25px rgba(5, 217, 232, 0.1);
+}
+
+.codex-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.codex-cat-badge {
+    font-size: 0.72rem;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+    background: rgba(5,217,232,0.1);
+    color: var(--accent-warm);
+    font-weight: 700;
+}
+
+.codex-level {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.codex-term {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.codex-definition {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 18px;
+    flex: 1;
+}
+
+.codex-stats-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+}
+
+.codex-interactive-demo {
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+}
+
+.demo-sound-btn {
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 42, 109, 0.1);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-md);
+    color: var(--accent);
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.demo-sound-btn:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+/* ============================================
+   DECIBEL METER SECTION — Round Additions
+   ============================================ */
+.decibel-section {
+    padding: 100px 5%;
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+}
+
+.decibel-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 1100px;
+    margin: 40px auto 0;
+}
+
+.decibel-meter-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: var(--shadow-lg);
+}
+
+.meter-gauge-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.meter-gauge-svg {
+    width: 100%;
+    height: auto;
+}
+
+#gauge-needle {
+    transition: transform 0.2s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+.meter-readout-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -20px;
+}
+
+.readout-db-num {
+    font-size: 3.5rem;
+    font-weight: 900;
+    font-family: var(--font-display);
+    color: #ffffff;
+    line-height: 1;
+}
+
+.readout-db-unit {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.readout-hazard-badge {
+    margin-top: 10px;
+    padding: 4px 14px;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.badge-safe {
+    background: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.badge-caution {
+    background: rgba(234, 179, 8, 0.15);
+    color: #fde047;
+    border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.badge-hazard {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.meter-toggle-bar {
+    width: 100%;
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.meter-mode-select {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+}
+
+.custom-select-dark {
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 0.88rem;
+    cursor: pointer;
+}
+
+.custom-select-dark:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.decibel-health-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: var(--shadow-lg);
+}
+
+.health-card-title {
+    font-size: 1.15rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--accent-warm);
+}
+
+.exposure-time-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.exposure-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.exposure-time-val {
+    font-size: 1.1rem;
+    color: #4ade80;
+}
+
+.db-guidelines-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.guideline-row {
+    display: grid;
+    grid-template-columns: 12px 85px 1fr;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.85rem;
+}
+
+.guideline-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+.dot-green { background: #22c55e; }
+.dot-yellow { background: #eab308; }
+.dot-orange { background: #f97316; }
+.dot-red { background: #ef4444; }
+
+.guideline-range {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.guideline-desc {
+    color: var(--text-muted);
+}
+
+.anc-recommendation-box {
+    margin-top: 10px;
+    background: linear-gradient(135deg, rgba(255,42,109,0.1), rgba(5,217,232,0.1));
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+.anc-recommendation-box i {
+    font-size: 1.4rem;
+    color: var(--accent);
+    margin-top: 2px;
+}
+
+.anc-recommendation-box p {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* ============================================
+   RESPONSIVE — Round Additions
+   ============================================ */
+@media (max-width: 900px) {
+    .hearing-container, .gift-card-container, .decibel-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .hearing-action-btns { flex-direction: column; }
+    .gift-amount-picker { flex-wrap: wrap; }
+    .guideline-row { grid-template-columns: 12px 1fr; }
+    .guideline-desc { grid-column: span 2; }
+}
+
+
