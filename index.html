@@ -5560,6 +5560,489 @@
         </div>
     </section>
 
+    <!-- ======== SPIDY 16-STEP BEAT LAB ======== -->
+    <section id="beat-maker" class="beatmaker-section reveal-on-scroll">
+        <div class="section-header text-center">
+            <span class="section-tag">STUDIO GROOVE</span>
+            <h2 class="section-title">Spidy 16-Step Beat Lab</h2>
+            <p class="section-desc">Experience the instantaneous transient response and sub-bass impact of our planar drivers with our real-time synthesized browser step sequencer.</p>
+        </div>
+
+        <div class="beatmaker-container">
+            <!-- Top Controls Bar -->
+            <div class="beatmaker-header-bar">
+                <div class="beatmaker-transport">
+                    <button type="button" class="btn btn-primary" id="bm-play-btn">
+                        <i class="fas fa-play" id="bm-play-icon"></i> <span id="bm-play-text">Start Sequencer</span>
+                    </button>
+                    <button type="button" class="btn btn-outline" id="bm-clear-btn">
+                        <i class="fas fa-trash-alt"></i> Clear Grid
+                    </button>
+                </div>
+
+                <div class="beatmaker-tempo-box">
+                    <label for="bm-tempo-slider">BPM: <strong id="bm-bpm-val">120</strong></label>
+                    <input type="range" id="bm-tempo-slider" min="70" max="170" value="120" class="custom-range bm-range">
+                </div>
+
+                <div class="beatmaker-presets">
+                    <span class="presets-label">Presets:</span>
+                    <button type="button" class="bm-preset-btn active" data-preset="cyber-trap">Cyber Trap</button>
+                    <button type="button" class="bm-preset-btn" data-preset="lofi-dusk">Lo-Fi Dusk</button>
+                    <button type="button" class="bm-preset-btn" data-preset="techno-pulse">Techno 303</button>
+                </div>
+            </div>
+
+            <!-- 16-Step Light Indicators -->
+            <div class="bm-step-indicators" id="bm-step-lights">
+                <!-- 16 lights injected or mapped via JS -->
+                <div class="step-light active-pulse" data-step="0">1</div>
+                <div class="step-light" data-step="1">2</div>
+                <div class="step-light" data-step="2">3</div>
+                <div class="step-light" data-step="3">4</div>
+                <div class="step-light beat-accent" data-step="4">5</div>
+                <div class="step-light" data-step="5">6</div>
+                <div class="step-light" data-step="6">7</div>
+                <div class="step-light" data-step="7">8</div>
+                <div class="step-light beat-accent" data-step="8">9</div>
+                <div class="step-light" data-step="9">10</div>
+                <div class="step-light" data-step="10">11</div>
+                <div class="step-light" data-step="11">12</div>
+                <div class="step-light beat-accent" data-step="12">13</div>
+                <div class="step-light" data-step="13">14</div>
+                <div class="step-light" data-step="14">15</div>
+                <div class="step-light" data-step="15">16</div>
+            </div>
+
+            <!-- Sequencer Grid Rows -->
+            <div class="beatmaker-grid" id="bm-grid">
+                <!-- Row 1: Kick 808 -->
+                <div class="bm-row" data-track="kick">
+                    <div class="bm-track-info">
+                        <span class="bm-track-icon"><i class="fas fa-drum"></i></span>
+                        <div class="bm-track-meta">
+                            <strong>808 Sub Kick</strong>
+                            <small>55Hz Sine Drop</small>
+                        </div>
+                        <button type="button" class="bm-mute-btn" title="Mute track"><i class="fas fa-volume-up"></i></button>
+                    </div>
+                    <div class="bm-pads-row" data-track-pads="kick">
+                        <!-- 16 pads -->
+                    </div>
+                </div>
+
+                <!-- Row 2: Snare -->
+                <div class="bm-row" data-track="snare">
+                    <div class="bm-track-info">
+                        <span class="bm-track-icon"><i class="fas fa-bolt"></i></span>
+                        <div class="bm-track-meta">
+                            <strong>Cyber Snare</strong>
+                            <small>Filtered Noise Burst</small>
+                        </div>
+                        <button type="button" class="bm-mute-btn" title="Mute track"><i class="fas fa-volume-up"></i></button>
+                    </div>
+                    <div class="bm-pads-row" data-track-pads="snare">
+                        <!-- 16 pads -->
+                    </div>
+                </div>
+
+                <!-- Row 3: Hi-Hat -->
+                <div class="bm-row" data-track="hihat">
+                    <div class="bm-track-info">
+                        <span class="bm-track-icon"><i class="fas fa-circle-notch"></i></span>
+                        <div class="bm-track-meta">
+                            <strong>Crisp Hi-Hat</strong>
+                            <small>8kHz Highpass Ping</small>
+                        </div>
+                        <button type="button" class="bm-mute-btn" title="Mute track"><i class="fas fa-volume-up"></i></button>
+                    </div>
+                    <div class="bm-pads-row" data-track-pads="hihat">
+                        <!-- 16 pads -->
+                    </div>
+                </div>
+
+                <!-- Row 4: Synth Lead -->
+                <div class="bm-row" data-track="synth">
+                    <div class="bm-track-info">
+                        <span class="bm-track-icon"><i class="fas fa-wave-square"></i></span>
+                        <div class="bm-track-meta">
+                            <strong>Neon Synth</strong>
+                            <small>Square Sub Wave</small>
+                        </div>
+                        <button type="button" class="bm-mute-btn" title="Mute track"><i class="fas fa-volume-up"></i></button>
+                    </div>
+                    <div class="bm-pads-row" data-track-pads="synth">
+                        <!-- 16 pads -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer banner -->
+            <div class="bm-footer-hint">
+                <i class="fas fa-headphones-alt"></i>
+                <span>Hear the pristine driver separation: Bass, punch, highs, and synth melody play cleanly without muddiness or intermodulation distortion.</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== ACOUSTIC ROOM & REVERB SIMULATOR ======== -->
+    <section id="room-simulator" class="room-section reveal-on-scroll">
+        <div class="section-header text-center">
+            <span class="section-tag">SPATIAL ACOUSTICS</span>
+            <h2 class="section-title">Acoustic Room &amp; Reverb Simulator</h2>
+            <p class="section-desc">Experience how acoustic room reflections, wall materials, and stereo binaural positioning transform soundwaves in an interactive 2D acoustic field.</p>
+        </div>
+
+        <div class="room-simulator-container">
+            <!-- Left: Interactive 2D Acoustic Field Canvas -->
+            <div class="room-canvas-card">
+                <div class="room-card-header">
+                    <span class="canvas-badge"><i class="fas fa-compass"></i> Interactive Binaural Map</span>
+                    <span class="canvas-tip">Drag speaker or listener to hear spatial panning</span>
+                </div>
+                <div class="room-canvas-wrapper">
+                    <canvas id="room-canvas" width="500" height="380" class="room-canvas"></canvas>
+                    <div class="room-legend">
+                        <span><span class="legend-dot dot-speaker"></span> Sound Source (Speaker)</span>
+                        <span><span class="legend-dot dot-listener"></span> Listener (You)</span>
+                        <span><span class="legend-dot dot-wave"></span> Acoustic Reflections</span>
+                    </div>
+                </div>
+                <div class="room-playback-bar">
+                    <button type="button" class="btn btn-primary" id="room-test-sound">
+                        <i class="fas fa-play"></i> Emit Acoustic Soundwave
+                    </button>
+                    <span class="room-pos-readout" id="room-pos-readout">Pan: Center (0.00) | Distance: 3.2m</span>
+                </div>
+            </div>
+
+            <!-- Right: Room Parameters & Acoustic Materials -->
+            <div class="room-controls-card">
+                <div class="room-ctrl-block">
+                    <h3 class="ctrl-heading"><i class="fas fa-archway"></i> 1. Select Environment Preset</h3>
+                    <div class="room-env-grid" id="room-env-btns">
+                        <button type="button" class="room-env-btn active" data-env="studio" data-rt60="0.28" data-damping="0.8">
+                            <i class="fas fa-sliders-h"></i>
+                            <div>
+                                <strong>Treated Studio</strong>
+                                <small>RT60: 0.28s | Acoustic Foam</small>
+                            </div>
+                        </button>
+                        <button type="button" class="room-env-btn" data-env="anechoic" data-rt60="0.05" data-damping="0.98">
+                            <i class="fas fa-shield-virus"></i>
+                            <div>
+                                <strong>Anechoic Chamber</strong>
+                                <small>RT60: 0.05s | Zero Reflection</small>
+                            </div>
+                        </button>
+                        <button type="button" class="room-env-btn" data-env="club" data-rt60="1.45" data-damping="0.4">
+                            <i class="fas fa-glass-cheers"></i>
+                            <div>
+                                <strong>Cyberpunk Club</strong>
+                                <small>RT60: 1.45s | Concrete Walls</small>
+                            </div>
+                        </button>
+                        <button type="button" class="room-env-btn" data-env="cathedral" data-rt60="3.80" data-damping="0.15">
+                            <i class="fas fa-monument"></i>
+                            <div>
+                                <strong>Neon Cathedral</strong>
+                                <small>RT60: 3.80s | Vast Reverberation</small>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="room-ctrl-block">
+                    <h3 class="ctrl-heading"><i class="fas fa-sliders-h"></i> 2. Acoustic Properties</h3>
+                    <div class="room-sliders-stack">
+                        <div class="room-slider-row">
+                            <div class="slider-label-row">
+                                <span>Reverb Decay Time (RT60):</span>
+                                <strong id="rt60-val-display">0.28 s</strong>
+                            </div>
+                            <input type="range" id="rt60-slider" min="5" max="400" value="28" class="custom-range">
+                        </div>
+
+                        <div class="room-slider-row">
+                            <div class="slider-label-row">
+                                <span>Wall Sound Absorption:</span>
+                                <strong id="absorption-val-display">80% (Foam)</strong>
+                            </div>
+                            <input type="range" id="absorption-slider" min="10" max="95" value="80" class="custom-range">
+                        </div>
+
+                        <div class="room-slider-row">
+                            <div class="slider-label-row">
+                                <span>Reverb Wet / Dry Mix:</span>
+                                <strong id="wetdry-val-display">35% Wet</strong>
+                            </div>
+                            <input type="range" id="wetdry-slider" min="0" max="100" value="35" class="custom-range">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="room-spidy-advantage">
+                    <i class="fas fa-sparkles"></i>
+                    <div>
+                        <strong>SpidySpatial™ Hardware DSP</strong>
+                        <p>Our quad-core onboard DSP measures ear canal reflections 192,000 times per second to neutralize unwanted room resonances in your listening environment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== GLOBAL CYBER AUDIOPHILE LOUNGE ======== -->
+    <section id="listening-lounge" class="lounge-section reveal-on-scroll">
+        <div class="section-header text-center">
+            <span class="section-tag">COMMUNITY STREAM</span>
+            <h2 class="section-title">The Spidy Audiophile Lounge</h2>
+            <p class="section-desc">Tune into our 24/7 high-fidelity community radio stream. Watch real-time bouncing VU meters, vote on upcoming tracks, and fire live reactions.</p>
+        </div>
+
+        <div class="lounge-container">
+            <!-- Left: Live Broadcast Station & Dual VU Meters -->
+            <div class="lounge-player-card">
+                <div class="lounge-broadcast-header">
+                    <div class="live-status-pill">
+                        <span class="live-pulse-dot"></span>
+                        <strong>ON AIR</strong>
+                    </div>
+                    <div class="listeners-counter">
+                        <i class="fas fa-user-friends"></i> <span id="lounge-listeners-count">1,348</span> audiophiles tuned in
+                    </div>
+                </div>
+
+                <!-- Dual Analog Retro VU Meters -->
+                <div class="lounge-vu-meters-box">
+                    <div class="vu-channel">
+                        <div class="vu-meter-face">
+                            <div class="vu-scale-marks">
+                                <span>-20</span><span>-10</span><span>-7</span><span>-3</span><span class="vu-red">0</span><span class="vu-red">+3</span>
+                            </div>
+                            <div class="vu-needle" id="vu-needle-left"></div>
+                            <span class="vu-channel-tag">LEFT CH</span>
+                        </div>
+                    </div>
+                    <div class="vu-channel">
+                        <div class="vu-meter-face">
+                            <div class="vu-scale-marks">
+                                <span>-20</span><span>-10</span><span>-7</span><span>-3</span><span class="vu-red">0</span><span class="vu-red">+3</span>
+                            </div>
+                            <div class="vu-needle" id="vu-needle-right"></div>
+                            <span class="vu-channel-tag">RIGHT CH</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Playing Track Info -->
+                <div class="lounge-track-info">
+                    <div class="track-artwork-box">
+                        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&auto=format&fit=crop&q=60" alt="Cyberpunk Lounge" class="track-artwork" id="lounge-track-art">
+                        <div class="artwork-pulse-overlay"></div>
+                    </div>
+                    <div class="track-details">
+                        <span class="track-stream-badge">MASTER FLAC 24-BIT / 96kHz</span>
+                        <h3 class="track-title" id="lounge-track-title">Midnight Tokyo Drift</h3>
+                        <p class="track-artist" id="lounge-track-artist">Aethelgard &amp; Spidy Sound Collective</p>
+                    </div>
+                </div>
+
+                <!-- Reaction Bar -->
+                <div class="lounge-reaction-bar">
+                    <span class="reaction-label">Send Reaction:</span>
+                    <div class="reaction-buttons-group">
+                        <button type="button" class="reaction-btn" data-emoji="🔥">🔥 <span class="react-cnt">342</span></button>
+                        <button type="button" class="reaction-btn" data-emoji="🎧">🎧 <span class="react-cnt">189</span></button>
+                        <button type="button" class="reaction-btn" data-emoji="⚡">⚡ <span class="react-cnt">521</span></button>
+                        <button type="button" class="reaction-btn" data-emoji="💜">💜 <span class="react-cnt">407</span></button>
+                        <button type="button" class="reaction-btn" data-emoji="🚀">🚀 <span class="react-cnt">215</span></button>
+                    </div>
+                </div>
+
+                <!-- Reaction Particles Floating Canvas -->
+                <canvas id="reaction-particles-canvas" class="reaction-canvas" width="600" height="300"></canvas>
+            </div>
+
+            <!-- Right: Up Next Voting Queue & Community Live Chat Feed -->
+            <div class="lounge-community-card">
+                <div class="lounge-sub-block">
+                    <h4 class="lounge-sub-title"><i class="fas fa-list-ol"></i> Up Next (Community Queue)</h4>
+                    <div class="lounge-queue-list" id="lounge-queue-list">
+                        <div class="queue-item">
+                            <span class="queue-num">01</span>
+                            <div class="queue-info">
+                                <strong>Sub-Bass Horizons</strong>
+                                <small>Neon Pulse • 4:12</small>
+                            </div>
+                            <button type="button" class="queue-vote-btn" data-votes="84">
+                                <i class="fas fa-arrow-up"></i> <span class="vote-count">84</span>
+                            </button>
+                        </div>
+                        <div class="queue-item">
+                            <span class="queue-num">02</span>
+                            <div class="queue-info">
+                                <strong>Solar Wind Symphony</strong>
+                                <small>Acoustic Lab • 5:48</small>
+                            </div>
+                            <button type="button" class="queue-vote-btn" data-votes="62">
+                                <i class="fas fa-arrow-up"></i> <span class="vote-count">62</span>
+                            </button>
+                        </div>
+                        <div class="queue-item">
+                            <span class="queue-num">03</span>
+                            <div class="queue-info">
+                                <strong>Quantum Resonance</strong>
+                                <small>Flux &amp; Wavelength • 3:39</small>
+                            </div>
+                            <button type="button" class="queue-vote-btn" data-votes="49">
+                                <i class="fas fa-arrow-up"></i> <span class="vote-count">49</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lounge-sub-block lounge-chat-block">
+                    <h4 class="lounge-sub-title"><i class="fas fa-comments"></i> Live Community Chat</h4>
+                    <div class="lounge-chat-feed" id="lounge-chat-feed">
+                        <div class="chat-msg">
+                            <strong class="chat-user user-cyan">AeroSonic:</strong>
+                            <span class="chat-text">The clarity on this FLAC stream with the Spidy Apex is mindblowing!</span>
+                        </div>
+                        <div class="chat-msg">
+                            <strong class="chat-user user-pink">Kavinsky_Fan:</strong>
+                            <span class="chat-text">Voted for Sub-Bass Horizons! Let's get that planar punch! 🔥</span>
+                        </div>
+                        <div class="chat-msg">
+                            <strong class="chat-user user-purple">Luna_Audiophile:</strong>
+                            <span class="chat-text">Greetings from Berlin! Listening with the Alcantara mesh cushions 💜</span>
+                        </div>
+                    </div>
+                    <form id="lounge-chat-form" class="lounge-chat-input-row">
+                        <input type="text" id="lounge-chat-input" placeholder="Join the discussion..." maxlength="80" autocomplete="off">
+                        <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== ACOUSTIC EAR SEAL & SUB-BASS ANALYZER ======== -->
+    <section id="ear-seal-lab" class="earseal-section reveal-on-scroll">
+        <div class="section-header text-center">
+            <span class="section-tag">ACOUSTIC ERGONOMICS</span>
+            <h2 class="section-title">Ear Tip Seal &amp; Sub-Bass Physics Lab</h2>
+            <p class="section-desc">Acoustic isolation dictates up to 80% of perceived sub-bass depth. Discover why an airtight seal is essential for 10Hz-40kHz planar performance.</p>
+        </div>
+
+        <div class="earseal-container">
+            <!-- Left: Interactive Seal Selector -->
+            <div class="earseal-config-card">
+                <h3 class="earseal-card-title"><i class="fas fa-sliders-h"></i> Test Ear Tip Configurations</h3>
+                
+                <div class="seal-step-box">
+                    <label class="seal-label">1. Ear Canal Anatomy Size</label>
+                    <div class="seal-btn-group" id="canal-size-group">
+                        <button type="button" class="seal-choice-btn" data-size="small">Small (9mm)</button>
+                        <button type="button" class="seal-choice-btn active" data-size="medium">Medium (11.5mm)</button>
+                        <button type="button" class="seal-choice-btn" data-size="large">Large (14mm)</button>
+                    </div>
+                </div>
+
+                <div class="seal-step-box">
+                    <label class="seal-label">2. Ear Tip Material &amp; Shape</label>
+                    <div class="seal-btn-group" id="tip-material-group">
+                        <button type="button" class="seal-choice-btn active" data-material="foam" data-seal="airtight">
+                            <i class="fas fa-cloud"></i> Memory Foam (Airtight 100%)
+                        </button>
+                        <button type="button" class="seal-choice-btn" data-material="silicone" data-seal="good">
+                            <i class="fas fa-feather"></i> Liquid Silicone (Good 85%)
+                        </button>
+                        <button type="button" class="seal-choice-btn" data-material="loose" data-seal="broken">
+                            <i class="fas fa-wind"></i> Loose / Mismatched (Leaky 40%)
+                        </button>
+                    </div>
+                </div>
+
+                <div class="seal-status-card" id="seal-status-card">
+                    <div class="seal-meter-header">
+                        <span>Acoustic Seal Quality:</span>
+                        <strong id="seal-quality-badge" class="seal-badge-perfect">100% AIRTIGHT SEAL</strong>
+                    </div>
+                    <div class="seal-progress-bar-bg">
+                        <div class="seal-progress-fill" id="seal-fill-bar" style="width: 100%;"></div>
+                    </div>
+                    <p class="seal-impact-desc" id="seal-impact-desc">
+                        Full sub-bass extension down to 10Hz preserved. Total noise isolation of -32dB passive dampening.
+                    </p>
+                </div>
+
+                <div class="seal-audio-test-box">
+                    <button type="button" class="btn btn-primary" id="seal-audio-test-btn">
+                        <i class="fas fa-play" id="seal-test-icon"></i> <span id="seal-test-text">Compare Simulated Audio Seal</span>
+                    </button>
+                    <small class="seal-audio-note">Toggles between full rich bass vs thin leaky bass filter.</small>
+                </div>
+            </div>
+
+            <!-- Right: Live Frequency Curve & Visual Diagram -->
+            <div class="earseal-visual-card">
+                <div class="earseal-graph-header">
+                    <h4>Frequency Response: Bass Roll-off vs Seal</h4>
+                    <span class="graph-legend-badge"><span class="legend-airtight"></span> Airtight vs <span class="legend-leaky"></span> Leaky</span>
+                </div>
+
+                <!-- SVG Acoustic Curve Visualizer -->
+                <div class="earseal-svg-wrap">
+                    <svg viewBox="0 0 500 240" class="freq-curve-svg">
+                        <defs>
+                            <linearGradient id="curve-glow-airtight" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#05d9e8" />
+                                <stop offset="100%" stop-color="#ff2a6d" />
+                            </linearGradient>
+                            <linearGradient id="curve-glow-leaky" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#64748b" />
+                                <stop offset="100%" stop-color="#94a3b8" />
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Grid Lines -->
+                        <line x1="40" y1="30" x2="480" y2="30" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4"/>
+                        <line x1="40" y1="80" x2="480" y2="80" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4"/>
+                        <line x1="40" y1="130" x2="480" y2="130" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4"/>
+                        <line x1="40" y1="180" x2="480" y2="180" stroke="rgba(255,255,255,0.06)" stroke-dasharray="4"/>
+
+                        <!-- Vertical frequency markers -->
+                        <text x="50" y="210" fill="var(--text-muted)" font-size="11">20Hz</text>
+                        <text x="140" y="210" fill="var(--text-muted)" font-size="11">100Hz</text>
+                        <text x="240" y="210" fill="var(--text-muted)" font-size="11">1kHz</text>
+                        <text x="350" y="210" fill="var(--text-muted)" font-size="11">8kHz</text>
+                        <text x="450" y="210" fill="var(--text-muted)" font-size="11">20kHz</text>
+
+                        <!-- Leaky Curve (Deep bass drop) -->
+                        <path id="svg-leaky-curve" d="M 50 175 Q 110 160 160 110 T 260 85 T 360 80 T 470 95" fill="none" stroke="#64748b" stroke-width="3" stroke-dasharray="6,4" opacity="0.6"/>
+
+                        <!-- Active Simulated Curve -->
+                        <path id="svg-active-curve" d="M 50 75 Q 110 77 160 80 T 260 85 T 360 80 T 470 90" fill="none" stroke="url(#curve-glow-airtight)" stroke-width="4" stroke-linecap="round"/>
+
+                        <!-- Dynamic Bass Drop Label -->
+                        <text id="svg-bass-loss-tag" x="65" y="125" fill="#05d9e8" font-size="13" font-weight="800">+6dB Studio Sub-Bass</text>
+                    </svg>
+                </div>
+
+                <div class="earseal-order-promo">
+                    <div class="promo-text">
+                        <strong>Unsure of your size?</strong>
+                        <p>We include 6 custom pairs (S, M, L in both Memory Foam &amp; Medical Silicone) in every Spidy box free of charge.</p>
+                    </div>
+                    <button type="button" class="btn btn-outline" id="claim-sample-kit-btn">
+                        <i class="fas fa-box-open"></i> Request Extra Fit Kit ($0)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ======== FOOTER ======== -->
     <footer class="site-footer">
         <div class="footer-grid reveal-stagger">
