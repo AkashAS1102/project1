@@ -5867,5 +5867,1095 @@
     }
 })();
 
+/* ============================================
+   MODULE 9: Spidy 16-Step Beat Lab
+   ============================================ */
+(function() {
+    'use strict';
+
+    const section = document.getElementById('beat-maker');
+    if (!section) return;
+
+    const playBtn = document.getElementById('bm-play-btn');
+    const playIcon = document.getElementById('bm-play-icon');
+    const playText = document.getElementById('bm-play-text');
+    const clearBtn = document.getElementById('bm-clear-btn');
+    const tempoSlider = document.getElementById('bm-tempo-slider');
+    const tempoVal = document.getElementById('bm-bpm-val');
+    const presetBtns = section.querySelectorAll('.bm-preset-btn');
+    const stepLights = section.querySelectorAll('.step-light');
+    const rows = section.querySelectorAll('.bm-row');
+
+    let audioCtx = null;
+    let isPlaying = false;
+    let bpm = 120;
+    let currentStep = 0;
+    let timerId = null;
+
+    // Pattern state: 4 tracks x 16 steps
+    const tracks = ['kick', 'snare', 'hihat', 'synth'];
+    const pattern = {
+        kick:  new Array(16).fill(false),
+        snare: new Array(16).fill(false),
+        hihat: new Array(16).fill(false),
+        synth: new Array(16).fill(false)
+    };
+    const muted = {
+        kick: false,
+        snare: false,
+        hihat: false,
+        synth: false
+    };
+
+    function getAudioCtx() {
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        return audioCtx;
+    }
+
+    // Audio Synthesis Engines
+    function playKick(ctx, time) {
+        if (muted.kick) return;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.frequency.setValueAtTime(150, time);
+        osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.35);
+
+        gain.gain.setValueAtTime(1.0, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.35);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(time);
+        osc.stop(time + 0.35);
+    }
+
+    function playSnare(ctx, time) {
+        if (muted.snare) return;
+        // Noise burst
+        const bufferSize = ctx.sampleRate * 0.15;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
+
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'highpass';
+        filter.frequency.value = 1000;
+
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.7, time);
+        gain.gain.exponentialRampToValueAtTime(0.01, time + 0.15);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+
+        noise.start(time);
+        noise.stop(time + 0.15);
+
+        // Body pop
+        const osc = ctx.createOscillator();
+        const oscGain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(180, time);
+        osc.frequency.exponentialRampToValueAtTime(40, time + 0.08);
+
+        oscGain.gain.setValueAtTime(0.6, time);
+        oscGain.gain.exponentialRampToValueAtTime(0.01, time + 0.08);
+
+        osc.connect(oscGain);
+        oscGain.connect(ctx.destination);
+
+        osc.start(time);
+        osc.stop(time + 0.08);
+    }
+
+    function playHiHat(ctx, time) {
+        if (muted.hihat) return;
+        const bufferSize = ctx.sampleRate * 0.05;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
+
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'highpass';
+        filter.frequency.value = 7500;
+
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.4, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+
+        noise.start(time);
+        noise.stop(time + 0.05);
+    }
+
+    // Pentatonic frequencies: A3 (220), C4 (261.63), D4 (293.66), E4 (329.63), G4 (392)
+    const synthNotes = [220, 261.63, 293.66, 329.63, 392, 440];
+    function playSynth(ctx, time, step) {
+        if (muted.synth) return;
+        const osc = ctx.createOscillator();
+        const filter = ctx.createBiquadFilter();
+        const gain = ctx.createGain();
+
+        const note = synthNotes[step % synthNotes.length];
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(note, time);
+
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(800, time);
+        filter.frequency.exponentialRampToValueAtTime(2400, time + 0.1);
+        filter.frequency.exponentialRampToValueAtTime(400, time + 0.25);
+
+        gain.gain.setValueAtTime(0.3, time);
+        gain.gain.exponentialRampToValueAtTime(0.001, time + 0.28);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(time);
+        osc.stop(time + 0.28);
+    }
+
+    // Build the 16 pads in each row
+    rows.forEach(row => {
+        const track = row.dataset.track;
+        const padsContainer = row.querySelector('.bm-pads-row');
+        if (!padsContainer) return;
+
+        padsContainer.innerHTML = '';
+        for (let i = 0; i < 16; i++) {
+            const pad = document.createElement('button');
+            pad.type = 'button';
+            pad.className = 'bm-pad';
+            pad.dataset.step = i;
+            pad.setAttribute('aria-label', `${track} step ${i + 1}`);
+
+            pad.addEventListener('click', () => {
+                pattern[track][i] = !pattern[track][i];
+                pad.classList.toggle('active', pattern[track][i]);
+                if (pattern[track][i]) {
+                    const ctx = getAudioCtx();
+                    if (track === 'kick') playKick(ctx, ctx.currentTime);
+                    else if (track === 'snare') playSnare(ctx, ctx.currentTime);
+                    else if (track === 'hihat') playHiHat(ctx, ctx.currentTime);
+                    else if (track === 'synth') playSynth(ctx, ctx.currentTime, i);
+                }
+            });
+
+            padsContainer.appendChild(pad);
+        }
+
+        // Mute button
+        const muteBtn = row.querySelector('.bm-mute-btn');
+        if (muteBtn) {
+            muteBtn.addEventListener('click', () => {
+                muted[track] = !muted[track];
+                muteBtn.classList.toggle('muted', muted[track]);
+                const icon = muteBtn.querySelector('i');
+                if (icon) {
+                    icon.className = muted[track] ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+                }
+            });
+        }
+    });
+
+    // Preset configurations
+    const presets = {
+        'cyber-trap': {
+            kick:  [0, 6, 8, 12],
+            snare: [4, 12],
+            hihat: [0, 2, 4, 6, 8, 10, 12, 14, 15],
+            synth: [0, 3, 8, 11]
+        },
+        'lofi-dusk': {
+            kick:  [0, 7, 10],
+            snare: [4, 12],
+            hihat: [0, 2, 4, 6, 8, 10, 12, 14],
+            synth: [2, 6, 10, 14]
+        },
+        'techno-pulse': {
+            kick:  [0, 4, 8, 12],
+            snare: [4, 12],
+            hihat: [2, 6, 10, 14],
+            synth: [1, 3, 5, 7, 9, 11, 13, 15]
+        }
+    };
+
+    function loadPreset(presetName) {
+        const p = presets[presetName];
+        if (!p) return;
+
+        tracks.forEach(track => {
+            pattern[track].fill(false);
+            if (p[track]) {
+                p[track].forEach(idx => {
+                    pattern[track][idx] = true;
+                });
+            }
+
+            const row = section.querySelector(`.bm-row[data-track="${track}"]`);
+            if (row) {
+                const pads = row.querySelectorAll('.bm-pad');
+                pads.forEach((pad, i) => {
+                    pad.classList.toggle('active', pattern[track][i]);
+                });
+            }
+        });
+    }
+
+    // Default load Cyber Trap preset
+    loadPreset('cyber-trap');
+
+    presetBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            presetBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            loadPreset(btn.dataset.preset);
+            if (typeof toast === 'function') {
+                toast(`Loaded "${btn.textContent}" beat preset!`, 'info', 2000);
+            }
+        });
+    });
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            tracks.forEach(track => pattern[track].fill(false));
+            section.querySelectorAll('.bm-pad').forEach(pad => pad.classList.remove('active'));
+            presetBtns.forEach(b => b.classList.remove('active'));
+            if (typeof toast === 'function') toast('Sequencer grid cleared', 'info', 1500);
+        });
+    }
+
+    // Sequencer Clock
+    function stepTick() {
+        const ctx = getAudioCtx();
+        const now = ctx.currentTime;
+
+        // Visual lights
+        stepLights.forEach((light, idx) => {
+            light.classList.toggle('active-pulse', idx === currentStep);
+        });
+
+        // Trigger sounds
+        tracks.forEach(track => {
+            if (pattern[track][currentStep]) {
+                if (track === 'kick') playKick(ctx, now);
+                else if (track === 'snare') playSnare(ctx, now);
+                else if (track === 'hihat') playHiHat(ctx, now);
+                else if (track === 'synth') playSynth(ctx, now, currentStep);
+            }
+
+            const row = section.querySelector(`.bm-row[data-track="${track}"]`);
+            if (row) {
+                const pads = row.querySelectorAll('.bm-pad');
+                pads.forEach((pad, idx) => {
+                    pad.classList.toggle('current-step', idx === currentStep);
+                });
+            }
+        });
+
+        currentStep = (currentStep + 1) % 16;
+    }
+
+    function startSequencer() {
+        if (timerId) clearInterval(timerId);
+        const intervalMs = (60 / bpm / 4) * 1000;
+        timerId = setInterval(stepTick, intervalMs);
+        isPlaying = true;
+        if (playIcon) playIcon.className = 'fas fa-pause';
+        if (playText) playText.textContent = 'Pause Sequencer';
+        if (playBtn) playBtn.classList.add('btn-primary');
+    }
+
+    function stopSequencer() {
+        if (timerId) clearInterval(timerId);
+        timerId = null;
+        isPlaying = false;
+        if (playIcon) playIcon.className = 'fas fa-play';
+        if (playText) playText.textContent = 'Start Sequencer';
+        stepLights.forEach(light => light.classList.remove('active-pulse'));
+        section.querySelectorAll('.bm-pad').forEach(pad => pad.classList.remove('current-step'));
+    }
+
+    if (playBtn) {
+        playBtn.addEventListener('click', () => {
+            getAudioCtx();
+            if (isPlaying) {
+                stopSequencer();
+            } else {
+                startSequencer();
+            }
+        });
+    }
+
+    if (tempoSlider) {
+        tempoSlider.addEventListener('input', () => {
+            bpm = parseInt(tempoSlider.value, 10);
+            if (tempoVal) tempoVal.textContent = bpm;
+            if (isPlaying) {
+                startSequencer();
+            }
+        });
+    }
+})();
+
+/* ============================================
+   MODULE 10: Spatial Room & Reverb Simulator
+   ============================================ */
+(function() {
+    'use strict';
+
+    const section = document.getElementById('room-simulator');
+    if (!section) return;
+
+    const canvas = document.getElementById('room-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+
+    const testBtn = document.getElementById('room-test-sound');
+    const readout = document.getElementById('room-pos-readout');
+    const envBtns = section.querySelectorAll('.room-env-btn');
+    const rt60Slider = document.getElementById('rt60-slider');
+    const rt60Display = document.getElementById('rt60-val-display');
+    const absorptionSlider = document.getElementById('absorption-slider');
+    const absorptionDisplay = document.getElementById('absorption-val-display');
+    const wetdrySlider = document.getElementById('wetdry-slider');
+    const wetdryDisplay = document.getElementById('wetdry-val-display');
+
+    let audioCtx = null;
+    let pannerNode = null;
+
+    // Positions (normalized 0..1 in room, then mapped to canvas)
+    let speaker = { x: 120, y: 120, radius: 14, isDragging: false };
+    let listener = { x: 340, y: 260, radius: 16, isDragging: false };
+
+    // Waves expanding
+    const ripples = [];
+
+    // Room parameters
+    let rt60 = 0.28;
+    let absorption = 0.8;
+    let wetMix = 0.35;
+
+    function getAudioCtx() {
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        return audioCtx;
+    }
+
+    function updateReadout() {
+        const dx = speaker.x - listener.x;
+        const dy = speaker.y - listener.y;
+        const distancePx = Math.sqrt(dx * dx + dy * dy);
+        const distanceM = (distancePx / 60).toFixed(1); // 60px = 1m
+
+        // Stereo pan -1.0 (left) to +1.0 (right) relative to listener
+        const pan = Math.max(-1, Math.min(1, (-dx / (canvas.width * 0.5)))).toFixed(2);
+        let panDesc = 'Center (0.00)';
+        if (pan < -0.1) panDesc = `Left (${pan})`;
+        else if (pan > 0.1) panDesc = `Right (+${pan})`;
+
+        if (readout) {
+            readout.textContent = `Pan: ${panDesc} | Distance: ${distanceM}m`;
+        }
+
+        if (pannerNode && audioCtx) {
+            if (pannerNode.pan) {
+                pannerNode.pan.setValueAtTime(parseFloat(pan), audioCtx.currentTime);
+            }
+        }
+    }
+
+    function emitSoundwave() {
+        const actx = getAudioCtx();
+        const now = actx.currentTime;
+
+        // Sound Synthesis with Stereo Panner
+        const osc1 = actx.createOscillator();
+        const osc2 = actx.createOscillator();
+        const masterGain = actx.createGain();
+
+        try {
+            pannerNode = actx.createStereoPanner ? actx.createStereoPanner() : null;
+        } catch(e) {
+            pannerNode = null;
+        }
+
+        osc1.type = 'triangle';
+        osc1.frequency.setValueAtTime(261.63, now); // C4
+        osc2.type = 'sine';
+        osc2.frequency.setValueAtTime(392.00, now); // G4
+
+        const dx = speaker.x - listener.x;
+        const dy = speaker.y - listener.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const distanceAtten = Math.max(0.15, 1 - (dist / (canvas.width * 0.8)));
+
+        masterGain.gain.setValueAtTime(0.25 * distanceAtten, now);
+        masterGain.gain.exponentialRampToValueAtTime(0.001, now + (rt60 * 1.5) + 0.1);
+
+        osc1.connect(masterGain);
+        osc2.connect(masterGain);
+
+        if (pannerNode) {
+            const pan = Math.max(-1, Math.min(1, (-dx / (canvas.width * 0.5))));
+            pannerNode.pan.setValueAtTime(pan, now);
+            masterGain.connect(pannerNode);
+            pannerNode.connect(actx.destination);
+        } else {
+            masterGain.connect(actx.destination);
+        }
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + (rt60 * 1.5) + 0.1);
+        osc2.stop(now + (rt60 * 1.5) + 0.1);
+
+        // Add visual wave ripple
+        for (let i = 0; i < 3; i++) {
+            ripples.push({
+                x: speaker.x,
+                y: speaker.y,
+                r: 5 + (i * 12),
+                maxR: Math.max(canvas.width, canvas.height) * 1.2,
+                opacity: 0.9 - (i * 0.2),
+                speed: 3.5,
+                color: i % 2 === 0 ? '#ff2a6d' : '#05d9e8'
+            });
+        }
+    }
+
+    if (testBtn) testBtn.addEventListener('click', emitSoundwave);
+
+    // Canvas Rendering Loop
+    function renderRoom() {
+        const w = canvas.width;
+        const h = canvas.height;
+
+        // Background
+        ctx.fillStyle = '#0a0d14';
+        ctx.fillRect(0, 0, w, h);
+
+        // Grid lines
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < w; x += 30) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, h);
+            ctx.stroke();
+        }
+        for (let y = 0; y < h; y += 30) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(w, y);
+            ctx.stroke();
+        }
+
+        // Room Boundary Walls (reflectors)
+        ctx.strokeStyle = '#22283a';
+        ctx.lineWidth = 6;
+        ctx.strokeRect(3, 3, w - 6, h - 6);
+
+        // Acoustic treatment wall indicator
+        ctx.strokeStyle = `rgba(5, 217, 232, ${absorption * 0.5})`;
+        ctx.lineWidth = 4;
+        ctx.strokeRect(6, 6, w - 12, h - 12);
+
+        // Draw and update soundwave ripples
+        for (let i = ripples.length - 1; i >= 0; i--) {
+            const rip = ripples[i];
+            ctx.beginPath();
+            ctx.arc(rip.x, rip.y, rip.r, 0, Math.PI * 2);
+            ctx.strokeStyle = rip.color;
+            ctx.globalAlpha = Math.max(0, rip.opacity);
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Reflection line if hitting wall
+            if (rip.r > rip.x || rip.r > rip.y || rip.x + rip.r > w || rip.y + rip.r > h) {
+                ctx.beginPath();
+                ctx.arc(rip.x, rip.y, rip.r * 0.85, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(139, 92, 246, 0.4)';
+                ctx.stroke();
+            }
+
+            ctx.globalAlpha = 1.0;
+            rip.r += rip.speed;
+            rip.opacity -= 0.012 * (1.1 - (rt60 / 4));
+
+            if (rip.opacity <= 0 || rip.r >= rip.maxR) {
+                ripples.splice(i, 1);
+            }
+        }
+
+        // Distance connector line
+        ctx.beginPath();
+        ctx.setLineDash([4, 4]);
+        ctx.moveTo(speaker.x, speaker.y);
+        ctx.lineTo(listener.x, listener.y);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Draw Speaker Node
+        ctx.beginPath();
+        ctx.arc(speaker.x, speaker.y, speaker.radius + 6, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 42, 109, 0.2)';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(speaker.x, speaker.y, speaker.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#ff2a6d';
+        ctx.shadowColor = '#ff2a6d';
+        ctx.shadowBlur = 15;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = '#fff';
+        ctx.font = '10px Outfit, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('SPEAKER', speaker.x, speaker.y + 26);
+
+        // Draw Listener Node
+        ctx.beginPath();
+        ctx.arc(listener.x, listener.y, listener.radius + 8, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(5, 217, 232, 0.2)';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(listener.x, listener.y, listener.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#05d9e8';
+        ctx.shadowColor = '#05d9e8';
+        ctx.shadowBlur = 15;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Ear pads on listener
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(listener.x - listener.radius - 4, listener.y - 6, 4, 12);
+        ctx.fillRect(listener.x + listener.radius, listener.y - 6, 4, 12);
+
+        ctx.fillStyle = '#fff';
+        ctx.font = '10px Outfit, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('YOU', listener.x, listener.y + 28);
+
+        requestAnimationFrame(renderRoom);
+    }
+    renderRoom();
+    updateReadout();
+
+    // Mouse / Touch Dragging on Canvas
+    function getCanvasPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        return {
+            x: (clientX - rect.left) * scaleX,
+            y: (clientY - rect.top) * scaleY
+        };
+    }
+
+    function checkHit(pos, target) {
+        const dx = pos.x - target.x;
+        const dy = pos.y - target.y;
+        return (dx * dx + dy * dy) <= (target.radius + 15) * (target.radius + 15);
+    }
+
+    function onPointerDown(e) {
+        const pos = getCanvasPos(e);
+        if (checkHit(pos, speaker)) {
+            speaker.isDragging = true;
+        } else if (checkHit(pos, listener)) {
+            listener.isDragging = true;
+        }
+    }
+
+    function onPointerMove(e) {
+        if (!speaker.isDragging && !listener.isDragging) return;
+        const pos = getCanvasPos(e);
+        const clampedX = Math.max(25, Math.min(canvas.width - 25, pos.x));
+        const clampedY = Math.max(25, Math.min(canvas.height - 25, pos.y));
+
+        if (speaker.isDragging) {
+            speaker.x = clampedX;
+            speaker.y = clampedY;
+        } else if (listener.isDragging) {
+            listener.x = clampedX;
+            listener.y = clampedY;
+        }
+        updateReadout();
+    }
+
+    function onPointerUp() {
+        speaker.isDragging = false;
+        listener.isDragging = false;
+    }
+
+    canvas.addEventListener('mousedown', onPointerDown);
+    window.addEventListener('mousemove', onPointerMove);
+    window.addEventListener('mouseup', onPointerUp);
+
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); onPointerDown(e); }, { passive: false });
+    window.addEventListener('touchmove', onPointerMove);
+    window.addEventListener('touchend', onPointerUp);
+
+    // Environment Presets
+    envBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            envBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            rt60 = parseFloat(btn.dataset.rt60);
+            absorption = parseFloat(btn.dataset.damping);
+
+            if (rt60Slider) rt60Slider.value = Math.round(rt60 * 100);
+            if (rt60Display) rt60Display.textContent = `${rt60} s`;
+
+            if (absorptionSlider) absorptionSlider.value = Math.round(absorption * 100);
+            if (absorptionDisplay) absorptionDisplay.textContent = `${Math.round(absorption * 100)}%`;
+
+            emitSoundwave();
+        });
+    });
+
+    if (rt60Slider) {
+        rt60Slider.addEventListener('input', () => {
+            rt60 = rt60Slider.value / 100;
+            if (rt60Display) rt60Display.textContent = `${rt60.toFixed(2)} s`;
+        });
+    }
+
+    if (absorptionSlider) {
+        absorptionSlider.addEventListener('input', () => {
+            absorption = absorptionSlider.value / 100;
+            if (absorptionDisplay) absorptionDisplay.textContent = `${Math.round(absorption * 100)}%`;
+        });
+    }
+
+    if (wetdrySlider) {
+        wetdrySlider.addEventListener('input', () => {
+            wetMix = wetdrySlider.value / 100;
+            if (wetdryDisplay) wetdryDisplay.textContent = `${Math.round(wetMix * 100)}% Wet`;
+        });
+    }
+})();
+
+/* ============================================
+   MODULE 11: Global Cyber Audiophile Lounge
+   ============================================ */
+(function() {
+    'use strict';
+
+    const section = document.getElementById('listening-lounge');
+    if (!section) return;
+
+    const needleLeft = document.getElementById('vu-needle-left');
+    const needleRight = document.getElementById('vu-needle-right');
+    const listenersCountEl = document.getElementById('lounge-listeners-count');
+    const canvas = document.getElementById('reaction-particles-canvas');
+    const chatFeed = document.getElementById('lounge-chat-feed');
+    const chatForm = document.getElementById('lounge-chat-form');
+    const chatInput = document.getElementById('lounge-chat-input');
+    const reactionBtns = section.querySelectorAll('.reaction-btn');
+    const voteBtns = section.querySelectorAll('.queue-vote-btn');
+
+    let baseListeners = 1348;
+    const particles = [];
+
+    // Animated VU Meters with organic rhythm kick
+    let vuBaseAngleL = -32;
+    let vuBaseAngleR = -30;
+    let tickCount = 0;
+
+    function animateVU() {
+        tickCount++;
+        // Simulated rhythmic music peaks
+        const kickPulse = Math.sin(tickCount * 0.12) > 0.4 ? Math.random() * 26 : Math.random() * 8;
+        const snarePulse = Math.cos(tickCount * 0.15) > 0.5 ? Math.random() * 20 : 0;
+
+        const targetAngleL = -42 + kickPulse + Math.random() * 6;
+        const targetAngleR = -40 + kickPulse * 0.9 + snarePulse + Math.random() * 5;
+
+        vuBaseAngleL += (targetAngleL - vuBaseAngleL) * 0.35;
+        vuBaseAngleR += (targetAngleR - vuBaseAngleR) * 0.35;
+
+        if (needleLeft) needleLeft.style.transform = `rotate(${vuBaseAngleL}deg)`;
+        if (needleRight) needleRight.style.transform = `rotate(${vuBaseAngleR}deg)`;
+
+        requestAnimationFrame(animateVU);
+    }
+    animateVU();
+
+    // Listener count subtle natural drift
+    setInterval(() => {
+        baseListeners += (Math.floor(Math.random() * 7) - 3);
+        if (listenersCountEl) listenersCountEl.textContent = baseListeners.toLocaleString();
+    }, 4500);
+
+    // Floating Emoji Reaction Canvas
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+
+        function renderParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                ctx.save();
+                ctx.globalAlpha = p.alpha;
+                ctx.font = `${p.size}px sans-serif`;
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation);
+                ctx.fillText(p.emoji, -p.size / 2, p.size / 2);
+                ctx.restore();
+
+                p.y += p.vy;
+                p.x += p.vx;
+                p.alpha -= 0.012;
+                p.rotation += 0.02;
+
+                if (p.alpha <= 0 || p.y < -30) {
+                    particles.splice(i, 1);
+                }
+            }
+            requestAnimationFrame(renderParticles);
+        }
+        renderParticles();
+
+        function spawnReaction(emoji) {
+            for (let i = 0; i < 4; i++) {
+                particles.push({
+                    x: canvas.width * 0.5 + (Math.random() - 0.5) * 160,
+                    y: canvas.height - 20,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: -(2.5 + Math.random() * 3),
+                    emoji: emoji,
+                    size: 20 + Math.random() * 12,
+                    alpha: 1.0,
+                    rotation: (Math.random() - 0.5) * 0.5
+                });
+            }
+        }
+
+        reactionBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const emoji = btn.dataset.emoji;
+                const cntSpan = btn.querySelector('.react-cnt');
+                if (cntSpan) {
+                    cntSpan.textContent = parseInt(cntSpan.textContent, 10) + 1;
+                }
+                spawnReaction(emoji);
+                if (typeof toast === 'function') {
+                    toast(`Fired ${emoji} reaction into the community stream!`, 'success', 1500);
+                }
+            });
+        });
+    }
+
+    // Queue Voting
+    voteBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (btn.classList.contains('voted')) return;
+            btn.classList.add('voted');
+            const cnt = btn.querySelector('.vote-count');
+            if (cnt) {
+                const num = parseInt(cnt.textContent, 10) + 1;
+                cnt.textContent = num;
+            }
+            if (typeof toast === 'function') {
+                toast('Track upvoted in the community broadcast queue!', 'success', 2000);
+            }
+        });
+    });
+
+    // Community Chat Feed
+    const simulatedMessages = [
+        { user: 'NeoWave_99', color: 'user-pink', text: 'That transient speed is incredible on these planar drivers!' },
+        { user: 'AudioMaster_JP', color: 'user-cyan', text: 'Sub-bass extension down to 10Hz is crystal clear.' },
+        { user: 'CyberDJ', color: 'user-purple', text: 'Next track up is a certified banger! 🚀' },
+        { user: 'SynthCollector', color: 'user-cyan', text: 'Best ANC headphone purchase I made this year.' }
+    ];
+
+    let simMsgIndex = 0;
+    setInterval(() => {
+        if (!chatFeed) return;
+        const msg = simulatedMessages[simMsgIndex % simulatedMessages.length];
+        simMsgIndex++;
+
+        const div = document.createElement('div');
+        div.className = 'chat-msg';
+        div.innerHTML = `<strong class="chat-user ${msg.color}">${msg.user}:</strong><span class="chat-text">${msg.text}</span>`;
+        chatFeed.appendChild(div);
+        chatFeed.scrollTop = chatFeed.scrollHeight;
+    }, 14000);
+
+    if (chatForm && chatInput) {
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if (!text || !chatFeed) return;
+
+            const div = document.createElement('div');
+            div.className = 'chat-msg';
+            div.innerHTML = `<strong class="chat-user user-cyan">You:</strong><span class="chat-text">${text}</span>`;
+            chatFeed.appendChild(div);
+            chatFeed.scrollTop = chatFeed.scrollHeight;
+            chatInput.value = '';
+        });
+    }
+})();
+
+/* ============================================
+   MODULE 12: Acoustic Ear Seal & Sub-Bass Analyzer
+   ============================================ */
+(function() {
+    'use strict';
+
+    const section = document.getElementById('ear-seal-lab');
+    if (!section) return;
+
+    const sizeBtns = section.querySelectorAll('#canal-size-group .seal-choice-btn');
+    const materialBtns = section.querySelectorAll('#tip-material-group .seal-choice-btn');
+    const badge = document.getElementById('seal-quality-badge');
+    const fillBar = document.getElementById('seal-fill-bar');
+    const impactDesc = document.getElementById('seal-impact-desc');
+    const audioTestBtn = document.getElementById('seal-audio-test-btn');
+    const testIcon = document.getElementById('seal-test-icon');
+    const testText = document.getElementById('seal-test-text');
+    const activeCurve = document.getElementById('svg-active-curve');
+    const bassTag = document.getElementById('svg-bass-loss-tag');
+    const claimKitBtn = document.getElementById('claim-sample-kit-btn');
+
+    let currentSize = 'medium';
+    let currentMaterial = 'foam';
+    let isAirtight = true;
+
+    let audioCtx = null;
+    let isAudioPlaying = false;
+    let oscBass = null;
+    let oscMelody = null;
+    let bassFilter = null;
+
+    function getAudioCtx() {
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        return audioCtx;
+    }
+
+    function updateSeal() {
+        // Calculation
+        let quality = 100;
+        let badgeClass = 'seal-badge-perfect';
+        let badgeLabel = '100% AIRTIGHT SEAL';
+        let desc = 'Full sub-bass extension down to 10Hz preserved. Total noise isolation of -32dB passive dampening.';
+        let curveD = 'M 50 75 Q 110 77 160 80 T 260 85 T 360 80 T 470 90';
+        let tagText = '+6dB Studio Sub-Bass';
+        let tagColor = '#05d9e8';
+
+        if (currentMaterial === 'foam') {
+            quality = 100;
+            isAirtight = true;
+        } else if (currentMaterial === 'silicone') {
+            if (currentSize === 'medium') {
+                quality = 85;
+                badgeClass = 'seal-badge-good';
+                badgeLabel = '85% GOOD SEAL';
+                desc = 'Solid bass response with minor 2dB roll-off below 30Hz. Adequate isolation in quiet rooms.';
+                curveD = 'M 50 105 Q 110 95 160 85 T 260 85 T 360 80 T 470 90';
+                tagText = '-2dB Low Roll-off';
+                tagColor = '#fde047';
+                isAirtight = false;
+            } else {
+                quality = 65;
+                badgeClass = 'seal-badge-good';
+                badgeLabel = '65% MODERATE SEAL';
+                desc = 'Noticeable air gap leakage. Bass frequencies under 60Hz are attenuated by -8dB.';
+                curveD = 'M 50 140 Q 110 120 160 95 T 260 85 T 360 80 T 470 90';
+                tagText = '-8dB Acoustic Leakage';
+                tagColor = '#f97316';
+                isAirtight = false;
+            }
+        } else {
+            // Loose / broken
+            quality = 35;
+            badgeClass = 'seal-badge-poor';
+            badgeLabel = '35% BROKEN SEAL (LEAKY)';
+            desc = 'Severe acoustic decoupling! Up to -18dB sub-bass loss makes sound thin, tinny, and hollow.';
+            curveD = 'M 50 175 Q 110 160 160 110 T 260 85 T 360 80 T 470 95';
+            tagText = '-18dB Bass Loss (Hollow)';
+            tagColor = '#f87171';
+            isAirtight = false;
+        }
+
+        if (badge) {
+            badge.className = badgeClass;
+            badge.textContent = badgeLabel;
+        }
+        if (fillBar) {
+            fillBar.style.width = `${quality}%`;
+            fillBar.style.background = quality > 80 ? 'linear-gradient(90deg, #eab308, #22c55e)' : (quality > 50 ? '#f59e0b' : '#ef4444');
+        }
+        if (impactDesc) impactDesc.textContent = desc;
+
+        if (activeCurve) {
+            activeCurve.setAttribute('d', curveD);
+        }
+        if (bassTag) {
+            bassTag.textContent = tagText;
+            bassTag.setAttribute('fill', tagColor);
+        }
+
+        // Live update active audio filter if playing
+        if (bassFilter && audioCtx) {
+            if (isAirtight) {
+                bassFilter.frequency.setValueAtTime(30, audioCtx.currentTime); // Let all bass through
+            } else {
+                bassFilter.frequency.setValueAtTime(140, audioCtx.currentTime); // Cut deep bass
+            }
+        }
+    }
+
+    sizeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            sizeBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentSize = btn.dataset.size;
+            updateSeal();
+        });
+    });
+
+    materialBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            materialBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentMaterial = btn.dataset.material;
+            updateSeal();
+        });
+    });
+
+    // Sound Seal Audio Comparison Simulation
+    function stopSealAudio() {
+        if (oscBass) { try { oscBass.stop(); oscBass.disconnect(); } catch(e){} oscBass = null; }
+        if (oscMelody) { try { oscMelody.stop(); oscMelody.disconnect(); } catch(e){} oscMelody = null; }
+        isAudioPlaying = false;
+        if (testIcon) testIcon.className = 'fas fa-play';
+        if (testText) testText.textContent = 'Compare Simulated Audio Seal';
+    }
+
+    function startSealAudio() {
+        const actx = getAudioCtx();
+        const now = actx.currentTime;
+
+        // Sub bass drone
+        oscBass = actx.createOscillator();
+        const bassGain = actx.createGain();
+        bassFilter = actx.createBiquadFilter();
+
+        oscBass.type = 'sawtooth';
+        oscBass.frequency.setValueAtTime(45, now);
+
+        bassFilter.type = 'highpass';
+        // If airtight, low cutoff allows full 45Hz sub-bass; if leaky, cuts below 140Hz
+        bassFilter.frequency.setValueAtTime(isAirtight ? 20 : 140, now);
+
+        bassGain.gain.setValueAtTime(0.28, now);
+
+        oscBass.connect(bassFilter);
+        bassFilter.connect(bassGain);
+        bassGain.connect(actx.destination);
+        oscBass.start(now);
+
+        // Chime melody
+        oscMelody = actx.createOscillator();
+        const melGain = actx.createGain();
+        oscMelody.type = 'sine';
+        oscMelody.frequency.setValueAtTime(523.25, now); // C5
+        melGain.gain.setValueAtTime(0.12, now);
+
+        oscMelody.connect(melGain);
+        melGain.connect(actx.destination);
+        oscMelody.start(now);
+
+        isAudioPlaying = true;
+        if (testIcon) testIcon.className = 'fas fa-pause';
+        if (testText) testText.textContent = 'Stop Simulated Seal Audio';
+    }
+
+    if (audioTestBtn) {
+        audioTestBtn.addEventListener('click', () => {
+            if (isAudioPlaying) {
+                stopSealAudio();
+            } else {
+                startSealAudio();
+                if (typeof toast === 'function') {
+                    toast(isAirtight ? '🔊 Playing with Airtight Seal (Full 45Hz Sub-Bass)' : '🔊 Playing with Leaky Seal (High-pass 140Hz Loss)', 'info', 3000);
+                }
+            }
+        });
+    }
+
+    // Claim sample fit kit
+    if (claimKitBtn) {
+        claimKitBtn.addEventListener('click', () => {
+            const fitKitItem = {
+                id: 'spidy-fit-kit-' + Date.now(),
+                title: 'Spidy Custom Ear Tip Sizing Kit (S/M/L)',
+                price: 0,
+                img: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=500&auto=format&fit=crop&q=60',
+                qty: 1,
+                specs: '6 Pairs (Memory Foam & Medical Liquid Silicone)'
+            };
+
+            if (typeof cart !== 'undefined' && Array.isArray(cart)) {
+                cart.push(fitKitItem);
+                if (typeof saveCart === 'function') saveCart();
+                if (typeof renderCart === 'function') renderCart();
+                if (typeof openCart === 'function') openCart();
+            }
+
+            if (typeof toast === 'function') {
+                toast('📦 Free Ear Tip Sizing Kit added to your cart!', 'success', 3500);
+            }
+        });
+    }
+})();
+
+
 
 
